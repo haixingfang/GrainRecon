@@ -11,19 +11,19 @@ LabDCT is an emerging technique for 3D grain mapping using lab X-ray source, ins
 4) 'gpu_cuda_index_compete' - run on NVIDIA gpu and require CUDA driver, based on brute force indexing and competing completeness for assign orientation for un-indexed voxels. However, this method has not be optimized to be robust yet.
 
 # How to use the code?
-##1) Prepare for recontruction:
+## 1) Prepare for recontruction:
   - run get_spots.m for spot segmentation from LabDCT projections;
   - run get_tomo_slices_create_h5.m to obtain an hdf5 file for tomo volume mask;
   - run get_geometry.m to get geometry information and/or set geometry parameters manually in setup_exp.m;
   - set all parameters, including sample name, output folder, recontruction parameter etc. in setup_para.m.
-##2) Run grain mapping:
+## 2) Run grain mapping:
   - for a fresh reconstruction, execute the function run_GrainMapping_fullvol_fun.m by assinging a correct SampleFlag.
   - for an interrupted reconstruction, execute the function run_GrainMapping_fullvol_fun_continue.m to continue where it has been interrupted.
   - in the output folder, files in the format of e.g. 1DS.mat, pos1.mat, SeedingIndexing1.mat will be stored and the number corresponds to the iteration number.
-##3) Merge regions and identify grains:
+## 3) Merge regions and identify grains:
   - run GrainMapping_assemble_vol.m, it will generate an .h5 file, a .dream3d file and a .xdmf file, which you can use ParaView for 3D visualization
   - Optionally, you can force this function to use the strategy of "completeness competing" to correct suspicious voxels and compute for empty voxels.<br>By default, grains with fewer than 5 voxels or with seeding completeness lower than a threshold will be checked by this strategy.
-##4) Geometry fitting:
+## 4) Geometry fitting:
   - If geometry is needed to be fitting (this is usually the case with the first time grain reconstruction), run GrainMapping_geo_fit.m to fit 7 parameters, including P0y, P0z, dety00, detz00, tilt_x, tilt_y and tilt_z.
   - After geometry fitting, you may repeat steps of 2-3 to redo/refine grain mapping results.
 
