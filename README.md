@@ -5,10 +5,10 @@
 LabDCT is an emerging technique for 3D grain mapping using lab X-ray source, inspired by the principle of synchrotron DCT. In LabDCT, a conical white beam illuminates a sample and diffracted beams from grains fulfilling the Bragg's condition are recorded by a 2D detector behind the sample. Each diffraction spot contains a small variation of X-ray wavelenths as incident angles are slightly different given the same {hkl} of the same grain because of the cone beam geometry. In addition, spots projected onto the detector have different magnifications in directions perpendicular and parallel to the diffraction vector. These make LabDCT rather different from synchrotron DCT.
 
 # Four different methods have been developed
-### 1) 'cpu' - run on cpu cores only and does not require GPU, slow. It may take ~7 days to complete a volume with 6 million voxels;
-### 2) 'gpu_cuda_Gt' - run on NVIDIA gpu and require CUDA driver, fast and robust. More suitable for a roughly know geometry;
-### 3) 'gpu_cuda_comp' - run on NVIDIA gpu and require CUDA driver, fast and robust. Suitable for projections with serious spot overlapping;
-### 4) 'gpu_cuda_index_compete' - run on NVIDIA gpu and require CUDA driver, based on brute force indexing and competing completeness for assign orientation for un-indexed voxels. However, this method has not be optimized to be robust yet and thus so far not recommended to use.
+1) 'cpu' - run on cpu cores only and does not require GPU, slow. It may take ~7 days to complete a volume with 6 million voxels;
+2) 'gpu_cuda_Gt' - run on NVIDIA gpu and require CUDA driver, fast and robust. More suitable for a roughly know geometry;
+3) 'gpu_cuda_comp' - run on NVIDIA gpu and require CUDA driver, fast and robust. Suitable for projections with serious spot overlapping;
+4) 'gpu_cuda_index_compete' - run on NVIDIA gpu and require CUDA driver, based on brute force indexing and competing completeness for assign orientation for un-indexed voxels. However, this method has not be optimized to be robust yet and thus so far not recommended to use.
 
 # How to use the code?
 ## 1) Prepare for recontruction
