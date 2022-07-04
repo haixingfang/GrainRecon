@@ -30,7 +30,7 @@ LabDCT is an emerging technique for 3D grain mapping using lab X-ray source, ins
 All the codes have been tested executable with a Matlab version 2020a or later.
 
 # Example
-An example of a virtual Fe sample containing 6 grains have been included.
+An example of a virtual Fe sample containing 6 grains have been included. <br>
 The reconstruction time is about 20 min with gpu methods.
 
 
@@ -39,17 +39,17 @@ This package is free to use, ditribute and adapt for non-commercial use only. Se
 
 # Reference
 A manuscript has been prepared and now is under review:
-H. Fang, W. Ludwig, P. Lhuissier, Reconstruction algorithms for grain mapping by laboratory X-ray diffraction contrast tomography (in review).
+H. Fang, W. Ludwig, P. Lhuissier, Reconstruction algorithms for grain mapping by laboratory X-ray diffraction contrast tomography (in review).<br>
 Please cite this article if you use or get inspired by the code presented here.
 
 # Want to know about LabDCT or synchrotron DCT? Read the following books and articles.
-[1] [Poulsen, H.F. (2004). Three-dimensional X-ray diffraction microscopy: mapping polycrystals and their dynamics, Springer, Berlin.](https://books.google.fr/books?hl=zh-CN&lr=&id=_jzrH20Qu6cC&oi=fnd&pg=PA1&dq=Three-dimensional+X-ray+diffraction+microscopy:+mapping+polycrystals+and+their+dynamics&ots=fuKB6aOUDR&sig=X1FLzGThZC5dBig_TmHRcPR34Jk&redir_esc=y#v=onepage&q=Three-dimensional%20X-ray%20diffraction%20microscopy%3A%20mapping%20polycrystals%20and%20their%20dynamics&f=false)
-[2] [Ludwig, W., Schmidt, S., Lauridsen, E.M. & Poulsen, H.F. (2008). J. Appl. Cryst. 41, 302-309.](https://onlinelibrary.wiley.com/doi/pdf/10.1107/S0021889808001684?casa_token=R34uKE0yZ-kAAAAA:nAWCkh8VEcvYkcdsX7gUqB3C05qQDH-5WrJ-OtSuBEiqf_iT1I3s2nCKz4sVOUSEvPYmzXJiOWmrBbH0)
+[1] [Poulsen, H.F. (2004). Three-dimensional X-ray diffraction microscopy: mapping polycrystals and their dynamics, Springer, Berlin.](https://books.google.fr/books?hl=zh-CN&lr=&id=_jzrH20Qu6cC&oi=fnd&pg=PA1&dq=Three-dimensional+X-ray+diffraction+microscopy:+mapping+polycrystals+and+their+dynamics&ots=fuKB6aOUDR&sig=X1FLzGThZC5dBig_TmHRcPR34Jk&redir_esc=y#v=onepage&q=Three-dimensional%20X-ray%20diffraction%20microscopy%3A%20mapping%20polycrystals%20and%20their%20dynamics&f=false)<br>
+[2] [Ludwig, W., Schmidt, S., Lauridsen, E.M. & Poulsen, H.F. (2008). J. Appl. Cryst. 41, 302-309.](https://onlinelibrary.wiley.com/doi/pdf/10.1107/S0021889808001684?casa_token=R34uKE0yZ-kAAAAA:nAWCkh8VEcvYkcdsX7gUqB3C05qQDH-5WrJ-OtSuBEiqf_iT1I3s2nCKz4sVOUSEvPYmzXJiOWmrBbH0)<br>
 [3] [Ludwig, W., Reischig, P., King, A. Herbig, M., Lauridsen, E.M., Johnson, G., Marrow, T.J. & Buffière, J.Y. (2009). Rev. Sci. Instrum. 80, 033905.](https://aip.scitation.org/doi/full/10.1063/1.3100200?casa_token=P5TD352wKKgAAAAA:JQJrFf2zposYugxPD1u7j_TInetWxNG8cojaDD_Xd8VfJi4IyYkLGf5gXEv-m1YwWH49zBCS9WRO)
-[4] [King, A., Reischig, P., Adrien, J. & Ludwig, W. (2013). J. Appl. Cryst. 46, 1734-1740.](https://onlinelibrary.wiley.com/doi/pdf/10.1107/S0021889813022553?casa_token=qNuPs8Cl0HYAAAAA:cdd2pUDdX4zQnAXdeM47NNfu_A2KUeFLcCvSQL37allmTNCuks3_Uqq7idWahDsFgfliuTYttIfvfFPT)
-[5] [Van Aarle, W., Ludwig, W., King, A. & Penumadu, D. (2015). J. Appl. Cryst. 48, 334-343.](https://onlinelibrary.wiley.com/doi/full/10.1107/S1600576715000928?casa_token=2NJbHkPcSqAAAAAA:E8Y8bRglog_x8aa2csR4KwR4ElfHcs3AiV6fdhVwerqJ2jptIwxXW1p7Rfrq0HPf5OfFFHNalBfPoiq2)
-[6] [Bachmann, F., Bale, H., Gueninchault, N., Holzner, C. & Lauridsen, E.M. (2019). J. Appl. Cryst. 52, 643-651.](https://journals.iucr.org/j/issues/2019/03/00/nb5238/nb5238.pdf)
-[7] [Fang, H., Juul Jensen, D. & Zhang, Y. (2020). Acta Cryst. A 76, 652-663.](https://journals.iucr.org/a/issues/2020/06/00/iv5008/iv5008.pdf)
-[8] [Fang, H., Juul Jensen, D. & Zhang, Y. (2021). IUCrJ 8, 559-573.](https://journals.iucr.org/m/issues/2021/04/00/fc5052/index.html)
+[4] [King, A., Reischig, P., Adrien, J. & Ludwig, W. (2013). J. Appl. Cryst. 46, 1734-1740.](https://onlinelibrary.wiley.com/doi/pdf/10.1107/S0021889813022553?casa_token=qNuPs8Cl0HYAAAAA:cdd2pUDdX4zQnAXdeM47NNfu_A2KUeFLcCvSQL37allmTNCuks3_Uqq7idWahDsFgfliuTYttIfvfFPT)<br>
+[5] [Van Aarle, W., Ludwig, W., King, A. & Penumadu, D. (2015). J. Appl. Cryst. 48, 334-343.](https://onlinelibrary.wiley.com/doi/full/10.1107/S1600576715000928?casa_token=2NJbHkPcSqAAAAAA:E8Y8bRglog_x8aa2csR4KwR4ElfHcs3AiV6fdhVwerqJ2jptIwxXW1p7Rfrq0HPf5OfFFHNalBfPoiq2)<br>
+[6] [Bachmann, F., Bale, H., Gueninchault, N., Holzner, C. & Lauridsen, E.M. (2019). J. Appl. Cryst. 52, 643-651.](https://journals.iucr.org/j/issues/2019/03/00/nb5238/nb5238.pdf)<br>
+[7] [Fang, H., Juul Jensen, D. & Zhang, Y. (2020). Acta Cryst. A 76, 652-663.](https://journals.iucr.org/a/issues/2020/06/00/iv5008/iv5008.pdf)<br>
+[8] [Fang, H., Juul Jensen, D. & Zhang, Y. (2021). IUCrJ 8, 559-573.](https://journals.iucr.org/m/issues/2021/04/00/fc5052/index.html)<br>
 
 ## Contact emails: haixing.fang@grenoble-inp.fr, haixing0a@esrf.fr or haixingfang868@gmail.com
