@@ -22,17 +22,15 @@ LabDCT is an emerging technique for 3D grain mapping using lab X-ray source, ins
   - in the output folder, files in the format of e.g. 1DS.mat, pos1.mat, SeedingIndexing1.mat will be stored and the number corresponds to the iteration number.
 ## 3) Merge regions and identify grains:
   - run GrainMapping_assemble_vol.m, it will generate an .h5 file, a .dream3d file and a .xdmf file, which you can use ParaView for 3D visualization
-  - Optionally, you can force this function to use the strategy of "completeness competing" to correct suspicious voxels and compute for empty voxels.<br>By default, grains with fewer than 5 voxels or with seeding completeness lower than a threshold will be checked by this strategy.
+  - Optionally, you can force this function to use the strategy of "completeness competing" to correct suspicious voxels and compute for empty voxels. By default, grains with fewer than 5 voxels or with seeding completeness lower than a threshold will be checked by this strategy.
 ## 4) Geometry fitting:
   - If geometry is needed to be fitting (this is usually the case with the first time grain reconstruction), run GrainMapping_geo_fit.m to fit 7 parameters, including P0y, P0z, dety00, detz00, tilt_x, tilt_y and tilt_z.
-  - After geometry fitting, you may repeat steps of 2-3 to redo/refine grain mapping results.
-
-All the codes have been tested executable with a Matlab version 2020a or later.
+  - After geometry fitting, you may repeat steps of 2-3 to redo/refine grain mapping results.<br>
+### All the codes have been tested executable with a Matlab version 2020a or later.
 
 # Example
 An example of a virtual Fe sample containing 6 grains have been included. <br>
 The reconstruction time is about 20 min with gpu methods.
-
 
 # License
 This package is free to use, ditribute and adapt for non-commercial use only. See LICENSE for license rights and limitations (CC BY-NC 4.0).
@@ -42,7 +40,8 @@ A manuscript has been prepared and now is under review:
 H. Fang, W. Ludwig, P. Lhuissier, Reconstruction algorithms for grain mapping by laboratory X-ray diffraction contrast tomography (in review).<br>
 Please cite this article if you use or get inspired by the code presented here.
 
-# Want to know about LabDCT or synchrotron DCT? Read the following books and articles.
+# Want to know about LabDCT or synchrotron DCT?
+## Read the following books and articles.
 [1] [Poulsen, H.F. (2004). Three-dimensional X-ray diffraction microscopy: mapping polycrystals and their dynamics, Springer, Berlin.](https://books.google.fr/books?hl=zh-CN&lr=&id=_jzrH20Qu6cC&oi=fnd&pg=PA1&dq=Three-dimensional+X-ray+diffraction+microscopy:+mapping+polycrystals+and+their+dynamics&ots=fuKB6aOUDR&sig=X1FLzGThZC5dBig_TmHRcPR34Jk&redir_esc=y#v=onepage&q=Three-dimensional%20X-ray%20diffraction%20microscopy%3A%20mapping%20polycrystals%20and%20their%20dynamics&f=false)<br>
 [2] [Ludwig, W., Schmidt, S., Lauridsen, E.M. & Poulsen, H.F. (2008). J. Appl. Cryst. 41, 302-309.](https://onlinelibrary.wiley.com/doi/pdf/10.1107/S0021889808001684?casa_token=R34uKE0yZ-kAAAAA:nAWCkh8VEcvYkcdsX7gUqB3C05qQDH-5WrJ-OtSuBEiqf_iT1I3s2nCKz4sVOUSEvPYmzXJiOWmrBbH0)<br>
 [3] [Ludwig, W., Reischig, P., King, A. Herbig, M., Lauridsen, E.M., Johnson, G., Marrow, T.J. & Buffière, J.Y. (2009). Rev. Sci. Instrum. 80, 033905.](https://aip.scitation.org/doi/full/10.1063/1.3100200?casa_token=P5TD352wKKgAAAAA:JQJrFf2zposYugxPD1u7j_TInetWxNG8cojaDD_Xd8VfJi4IyYkLGf5gXEv-m1YwWH49zBCS9WRO)<br>
