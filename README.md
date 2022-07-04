@@ -21,7 +21,7 @@ LabDCT is a novel technique for 3D grain mapping using lab X-ray source, inspire
   - for an interrupted reconstruction, execute the function run_GrainMapping_fullvol_fun_continue.m to continue where it has been interrupted.
   - in the output folder, files in the format of e.g. 1DS.mat, pos1.mat, SeedingIndexing1.mat will be stored and the number corresponds to the iteration number.
 ## 3) Merge regions and identify grains
-  - run GrainMapping_assemble_vol.m, it will generate an .h5 file, a .dream3d file and a .xdmf file, which you can use ParaView for 3D visualization
+  - run GrainMapping_assemble_vol.m, it will generate a .h5 file, a .dream3d file and a .xdmf file, which you can use ParaView for 3D visualization
   - Optionally, you can force this function to use the strategy of "completeness competing" to correct suspicious voxels and compute for empty voxels. By default, grains with fewer than 5 voxels or with seeding completeness lower than a threshold will be checked by this strategy.
 ## 4) Geometry fitting
   - If geometry is needed to be fitting (this is usually the case with the first time grain reconstruction), run GrainMapping_geo_fit.m to fit 7 parameters, including P0y, P0z, dety00, detz00, tilt_x, tilt_y and tilt_z.
