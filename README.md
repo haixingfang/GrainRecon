@@ -30,10 +30,13 @@ LabDCT is a novel technique for 3D grain mapping using lab X-ray source, inspire
 
 ## Run on linux cluster
 Examples of bash file for submitting jobs to ESRF slurm cluster:
-1) go_SLURM_job_subvol.sh shows an example to submit a job to a cluster equipped with only CPU for reconstructing a full volume.<br>
+1) go_SLURM_job_fullvol.slurm shows an example to submit a job to a cluster equipped with only CPU for reconstructing a full volume.<br>
 2) go_SLURM_job_subvol_array.slurm shows an example to submit a job to a cluster equipped with only CPU for reconstructing all subvolumes partitioned from a full volume.<br>
 3) go_SLURM_gpu_single_job.slurm shows an example to submit a job to a cluster equipped with GPU for reconstructing a full volume. <br>
-command for submitting the job: sbatch ...
+command example for submitting the job in bash mode
+'''
+sbatch go_SLURM_gpu_single_job.slurm
+'''
 
 # Example
 An example of a virtual Fe sample containing 6 grains have been included. <br>
