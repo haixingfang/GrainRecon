@@ -4,11 +4,11 @@
 # Brief introduction of LabDCT
 LabDCT is a novel technique for 3D grain mapping using lab X-ray source, inspired by the principle of synchrotron DCT. In LabDCT, a conical white beam illuminates a sample and diffracted beams from grains fulfilling the Bragg's condition are recorded by a 2D detector behind the sample. Each diffraction spot contains a small variation of X-ray wavelenths as incident angles are slightly different given the same {hkl} of the same grain because of the cone beam geometry. In addition, spots projected onto the detector have different magnifications in directions perpendicular and parallel to the diffraction vector. These make LabDCT rather different from synchrotron DCT.
 
-# Four different methods have been developed
+# 3(4) different methods have been developed
 1) 'cpu' - run on cpu cores only and does not require GPU, slow. It may take ~7 days to complete a volume with 6 million voxels;
 2) 'gpu_cuda_Gt' - run on NVIDIA gpu and require CUDA driver, fast and robust. More suitable for a roughly know geometry;
 3) 'gpu_cuda_comp' - run on NVIDIA gpu and require CUDA driver, fast and robust. Suitable for projections with serious spot overlapping;
-4) 'gpu_cuda_index_compete' - run on NVIDIA gpu and require CUDA driver, based on brute force indexing and competing completeness for assign orientation for un-indexed voxels. However, this method has not be optimized to be robust yet and thus so far not recommended to use.
+4) 'gpu_cuda_index_compete' - run on NVIDIA gpu and require CUDA driver, based on brute force indexing and competing completeness for assign orientation for un-indexed voxels. However, this method has not be optimized to be robust enough yet and thus so far not recommended to use.
 
 # How to use the code?
 ## 1) Prepare for recontruction
@@ -33,7 +33,7 @@ Examples of bash file for submitting jobs to ESRF slurm cluster:
 1) go_SLURM_job_fullvol.slurm shows an example to submit a job to a cluster equipped with only CPU for reconstructing a full volume.<br>
 2) go_SLURM_job_subvol_array.slurm shows an example to submit a job to a cluster equipped with only CPU for reconstructing all subvolumes partitioned from a full volume.<br>
 3) go_SLURM_gpu_single_job.slurm shows an example to submit a job to a cluster equipped with GPU for reconstructing a full volume. <br>
-command example for submitting the job in bash mode
+### command example for submitting the job in bash mode
 ```
 sbatch go_SLURM_gpu_single_job.slurm
 ```
@@ -41,6 +41,9 @@ sbatch go_SLURM_gpu_single_job.slurm
 # Example
 An example of a virtual Fe sample containing 6 grains have been included. <br>
 The reconstruction takes about 20 min with gpu methods.
+
+# Note
+By default the code is designed for reconstructing cubic crystals. For other crystal symmetries, You may need to modify some code lines related to the crystal symmetry name.
 
 # License
 This package is free to use, ditribute and adapt for non-commercial use only. See LICENSE for license rights and limitations (CC BY-NC 4.0).
