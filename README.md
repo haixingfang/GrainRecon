@@ -34,9 +34,9 @@ Examples of bash file for submitting jobs to ESRF slurm cluster:
 2) go_SLURM_job_subvol_array.slurm shows an example to submit a job to a cluster equipped with only CPU for reconstructing all subvolumes partitioned from a full volume.<br>
 3) go_SLURM_gpu_single_job.slurm shows an example to submit a job to a cluster equipped with GPU for reconstructing a full volume. <br>
 command example for submitting the job in bash mode
-'''
+```
 sbatch go_SLURM_gpu_single_job.slurm
-'''
+```
 
 # Example
 An example of a virtual Fe sample containing 6 grains have been included. <br>
