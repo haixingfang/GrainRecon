@@ -1,4 +1,5 @@
-# GrainRecon
+
+<h2>🏆 # GrainRecon </h2> 
 [GrainRecon](https://github.com/haixingfang/GrainRecon) is a code package for reconstructing 3D grain map, namely grain orientations, positions and shapes, from diffraction patterns of laboratory X-ray diffraction contrast tomography (LabDCT). The code was developed by [Dr. Haixing Fang](https://orcid.org/0000-0001-8114-5276) while he works at [CNRS SIMaP laboratory](https://simap.grenoble-inp.fr/) and [ESRF](https://www.esrf.fr/UsersAndScience/Experiments/StructMaterials/ID11) in Grenoble, France, together with [Dr. Pierre Lhuissier](https://simap.grenoble-inp.fr/fr/equipes/m-lhuissier-pierre) and [Prof. dr. Wolfgang Ludwig](https://scholar.google.fr/citations?user=f8-PwEMAAAAJ&hl=fr). This work is part of the project Advanced Laboratory X-ray Microtomography funded by the Agence Nationale de la Recherche (ANR-18-CE42-0005). The code may be continuously updated as work progresses.
 
 # Brief introduction of LabDCT
@@ -59,5 +60,5 @@ Please cite this article if you use or get inspired by the code presented here.
 [8] [Fang, H., Juul Jensen, D. & Zhang, Y. (2021). IUCrJ 8, 559-573.](https://journals.iucr.org/m/issues/2021/04/00/fc5052/index.html)<br>
 
 ## Contact emails: haixing.fang@grenoble-inp.fr, haixing0a@esrf.fr or haixingfang868@gmail.com
-<h2>🏆 Github Profile Trophy</h2> 
+
 
