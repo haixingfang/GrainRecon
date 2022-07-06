@@ -39,8 +39,10 @@ sbatch go_SLURM_gpu_single_job.slurm
 ```
 
 # Example
-An example of a virtual Fe sample containing 6 grains have been included. <br>
-The reconstruction takes about 20 min with gpu methods.
+Three examples are available in ./Examples:
+1) a virtual Fe sample containing 6 grains in a magnified geometry; <br>
+2) a virtual Fe sample containing 144 grains in both Laue-focusing and magnified geometries; <br>
+3) an experimental AlCu alloy sample in a magnified geometry.<br>
 
 # Note
 By default the code is designed for reconstructing cubic crystals. For other crystal symmetries, You may need to modify some code lines related to the crystal symmetry name.
