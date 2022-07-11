@@ -1,0 +1,12 @@
+	
+ics_version	1.0
+filename	rings
+layout	parameters	3
+layout	order	bits	x	y
+layout	sizes	32	256	256
+layout	coordinates	video
+layout	significant_bits	32
+representation	format	real
+representation	sign	signed
+representation	byte_order	4	3	2	1
+representation	SCIL_TYPE	f2d

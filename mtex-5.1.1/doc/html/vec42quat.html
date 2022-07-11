@@ -1,0 +1,92 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>vec42quat (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: vec42quat -->
+      <!-- HEADSTUFF: vec42quat -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:vec42quat">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div>
+         <table class="nav" summary="Navigation aid" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline"><b>MTEX</b> - A MATLAB Toolbox for Quantitative Texture Analysis</td>
+               <td valign="baseline" align="right"><a href="matlab:edit vec42quat">
+                     View Code</a></td>
+            </tr>
+         </table>
+         <p style="font-size:1px;"></p>
+      </div>
+      <div class="content">
+         <h1 class="refname">vec42quat</h1>
+         <div class="subheading">
+            <p>returns a quaternion q with q u_1 = v1 and q u2 = v2</p>
+         </div>
+         <h2>Description<a name="2"> </a></h2>
+         <p>The method <b>vec42quat</b> defines a <a href="quaternion_index.html">quaternion</a> <tt>q</tt> by 4 directions <tt>u1</tt>, <tt>u2</tt>, <tt>v1</tt> and <tt>v2</tt> such that <tt>q * u1 = v1</tt> and <tt>q * u2 = v2</tt></p>
+         <h2>Syntax<a name="3"> </a></h2>
+         <p>
+            <div class="syntax" width="100%">
+            <div>
+            <tt>q = vec42quat(u1,v1,u2,v2)</tt>
+            </div>
+            </div>
+            
+         </p>
+         <h2>Input<a name="4"> </a></h2>
+         <p>
+            <table cellpadding="4" cellspacing="0" class="funcref" width="100%">
+            <tr>
+            <td width="100px">
+            <tt>u1, u2</tt>
+            </td>
+            <td>
+            <p><a href="vector3d_index.html">vector3d</a></p>
+            </td>
+            </tr>
+            <tr>
+            <td width="100px">
+            <tt>v1, v2</tt>
+            </td>
+            <td>
+            <p><a href="vector3d_index.html">vector3d</a></p>
+            </td>
+            </tr>
+            </table>
+            
+         </p>
+         <h2>Output<a name="5"> </a></h2>
+         <p>
+            <table cellpadding="4" cellspacing="0" class="funcref" width="100%">
+            <tr>
+            <td width="100px">
+            <tt>q</tt>
+            </td>
+            <td>
+            <p><a href="quaternion_index.html">quaternion</a></p>
+            </td>
+            </tr>
+            </table>
+            
+         </p>
+         <h3 class="seealso">See also</h3>
+         <p><a href="quaternion_index.html">quaternion_index</a>, <a href="quaternion.quaternion.html">quaternion/quaternion</a>, <a href="axis2quat.html">axis2quat</a>, <a href="Miller2quat.html">Miller2quat</a>, <a href="euler2quat.html">euler2quat</a>, <a href="hr2quat.html">hr2quat</a></p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

@@ -1,0 +1,107 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>FAQ (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: FAQ -->
+      <!-- HEADSTUFF: FAQ -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:FAQ">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div>
+         <table class="nav" summary="Navigation aid" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline"><b>MTEX</b> - A MATLAB Toolbox for Quantitative Texture Analysis</td>
+            </tr>
+         </table>
+         <p style="font-size:1px;"></p>
+      </div>
+      <div class="content">
+         <h1 class="refname">FAQ</h1>
+         <div class="subheading">
+            <p>Frequently asked questions</p>
+         </div>
+         <h2>Why is there no graphical user interface?<a name="1"> </a></h2>
+         <p>In contrast to almost any other texture analysis software MTEX has no graphical user interface but provides scripting languages.
+            We believe that this has the following advantages
+         </p>
+         <div>
+            <ul type="square">
+               <li>documented workflow: you will always remember all options which gave you the result</li>
+               <li>reproducible results: running a script multiple times gives you the same results</li>
+               <li>templates for common tasks: just replace the names of the data files and repeat the calculations</li>
+               <li>automatically process multiple data sets with different parameters</li>
+               <li>great flexibility: you can combine every tool with every other tool</li>
+            </ul>
+         </div>
+         <p>On the downside, scripts are often thought to be complicated to learn and tedious to write. However, how would you learn a
+            GUI bases program? You would use a script which tells you in which order to click which buttons. In MTEX you give the script
+            directly to the computer and he does process it for you. We also believe that MTEX scripts are easy to read for humans as
+            well. Take the following example:
+         </p><pre class="codeinput"><span class="comment">% import some EBSD data, while aligning the x,y coordinates to follow the</span>
+<span class="comment">% Euler angle coordinate system</span>
+ebsd = loadEBSD([mtexDataPath filesep <span class="string">'EBSD'</span> filesep <span class="string">'twins.ctf'</span>],<span class="string">'convertSpatial2EulerReferenceFrame'</span> );
+
+<span class="comment">% plot the orientations</span>
+plot(ebsd(<span class="string">'indexed'</span>),ebsd(<span class="string">'indexed'</span>).orientations)
+
+<span class="comment">% compute grains</span>
+grains = calcGrains(ebsd(<span class="string">'indexed'</span>));
+
+<span class="comment">% and draw the grain boundaries</span>
+hold <span class="string">on</span>
+plot(grains.boundary)
+hold <span class="string">off</span></pre><img src="FAQ_01.png"> <h2>Why Matlab?<a name="2"> </a></h2>
+         <p>Matlab offers a very comfortable scripting interface as well as a very powerful graphics engine. A reasonable alternative
+            is Phyton which would have several advantages. However, so far there are no plans for migration.
+         </p>
+         <h2>Which Matlab version and which toolboxes do I need?<a name="3"> </a></h2>
+         <p>MTEX does not require any additional Matlab toolbox and shall work fine with student version. A comprehensive table that shows
+            which MTEX version runs on which Matlab versions can be found <a href="installation.html">here</a>.
+         </p>
+         <h2>I get crazy plots, empty plots, plot with wrong colors<a name="4"> </a></h2>
+         <p>This is most likely a Matlab rendering issue. You can change the renderer Matlab uses for plotting by</p><pre class="codeinput"><span class="comment">% this is some arbitrary plot command</span>
+plot(grains(<span class="string">'indexed'</span>),grains(<span class="string">'indexed'</span>).meanOrientation)
+
+<span class="comment">% apply this command directly after the plot command</span>
+set(gcf,<span class="string">'renderer'</span>,<span class="string">'zBuffer'</span>)</pre><pre class="codeoutput">  I'm going to colorize the orientation data with the 
+  standard MTEX colorkey. To view the colorkey do:
+ 
+  oM = ipfColorKey(ori_variable_name)
+  plot(oM)
+</pre><img src="FAQ_02.png"> <h2>I have crazy characters in my plots. What can I do?<a name="5"> </a></h2>
+         <p>This indicates that your MATLAB installation has problems to interpret LaTex. As a workaround switch off LaTex by uncommenting
+            the following line in <a href="matlab:edit('mtex_settings.m')">mtex_settings.m</a>.
+         </p><pre class="codeinput">setMTEXpref(<span class="string">'LaTex'</span>,false);</pre><h2>How can I import my data<a name="6"> </a></h2>
+         <p>You might use the import_wizard by typing</p><pre class="codeinput">import_wizard</pre><img src="FAQ_03.png"> <p>See also</p>
+         <div>
+            <ul type="square">
+               <li><a href="http://mtex-toolbox.github.io/files/doc/ImportPoleFigureData.html">import pole figure data</a></li>
+               <li><a href="http://mtex-toolbox.github.io/files/doc/ImportPoleFigureData.html">import ODFs</a></li>
+               <li><a href="http://mtex-toolbox.github.io/files/doc/ImportEBSDData.html">import EBSD data</a></li>
+               <li><a href="http://mtex-toolbox.github.io/files/doc/ImportEBSDData.html">import individual orientations</a></li>
+               <li><a href="http://mtex-toolbox.github.io/files/doc/ImportEBSDData.html">import tensors</a></li>
+            </ul>
+         </div>
+         <h2>MTEX fails to import EBSD OSC files<a name="8"> </a></h2>
+         <p>The OSC file format is a commercial binary EBSD format that has undergone heavy changes. For that reason it is hard for MTEX
+            to keep up with a functional interface. As a workaround export your data to ANG file. Those can be easily imported into MTEX.
+         </p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

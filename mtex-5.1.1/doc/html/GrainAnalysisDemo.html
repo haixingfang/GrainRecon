@@ -1,0 +1,103 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>Example for 2d EBSD Data analysis (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: GrainAnalysisDemo -->
+      <!-- HEADSTUFF: GrainAnalysisDemo -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:GrainAnalysisDemo">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div class="myheader">
+         <table border="0" width="100%" cellpadding="10" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="left" style="color:white"><a style="color:white" href="matlab:edit GrainAnalysisDemo">Open Matlab File in the Editor</a></td>
+               <td valign="baseline" align="right" style="color:white"><a style="color:white" href="mtex_product_page.html">MTEX</a></td>
+            </tr>
+         </table>
+      </div>
+      <div class="content">
+         <h1 class="refname">Example for 2d EBSD Data analysis</h1>
+         <div class="subheading"><pre>data by Daniel Rutte with Bret Hacker, Stanford.</pre><p>The following script mainly generate the figures shown in "Grain detection from 2d and 3d EBSD data - Specification of the
+               MTEX algorithm" - section "Practical application to a 2d EBSD data set". The only imposed restriction is the size of the data
+               set, which was scaled down.
+            </p>
+         </div>
+         <h2>Data import<a name="2"> </a></h2>
+         <p>plotting convention</p><pre class="codeinput">mtexdata <span class="string">mylonite</span>
+
+plotx2east</pre><h2>Phase map<a name="3"> </a></h2>
+         <p>Phase map of multi-phase rock specimen with Andesina (blue), Quartz (red), Biotite (green) and Orthoclase (yellow)</p><pre class="codeinput">plot(ebsd)</pre><img src="GrainAnalysisDemo_01.png"> <h2>Restrict to the region of interest (RoI)<a name="4"> </a></h2>
+         <p>the box is given by [xmin ymin xmax-xmin ymax-ymin] and indicates a region of interest (RoI).</p><pre class="codeinput">region = [19000 1500 4000 1500];
+rectangle(<span class="string">'position'</span>,region,<span class="string">'edgecolor'</span>,<span class="string">'r'</span>,<span class="string">'linewidth'</span>,2)</pre><img src="GrainAnalysisDemo_02.png"> <p>to which we restrict the data</p><pre class="codeinput">ebsd_region = ebsd(inpolygon(ebsd,region))</pre><pre class="codeoutput"> 
+ebsd_region = EBSD  
+ 
+ Phase  Orientations     Mineral        Color  Symmetry  Crystal reference frame
+     1     578 (20%)    Andesina   light blue        -1              X||a*, Z||c
+     2    1144 (40%)      Quartz  light green      -3m1       X||a*, Y||b, Z||c*
+     3       58 (2%)     Biotite    light red     12/m1        X||a, Y||b*, Z||c
+     4    1066 (37%)  Orthoclase         cyan     12/m1       X||a*, Y||b*, Z||c
+ 
+ Properties: x, y
+ Scan unit : um
+ 
+</pre><h2>Recover grains<a name="6"> </a></h2>
+         <p>Next we reconstruct the grains (and grain boundareis in the region of interest</p><pre class="codeinput">grains = calcGrains(ebsd_region,<span class="string">'angle'</span>,15*degree)</pre><pre class="codeoutput"> 
+grains = grain2d  
+ 
+ Phase  Grains  Pixels     Mineral  Symmetry  Crystal reference frame
+     1     371     578    Andesina        -1              X||a*, Z||c
+     2     189    1144      Quartz      -3m1       X||a*, Y||b, Z||c*
+     3      55      58     Biotite     12/m1        X||a, Y||b*, Z||c
+     4     380    1066  Orthoclase     12/m1       X||a*, Y||b*, Z||c
+ 
+ boundary segments: 4424
+ triple points: 1333
+ 
+ Properties: GOS, meanRotation
+ 
+</pre><h2>Plot grain boundaries and phase<a name="7"> </a></h2>
+         <p>(RoI) Detailed phase map with measurement locations and reconstructed grain boundaries.</p><pre class="codeinput">plot(ebsd_region)
+hold <span class="string">on</span>
+plot(grains.boundary,<span class="string">'color'</span>,<span class="string">'k'</span>)
+hold <span class="string">off</span></pre><img src="GrainAnalysisDemo_03.png"> <p>(RoI) Individual orientation measurements of quartz together with the grain boundaries.</p><pre class="codeinput">plot(grains({<span class="string">'Andesina'</span>,<span class="string">'Biotite'</span>,<span class="string">'Orthoclase'</span>}),<span class="string">'FaceAlpha'</span>,0.2)
+hold <span class="string">on</span>
+plot(ebsd_region(<span class="string">'Quartz'</span>))
+plot(grains.boundary,<span class="string">'color'</span>,<span class="string">'black'</span>);
+legend <span class="string">off</span>
+hold <span class="string">off</span></pre><img src="GrainAnalysisDemo_04.png"> <p>colored according to the false color map of its inverse polefigure</p><pre class="codeinput">close <span class="string">all</span>
+ipfKey = ipfColorKey(ebsd_region(<span class="string">'Quartz'</span>));
+plot(ipfKey,<span class="string">'Position'</span>,[825 100 300 300])</pre><img src="GrainAnalysisDemo_05.png"> <p>(RoI) The reconstructed grains. The quartz grains are colored according to their mean orientation while the remaining grains
+            are colored according to there phase.
+         </p><pre class="codeinput">plot(grains({<span class="string">'Andesina'</span>,<span class="string">'Biotite'</span>,<span class="string">'Orthoclase'</span>}),<span class="string">'FaceAlpha'</span>,0.2)
+hold <span class="string">on</span>
+plot(grains(<span class="string">'Quartz'</span>))
+legend <span class="string">off</span></pre><img src="GrainAnalysisDemo_06.png"> <h2>Highlight specific boundaries<a name="11"> </a></h2>
+         <p>(RoI) Phase map with grain boundaries highlighted, where adjacent grains have a misorientation with rotational axis close
+            to the c-axis. TODO
+         </p><pre class="codeinput">close <span class="string">all</span>
+AOboundary = grains.boundary(<span class="string">'Andesina'</span>,<span class="string">'Orthoclase'</span>);
+angle = AOboundary.misorientation.angle;
+
+hist(angle./degree)</pre><img src="GrainAnalysisDemo_07.png"> <pre class="codeinput">plot(grains,<span class="string">'FaceAlpha'</span>,0.4)
+hold <span class="string">on</span>
+
+plot(AOboundary(angle&gt;160*degree),<span class="string">'linewidth'</span>,2,<span class="string">'linecolor'</span>,<span class="string">'red'</span>)
+hold <span class="string">off</span></pre><img src="GrainAnalysisDemo_08.png"> <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

@@ -1,0 +1,389 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>Specimen Directions - The MTEX Class vector3d (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: GeometryTutorial -->
+      <!-- HEADSTUFF: GeometryTutorial -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:GeometryTutorial">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div class="myheader">
+         <table border="0" width="100%" cellpadding="10" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="left" style="color:white"><a style="color:white" href="matlab:edit GeometryTutorial">Open Matlab File in the Editor</a></td>
+               <td valign="baseline" align="right" style="color:white"><a style="color:white" href="mtex_product_page.html">MTEX</a></td>
+            </tr>
+         </table>
+      </div>
+      <div class="content">
+         <h1 class="refname">Specimen Directions - The MTEX Class vector3d</h1>
+         <div class="subheading"></div>
+         <p><b>Definition</b></p><pre class="codeinput">v = vector3d (1 ,0 ,0)                      <span class="comment">% Cart . coordinates</span>
+v = vector3d(<span class="string">'polar'</span>, 20*degree, 10*degree) <span class="comment">% polar coordinates</span>
+v = xvector                                 <span class="comment">% predefined vector</span></pre><pre class="codeoutput"> 
+v = vector3d  
+ size: 1 x 1
+  x y z
+  1 0 0
+ 
+v = vector3d  
+ size: 1 x 1
+         x         y         z
+  0.336824 0.0593912  0.939693
+ 
+v = vector3d  
+ size: 1 x 1
+  x y z
+  1 0 0
+</pre><p><b>Calculations</b></p><pre class="codeinput">v = [xvector, yvector]; w = v(1);
+v = 2*xvector - yvector;</pre><p><b>Basic Functions</b></p><pre class="codeinput">angle(v, w)
+norm(v)
+dot(v ,w)
+cross(v, w)
+[theta, rho] = polar(v)</pre><pre class="codeoutput">ans =
+    0.4636
+ans =
+    2.2361
+ans =
+     2
+ 
+ans = vector3d  
+ size: 1 x 1
+  x y z
+  0 0 1
+theta =
+    1.5708
+rho =
+    5.8195
+</pre><p><b>plotting</b></p><pre class="codeinput">close <span class="string">all</span>
+plot([v,w])</pre><img src="GeometryTutorial_01.png"> <h2>Rotations<a name="6"> </a></h2>
+         <p><b>Definition</b></p><pre class="codeinput">rot = rotation(<span class="string">'Euler'</span>,10*degree,20*degree,30*degree);
+rot = rotation(<span class="string">'axis'</span>,xvector,<span class="string">'angle'</span>,30*degree);
+rot = rotation(<span class="string">'map'</span>,xvector,yvector,vector3d(0,1,1),zvector);
+rot = rotation(<span class="string">'quaternion'</span>,0.5,0.5,0.5,0.5);
+rot = reflection(zvector)</pre><pre class="codeoutput"> 
+rot = rotation  
+  size: 1 x 1
+ 
+  Bunge Euler angles in degree
+  phi1  Phi phi2 Inv.
+   180    0    0    1
+ 
+</pre><p><b>Calculations</b></p><pre class="codeinput">v = rot * xvector
+rot \ v
+rot2 = rot * rot</pre><pre class="codeoutput"> 
+v = vector3d  
+ size: 1 x 1
+  x y z
+  1 0 0
+ 
+ans = vector3d  
+ size: 1 x 1
+  x y z
+  1 0 0
+ 
+rot2 = rotation  
+  size: 1 x 1
+ 
+  Bunge Euler angles in degree
+  phi1  Phi phi2 Inv.
+   360    0    0    0
+ 
+</pre><p><b>Basic Functions</b></p><pre class="codeinput">angle(rot)
+axis(rot)
+angle(rot, rot2)
+inv(rot)
+[alpha, beta ,gamma] = Euler(rot)</pre><pre class="codeoutput">ans =
+    3.1416
+ 
+ans = vector3d  
+ size: 1 x 1
+  x y z
+  0 0 1
+ans =
+    3.1416
+ 
+ans = rotation  
+  size: 1 x 1
+ 
+  Bunge Euler angles in degree
+  phi1  Phi phi2 Inv.
+   180    0    0    1
+ 
+alpha =
+    3.1416
+beta =
+     0
+gamma =
+     0
+</pre><h2>Crystal and Specimen Symmetries<a name="10"> </a></h2>
+         <p><b>Definition</b></p><pre class="codeinput">S = crystalSymmetry(<span class="string">'triclinic'</span>,[1.1 1.3 2.3],[80 110 120]*degree);
+CS = crystalSymmetry(<span class="string">'-3m'</span>,[2,2,1],<span class="string">'X||a'</span>,<span class="string">'mineral'</span>,<span class="string">'iron'</span>);
+SS = specimenSymmetry (<span class="string">'mmm'</span>);
+
+<span class="comment">% load from a cif file</span>
+CS = loadCIF(<span class="string">'quartz'</span>)</pre><pre class="codeoutput"> 
+CS = crystalSymmetry  
+ 
+  mineral        : Quartz            
+  symmetry       : 321               
+  a, b, c        : 4.9, 4.9, 5.4     
+  reference frame: X||a*, Y||b, Z||c*
+ 
+</pre><p><b>Basic Functions</b></p><pre class="codeinput">symmetrise(xvector,SS)
+symmetrise(rotation(<span class="string">'Euler'</span>,0,0,0),CS,SS)
+rotation(CS)
+[alpha_max,bet_max,gamma_max] = fundamentalRegionEuler(CS,SS)</pre><pre class="codeoutput"> 
+ans = vector3d  
+ size: 2 x 1
+   x  y  z
+   1  0  0
+  -1  0  0
+ 
+ans = rotation  
+  size: 48 x 1
+ 
+ 
+ans = rotation  
+  size: 2 x 3
+ 
+  Bunge Euler angles in degree
+  phi1  Phi phi2 Inv.
+     0    0    0    0
+    15  180   75    0
+   120    0    0    0
+    15  180  195    0
+   240    0    0    0
+    15  180  315    0
+ 
+alpha_max =
+    1.5708
+bet_max =
+    1.5708
+gamma_max =
+    2.0944
+</pre><p><b>plotting</b></p><pre class="codeinput">plot(CS)</pre><img src="GeometryTutorial_02.png"> <pre class="codeinput">close <span class="string">all</span></pre><h2>Crystal directions - the class <b>Miller</b><a name="15"> </a></h2>
+         <p><b>Definition</b></p><pre class="codeinput">h = Miller(v,CS);
+h1 = Miller(1,0,0,CS);
+h2 = [Miller(1,1,-2,3,CS),Miller(0,1,-1,0,CS)]</pre><pre class="codeoutput"> 
+h2 = Miller  
+ size: 1 x 2
+ mineral: Quartz (321, X||a*, Y||b, Z||c*)
+  h  1  0
+  k  1  1
+  i -2 -1
+  l  3  0
+</pre><p><b>Basic Functions</b></p><pre class="codeinput">eq(h1,h2)
+angle(h1,h2,<span class="string">'antipodal'</span>)
+symmetrise(h)
+plot([h1,h2],<span class="string">'all'</span>,<span class="string">'labeled'</span>,<span class="string">'backGroundColor'</span>,<span class="string">'w'</span>)</pre><pre class="codeoutput">ans =
+  1&times;2 logical array
+   0   1
+ans =
+    1.0333         0
+ 
+ans = Miller  
+ size: 6 x 1
+ mineral: Quartz (321, X||a*, Y||b, Z||c*)
+  h  4.2574  4.2574 -4.2574 -4.2574       0       0
+  k       0 -4.2574  4.2574       0 -4.2574  4.2574
+  i -4.2574       0       0  4.2574  4.2574 -4.2574
+  l       0       0       0       0       0       0
+</pre><img src="GeometryTutorial_03.png"> <h2>Orientations<a name="18"> </a></h2>
+         <p><b>Definition</b></p><pre class="codeinput">ori = orientation(rot,CS,SS)
+ori = orientation(<span class="string">'Euler'</span>,alpha,beta,gamma,CS,SS)
+ori = orientation(<span class="string">'brass'</span>,crystalSymmetry(<span class="string">'cubic'</span>))
+ori = orientation(<span class="string">'Miller'</span>,[1 0 0],[1 1 1],CS,SS)</pre><pre class="codeoutput"> 
+ori = orientation  
+  size: 1 x 1
+  crystal symmetry : Quartz (321, X||a*, Y||b, Z||c*)
+  specimen symmetry: mmm
+ 
+  Bunge Euler angles in degree
+  phi1  Phi phi2 Inv.
+   180    0    0    1
+ 
+ 
+ori = orientation  
+  size: 1 x 1
+  crystal symmetry : Quartz (321, X||a*, Y||b, Z||c*)
+  specimen symmetry: mmm
+ 
+  Bunge Euler angles in degree
+  phi1  Phi phi2 Inv.
+   180    0    0    0
+ 
+ 
+ori = orientation  
+  size: 0 x 0
+  crystal symmetry : m-3m
+  specimen symmetry: 1
+ 
+ 
+ori = orientation  
+  size: 1 x 1
+  crystal symmetry : Quartz (321, X||a*, Y||b, Z||c*)
+  specimen symmetry: mmm
+ 
+  Bunge Euler angles in degree
+     phi1     Phi    phi2    Inv.
+  335.547      90      90       0
+ 
+</pre><p><b>Calculations</b></p><pre class="codeinput">r = ori * h
+h = ori \ r
+ori2 = rot * ori</pre><pre class="codeoutput"> 
+r = vector3d  
+ size: 1 x 1
+  x y z
+  0 0 1
+ 
+h = Miller  
+ size: 1 x 1
+ mineral: Quartz (321, X||a*, Y||b, Z||c*)
+  h  4.2574
+  k       0
+  i -4.2574
+  l       0
+ 
+ori2 = orientation  
+  size: 1 x 1
+  crystal symmetry : Quartz (321, X||a*, Y||b, Z||c*)
+  specimen symmetry: mmm
+ 
+  Bunge Euler angles in degree
+     phi1     Phi    phi2    Inv.
+  155.547      90      90       1
+ 
+</pre><p><b>Basic Functions</b></p><pre class="codeinput">eq(ori,ori2)
+angle(ori,ori2)
+symmetrise(ori)
+angle(ori)
+[alpha,beta,gamma]  = Euler(ori)</pre><pre class="codeoutput">ans =
+  logical
+   1
+ans =
+   2.9802e-08
+ 
+ans = orientation  
+  size: 48 x 1
+  crystal symmetry : Quartz (321, X||a*, Y||b, Z||c*)
+  specimen symmetry: mmm
+ 
+ans =
+    1.5731
+alpha =
+    5.8564
+beta =
+    1.5708
+gamma =
+    1.5708
+</pre><p><b>Plotting</b></p><pre class="codeinput">plotPDF([ori,ori2],Miller(1,0,0,CS))</pre><img src="GeometryTutorial_04.png"> <h2>Exercises<a name="23"> </a></h2>
+         <p>1) Consider trigonal crystal symmetry.</p>
+         <p>a) Find all crystallographic directions symmetrically equivalent to h = (1, 0, -1, 0) (Miller indices)!</p><pre class="codeinput">CS = crystalSymmetry(<span class="string">'-3m'</span>)
+h = Miller(1,0,-1,0,CS);
+symmetrise(h)</pre><pre class="codeoutput"> 
+CS = crystalSymmetry  
+ 
+  symmetry       : -3m1              
+  a, b, c        : 1, 1, 1           
+  reference frame: X||a*, Y||b, Z||c*
+ 
+ 
+ans = Miller  
+ size: 6 x 1
+ symmetry: -3m1, X||a*, Y||b, Z||c*
+  h  1  1 -1 -1  0  0
+  k  0 -1  1  0 -1  1
+  i -1  0  0  1  1 -1
+  l  0  0  0  0  0  0
+</pre><p>b) Find crystallographic directions such that the number of their crystallographic equivalent directions on the upper hemisphere
+            (without equator) is 1, 3, or 6 when including antipodal symmetry?
+         </p><pre class="codeinput">h1 = Miller(0,0,0,1,CS);
+h2 = Miller(1,1,-2,1,CS);
+h3 = Miller(1,0,-1,1,CS);
+
+plot([h1 h2 h3],<span class="string">'all'</span>,<span class="string">'antipodal'</span>)</pre><img src="GeometryTutorial_05.png"> <p>c) Consider the orientation given by the Euler angles 30, 90, 90 degree. Give the Euler angles of all symmetrically equivalent
+            orientations!
+         </p><pre class="codeinput">ori = orientation(<span class="string">'Euler'</span>,30*degree,90*degree,90*degree,CS);
+symmetrise(ori)</pre><pre class="codeoutput"> 
+ans = orientation  
+  size: 12 x 1
+  crystal symmetry : -3m1, X||a*, Y||b, Z||c*
+  specimen symmetry: 1
+ 
+  Bunge Euler angles in degree
+  phi1  Phi phi2 Inv.
+    30   90   90    0
+   210   90  150    0
+    30   90  210    0
+   210   90  270    0
+    30   90  330    0
+   210   90   30    0
+    30   90   90    1
+   210   90  150    1
+    30   90  210    1
+   210   90  270    1
+    30   90  330    1
+   210   90   30    1
+ 
+</pre><p>d) Which positions in the (0,0,0,1) - pole figure correspond to above defined orientation. Which crystal direction is rotated
+            by this orientation to the specimen direction (0,0,1)?
+         </p><pre class="codeinput">ori * symmetrise(Miller(0,0,0,1,CS))
+
+ori \ zvector</pre><pre class="codeoutput"> 
+ans = vector3d  
+ size: 1 x 2
+     x         y         z
+   0.5 -0.866025         0
+  -0.5  0.866025         0
+ 
+ans = Miller  
+ size: 1 x 1
+ symmetry: -3m1, X||a*, Y||b, Z||c*
+  h  0.866
+  k      0
+  i -0.866
+  l      0
+</pre><p>e) Construct an orientation that rotates the crystallographic directions <img src="GeometryTutorial_eq09183303272873740347.png">  and <img src="GeometryTutorial_eq15070866154674919182.png">  onto the specimen directions <img src="GeometryTutorial_eq18320652340092986321.png">  and <img src="GeometryTutorial_eq00620558497243822960.png"> , respectively. Check your result and describe the rotation by axis and angle.
+         </p><pre class="codeinput">h1 = Miller(0,0,0,1,CS);
+h2 = Miller(2,-1,-1,0,CS);
+r1 = xvector;
+r2 = yvector;
+
+ori = orientation(<span class="string">'map'</span>,h1,r1,h2,r2,CS)
+
+ori * [h1,h2]</pre><pre class="codeoutput"> 
+ori = orientation  
+  size: 1 x 1
+  crystal symmetry : -3m1, X||a*, Y||b, Z||c*
+  specimen symmetry: 1
+ 
+  Bunge Euler angles in degree
+  phi1  Phi phi2 Inv.
+    90   90   30    0
+ 
+ 
+ans = vector3d  
+ size: 1 x 2
+  x y z
+  1 0 0
+  0 2 0
+</pre><p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

@@ -1,0 +1,154 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>Importing and Exporting ODF Data (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: ODFImportExport -->
+      <!-- HEADSTUFF: ODFImportExport -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:ODFImportExport">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div class="myheader">
+         <table border="0" width="100%" cellpadding="10" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="left" style="color:white"><a style="color:white" href="matlab:edit ODFImportExport">Open Matlab File in the Editor</a></td>
+               <td valign="baseline" align="right" style="color:white"><a style="color:white" href="mtex_product_page.html">MTEX</a></td>
+            </tr>
+         </table>
+      </div>
+      <div class="content">
+         <h1 class="refname">Importing and Exporting ODF Data</h1>
+         <div class="subheading">
+            <p>Explains how to read and write ODFs to a data file</p>
+         </div>
+         <div>
+            <table class="content">
+               <tr>
+                  <td class="header">On this page ...</td>
+               </tr>
+               <tr>
+                  <td><a href="#4">Define an Model ODF</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#5">Save as .mat file</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#7">Export as an generic ASCII file</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#9">Export an ODF to an MTEX ASCII File</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#10">Export to VPSC format</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#11">Import ODF Data using the import wizard</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#13">Importing EBSD data using the method loadODF</a></td>
+               </tr>
+            </table>
+         </div>
+         <p>MTEX support the following formats for storing and importing of ODFs:</p>
+         <div>
+            <ul type="square">
+               <li>.mat file - lossless, specific for MTEX, binary format</li>
+               <li>MTEX file - lossless, specific for MTEX, ASCII format</li>
+               <li>VPSC file - not lossless, ASCII format</li>
+               <li>.txt file - not lossless, ASCII format</li>
+            </ul>
+         </div>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Define an Model ODF<a name="4"> </a></h2>
+         <p>We will demonstrate the the import and export of ODFs at the following sample ODF which is defined as the superposition of
+            several model ODFs.
+         </p><pre class="codeinput">cs = crystalSymmetry(<span class="string">'cubic'</span>);
+mod1 = orientation(<span class="string">'axis'</span>,xvector,<span class="string">'angle'</span>,45*degree,cs);
+mod2 = orientation(<span class="string">'axis'</span>,yvector,<span class="string">'angle'</span>,65*degree,cs);
+model_odf = 0.5*uniformODF(cs) + <span class="keyword">...</span>
+  0.05*fibreODF(Miller(1,0,0,cs),xvector,<span class="string">'halfwidth'</span>,10*degree) + <span class="keyword">...</span>
+  0.05*fibreODF(Miller(0,1,0,cs),yvector,<span class="string">'halfwidth'</span>,10*degree) + <span class="keyword">...</span>
+  0.05*fibreODF(Miller(0,0,1,cs),zvector,<span class="string">'halfwidth'</span>,10*degree) + <span class="keyword">...</span>
+  0.05*unimodalODF(mod1,<span class="string">'halfwidth'</span>,15*degree) + <span class="keyword">...</span>
+  0.3*unimodalODF(mod2,<span class="string">'halfwidth'</span>,25*degree);
+plot(model_odf,<span class="string">'sections'</span>,6,<span class="string">'silent'</span>)</pre><img src="ODFImportExport_01.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Save as .mat file<a name="5"> </a></h2>
+         <p>The most simplest way to store an ODF is to store the corresponding variable odf as any other MATLAB variable.</p><pre class="codeinput"><span class="comment">% the filename</span>
+fname = fullfile(mtexDataPath, <span class="string">'ODF'</span>, <span class="string">'odf.mat'</span>);
+save(fname,<span class="string">'model_odf'</span>)</pre><p>Importing a .mat file is done simply by</p><pre class="codeinput">load(fname)</pre><p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Export as an generic ASCII file<a name="7"> </a></h2>
+         <p>By default and ODF is exported in an ASCII file which consists of a large table with four columns, where the first three column
+            describe the Euler angles of a regular 5� grid in the orientation space and the fourth column contains the value of the ODF
+            at this specific position.
+         </p><pre class="codeinput"><span class="comment">% the filename</span>
+fname = fullfile(mtexDataPath, <span class="string">'ODF'</span>, <span class="string">'odf.txt'</span>);
+
+<span class="comment">% export the ODF</span>
+export(model_odf,fname,<span class="string">'Bunge'</span>)</pre><p>Other Euler angle conventions or other resolutions can by specified by options to <a href="ODF.export.html">export</a>. Even more control you have, if you specify the grid in the orientation space directly.
+         </p><pre class="codeinput"><span class="comment">% define a equispaced grid in orientation space with resolution of 5 degree</span>
+S3G = equispacedSO3Grid(cs,<span class="string">'resolution'</span>,5*degree);
+
+<span class="comment">% export the ODF by values at these locations</span>
+export(model_odf,fname,S3G,<span class="string">'Bunge'</span>,<span class="string">'generic'</span>)</pre><p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Export an ODF to an MTEX ASCII File<a name="9"> </a></h2>
+         <p>Using the options <b>MTEX</b> the ODF is exported to an ASCII file which contains descriptions of all components of the ODF in a human readable fassion.
+            This format can be imported by MTEX without loss.
+         </p><pre class="codeinput"><span class="comment">% the filename</span>
+fname = [mtexDataPath <span class="string">'/ODF/odf.mtex'</span>];
+
+<span class="comment">% export the ODF</span>
+export(model_odf,fname,<span class="string">'Bunge'</span>,<span class="string">'MTEX'</span>)</pre><p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Export to VPSC format<a name="10"> </a></h2>
+         <p>TODO!!!</p>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Import ODF Data using the import wizard<a name="11"> </a></h2>
+         <p>Importing ODF data into MTEX means to create an ODF variable from data files containing Euler angles and weights. Once such
+            an variable has been created the data can be analyzed and processed in many ways. See e.g. <a href="ODFCalculations.html">ODFCalculations</a>. The most simplest way to import ODF data is to use the import wizard, which can be started either by typing into the command
+            line
+         </p><pre class="codeinput">import_wizard(<span class="string">'ODF'</span>)</pre><img src="ODFImportExport_02.png"> <p>or using from the start menu the item Start/Toolboxes/MTEX/Import Wizard. The import wizard provides a gui to import data
+            of almost all ASCII data formats and allows to save the imported data as an ODF variable to the workspace or to generate a
+            m-file loading the data automatically.
+         </p>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Importing EBSD data using the method loadODF<a name="13"> </a></h2>
+         <p>A script generated by the import wizard typically look as follows.</p><pre class="codeinput"><span class="comment">% define crystal and specimen symmetry</span>
+cs = crystalSymmetry(<span class="string">'cubic'</span>);
+
+<span class="comment">% the file name</span>
+fname = [mtexDataPath <span class="string">'/ODF/odf.txt'</span>];
+
+<span class="comment">% TODO: write about halfwidth and the missing 1-1 relationship between ODF</span>
+<span class="comment">% and single orientations.</span>
+<span class="comment">% the resolution used for the reconstruction of the ODF</span>
+res = 10*degree;
+
+<span class="comment">% load the data</span>
+odf = loadODF(fname,cs,<span class="string">'resolution'</span>,res,<span class="string">'Bunge'</span>,<span class="keyword">...</span>
+  <span class="string">'ColumnNames'</span>,{<span class="string">'Euler 1'</span>,<span class="string">'Euler 2'</span>,<span class="string">'Euler 3'</span>,<span class="string">'weights'</span>});
+
+<span class="comment">% plot data</span>
+plot(odf,<span class="string">'sections'</span>,6,<span class="string">'silent'</span>)</pre><pre class="codeoutput">  Interpolating the ODF. This might take some time...
+progress: 100%
+</pre><img src="ODFImportExport_03.png"> <p>So far ODFs may only exported from and imported into ASCII files that consists of a table of orientations and weights. The
+            orientations may be given either as Euler angles or as quaternions. The weight may either represent the value of the ODF at
+            this specific orientation or it may represent the volume of a bell shaped function centered at this orientation.
+         </p>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

@@ -1,0 +1,456 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>First Steps and Function Overview (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: GrainReconstructionDemo -->
+      <!-- HEADSTUFF: GrainReconstructionDemo -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:GrainReconstructionDemo">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div>
+         <table class="nav" summary="Navigation aid" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline"><b>MTEX</b> - A MATLAB Toolbox for Quantitative Texture Analysis</td>
+            </tr>
+         </table>
+         <p style="font-size:1px;"></p>
+      </div>
+      <div class="content">
+         <h1 class="refname">First Steps and Function Overview</h1>
+         <div class="subheading">
+            <p>Get in touch with grains.</p>
+         </div>
+         <h2>Grain reconstruction from EBSD data<a name="1"> </a></h2>
+         <p>So far grains can be exclusively computed from EBSD data using the command <a href="EBSD_calcGrains.html">calcGrains</a>. In order to demonstrate grain reconstruction we import some EBSD data
+         </p><pre class="codeinput">mtexdata <span class="string">forsterite</span>
+plotx2east
+
+<span class="comment">% plot the Forsterite phase colorized according to orientation</span>
+plot(ebsd(<span class="string">'fo'</span>),ebsd(<span class="string">'fo'</span>).orientations)</pre><img src="GrainReconstructionDemo_01.png"> <p>When reconstructing grain there are two basic ways how to deal with not indexed measurements. The simplest way is to keep
+            the not indexed pixels separately, i.e., do not assign them to any indexed grain.
+         </p><pre class="codeinput">[grains, ebsd.grainId] = calcGrains(ebsd,<span class="string">'angle'</span>,5*degree)</pre><pre class="codeoutput"> 
+grains = grain2d  
+ 
+ Phase  Grains  Pixels     Mineral  Symmetry  Crystal reference frame
+     0   16334   58485  notIndexed                                   
+     1    4331  152345  Forsterite       mmm                         
+     2    1866   26058   Enstatite       mmm                         
+     3    2012    9064    Diopside     12/m1       X||a*, Y||b*, Z||c
+ 
+ boundary segments: 148741
+ triple points: 12065
+ 
+ Properties: GOS, meanRotation
+ 
+ 
+ebsd = EBSD  
+ 
+ Phase  Orientations     Mineral        Color  Symmetry  Crystal reference frame
+     0   58485 (24%)  notIndexed                                                
+     1  152345 (62%)  Forsterite   light blue       mmm                         
+     2   26058 (11%)   Enstatite  light green       mmm                         
+     3   9064 (3.7%)    Diopside    light red     12/m1       X||a*, Y||b*, Z||c
+ 
+ Properties: bands, bc, bs, error, mad, x, y, grainId
+ Scan unit : um
+ 
+</pre><p>We observe that there are not only grains of specific phases but also not indexed grains. Let's add the grain boundaries to
+            the previous plot.
+         </p><pre class="codeinput">hold <span class="string">on</span>
+plot(grains.boundary)
+hold <span class="string">off</span></pre><img src="GrainReconstructionDemo_02.png"> <p>The resulting grains contain a lot of holes and one-pixel grains. The second way is to assign not indexed pixels to surrounding
+            grains. In MTEX this is done if the not indexed data are removed from the measurements, i.e.
+         </p><pre class="codeinput">ebsd = ebsd(<span class="string">'indexed'</span>) <span class="comment">% this removes all not indexed data</span>
+[grains, ebsd.grainId] = calcGrains(ebsd,<span class="string">'angle'</span>,5*degree)</pre><pre class="codeoutput"> 
+ebsd = EBSD  
+ 
+ Phase  Orientations     Mineral        Color  Symmetry  Crystal reference frame
+     1  152345 (81%)  Forsterite   light blue       mmm                         
+     2   26058 (14%)   Enstatite  light green       mmm                         
+     3   9064 (4.8%)    Diopside    light red     12/m1       X||a*, Y||b*, Z||c
+ 
+ Properties: bands, bc, bs, error, mad, x, y, grainId
+ Scan unit : um
+ 
+ 
+grains = grain2d  
+ 
+ Phase  Grains  Pixels     Mineral  Symmetry  Crystal reference frame
+     1    1256  152345  Forsterite       mmm                         
+     2     518   26058   Enstatite       mmm                         
+     3    1526    9064    Diopside     12/m1       X||a*, Y||b*, Z||c
+ 
+ boundary segments: 45832
+ triple points: 3863
+ 
+ Properties: GOS, meanRotation
+ 
+ 
+ebsd = EBSD  
+ 
+ Phase  Orientations     Mineral        Color  Symmetry  Crystal reference frame
+     1  152345 (81%)  Forsterite   light blue       mmm                         
+     2   26058 (14%)   Enstatite  light green       mmm                         
+     3   9064 (4.8%)    Diopside    light red     12/m1       X||a*, Y||b*, Z||c
+ 
+ Properties: bands, bc, bs, error, mad, x, y, grainId
+ Scan unit : um
+ 
+</pre><p>Now, there are no not indexed grains computed. Let's visualize the result</p><pre class="codeinput"><span class="comment">% plot the orientation data of the Forsterite phase</span>
+plot(ebsd(<span class="string">'fo'</span>),ebsd(<span class="string">'fo'</span>).orientations)
+
+<span class="comment">% plot the grain boundary on top of it</span>
+hold <span class="string">on</span>
+plot(grains.boundary)
+hold <span class="string">off</span></pre><img src="GrainReconstructionDemo_03.png"> <p>A more detailed discussion on grain reconstruction in MTEX can be found <a href="GrainReconstruction.html">here</a></p>
+         <h2>Smoothing grain boundaries<a name="7"> </a></h2>
+         <p>Due to the measurement grid, the grain boundaries often show a typical staircase effect. This effect can be reduced by smoothing
+            the grain boundaries. Using the command <a href="grain2d.smooth.html">smooth</a>.
+         </p><pre class="codeinput"><span class="comment">% smooth the grains</span>
+grains = smooth(grains);
+
+<span class="comment">% plot the orientation data of the Forsterite phase</span>
+plot(ebsd(<span class="string">'fo'</span>),ebsd(<span class="string">'fo'</span>).orientations)
+
+<span class="comment">% plot the grain boundary on top of it</span>
+hold <span class="string">on</span>
+plot(grains.boundary)
+hold <span class="string">off</span></pre><img src="GrainReconstructionDemo_04.png"> <h2>Grain properties<a name="8"> </a></h2>
+         <p>Grains are stored as a long list of several properties. Please find below a table of most of the properties that are stored
+            or can be computed for grains
+         </p>
+         <p>
+            <table class="usertable">
+            <tr>
+            <td>
+            <p>
+            <a href="grain2d.area.html">
+            <b>grains.area</b>
+            </a>
+            </p>
+            </td>
+            <td>
+            <p>grain area in square <a href="grain2d.index.html">grains.scanUnit</a>
+            </p>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <p>
+            <a href="grain2d.aspectRatio.html">
+            <b>grains.aspectRatio</b>
+            </a>
+            </p>
+            </td>
+            <td>
+            <p>grain length / grain width</p>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <p>
+            <a href="grainBoundary.html">
+            <b>grains.boundary</b>
+            </a>
+            </p>
+            </td>
+            <td>
+            <p>list of boundary segments</p>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <p>
+            <a href="grain2d.boundarySize.html">
+            <b>grains.boundarySize</b>
+            </a>
+            </p>
+            </td>
+            <td>
+            <p>number of boundary segments</p>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <p>
+            <a href="grain2d.calcParis.html">
+            <b>grains.calcParis</b>
+            </a>
+            </p>
+            </td>
+            <td>
+            <p>area difference between grain and its convex hull</p>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <p>
+            <a href="grain2d.centroid.html">
+            <b>grains.centroid</b>
+            </a>
+            </p>
+            </td>
+            <td>
+            <p>x,y coordinates of the barycenter of the grain</p>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <p>
+            <b>grains.CS</b>
+            </p>
+            </td>
+            <td>
+            <p>crystal symmetry (single phase only)</p>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <p>
+            <a href="grain2d.diameter.html">
+            <b>grains.diameter</b>
+            </a>
+            </p>
+            </td>
+            <td>
+            <p>diameter in <a href="grain2d.index.html">grains.scanUnit</a>
+            </p>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <p>
+            <a href="grain2d.equivalentPerimeter.html">
+            <b>grains.equivalentPerimeter</b>
+            </a>
+            </p>
+            </td>
+            <td>
+            <p>the perimeter of the fitted ellipse</p>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <p>
+            <a href="grain2d.equivalentRadius.html">
+            <b>grains.equivalentRadius</b>
+            </a>
+            </p>
+            </td>
+            <td>
+            <p>the radius of the fitted ellipse</p>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <p>
+            <b>grains.GOS</b>
+            </p>
+            </td>
+            <td>
+            <p>grain orientation spread</p>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <p>
+            <b>grains.grainSize</b>
+            </p>
+            </td>
+            <td>
+            <p>number of measurements per grain</p>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <p>
+            <a href="grain2d.hasHole.html">
+            <b>grains.hasHole</b>
+            </a>
+            </p>
+            </td>
+            <td>
+            <p>check for inclusions</p>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <p>
+            <b>grains.id</b>
+            </p>
+            </td>
+            <td>
+            <p>grain id</p>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <p>
+            <a href="grainBoundary.html">
+            <b>grains.innBoundary</b>
+            </a>
+            </p>
+            </td>
+            <td>
+            <p>list of inner boundary segments</p>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <p>
+            <b>grains.meanOrientation</b>
+            </p>
+            </td>
+            <td>
+            <p>meanOrientation (single phase only)</p>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <p>
+            <b>grains.mineral</b>
+            </p>
+            </td>
+            <td>
+            <p>mineral name (single phase only)</p>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <p>
+            <a href="grain2d.neigbours.html">
+            <b>grains.neighbours</b>
+            </a>
+            </p>
+            </td>
+            <td>
+            <p>number and ids of neighboring grains</p>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <p>
+            <b>grains.phase</b>
+            </p>
+            </td>
+            <td>
+            <p>phase identifier</p>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <p>
+            <a href="grain2d.perimeter.html">
+            <b>grains.perimeter</b>
+            </a>
+            </p>
+            </td>
+            <td>
+            <p>perimeter in <a href="grain2d.index.html">grains.scanUnit</a>
+            </p>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <p>
+            <a href="grain2d.principalComponents.html">
+            <b>grains.principalComponents</b>
+            </a>
+            </p>
+            </td>
+            <td>
+            <p>length and width of the fitted ellipse</p>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <p>
+            <a href="grain2d.shapeFactor.html">
+            <b>grains.shapeFactor</b>
+            </a>
+            </p>
+            </td>
+            <td>
+            <p>quotient perimeter / perimeter of the fitted ellipse</p>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <p>
+            <a href="triplePoints.html">
+            <b>grains.triplePoints</b>
+            </a>
+            </p>
+            </td>
+            <td>
+            <p>list of  triple points</p>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <p>
+            <b>grains.x</b>
+            </p>
+            </td>
+            <td>
+            <p>x coordinates of the vertices</p>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <p>
+            <b>grains.y</b>
+            </p>
+            </td>
+            <td>
+            <p>y coordinates of the vertices</p>
+            </td>
+            </tr>
+            </table>
+            
+         </p>
+         <p>Those grain properties can be used for colorization. E.g. we may colorize grains according to their area.</p><pre class="codeinput">plot(grains,grains.area)</pre><img src="GrainReconstructionDemo_05.png"> <p>or a little bit more advanced according to the log quotient between grain size and boundary size.</p><pre class="codeinput">plot(grains,log(grains.grainSize ./ grains.boundarySize))
+mtexColorbar</pre><img src="GrainReconstructionDemo_06.png"> <p>Note that some properties are available for single phase lists of grains, e.g.</p><pre class="codeinput"><span class="comment">% colorize the Forsterite Phase according to its mean orientation</span>
+plot(grains(<span class="string">'Fo'</span>),grains(<span class="string">'Fo'</span>).meanOrientation)</pre><pre class="codeoutput">  I'm going to colorize the orientation data with the 
+  standard MTEX colorkey. To view the colorkey do:
+ 
+  oM = ipfColorKey(ori_variable_name)
+  plot(oM)
+</pre><img src="GrainReconstructionDemo_07.png"> <h2>Changing lists of grains<a name="12"> </a></h2>
+         <p>As with any list in MTEX, one can single out specific grains by conditions using the syntax</p><pre class="codeinput"><span class="comment">% this gives all grains with more the 1000 pixels</span>
+largeGrains = grains(grains.grainSize &gt; 1000)
+
+hold <span class="string">on</span>
+<span class="comment">% mark only large Forsterite grains</span>
+plot(largeGrains(<span class="string">'Fo'</span>).boundary,<span class="string">'linewidth'</span>,2,<span class="string">'linecolor'</span>,<span class="string">'k'</span>)
+hold <span class="string">off</span></pre><pre class="codeoutput"> 
+largeGrains = grain2d  
+ 
+ Phase  Grains  Pixels     Mineral  Symmetry  Crystal reference frame
+     1      37   58902  Forsterite       mmm                         
+     2       1    1038   Enstatite       mmm                         
+ 
+ boundary segments: 10886
+ triple points: 816
+ 
+ Properties: GOS, meanRotation
+ 
+</pre><img src="GrainReconstructionDemo_08.png"> <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

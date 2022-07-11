@@ -1,0 +1,113 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>Aligning EBSD data to a reference frame (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: AliginingEBSDData -->
+      <!-- HEADSTUFF: AliginingEBSDData -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:AliginingEBSDData">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div class="myheader">
+         <table border="0" width="100%" cellpadding="10" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="left" style="color:white"><a style="color:white" href="matlab:edit AliginingEBSDData">Open Matlab File in the Editor</a></td>
+               <td valign="baseline" align="right" style="color:white"><a style="color:white" href="mtex_product_page.html">MTEX</a></td>
+            </tr>
+         </table>
+      </div>
+      <div class="content">
+         <h1 class="refname">Aligning EBSD data to a reference frame</h1>
+         <div class="subheading">
+            <p>How to align EBSD correctly to certain reference frames</p>
+         </div>
+         <p>This article discusses how</p>
+         <div>
+            <table class="content">
+               <tr>
+                  <td class="header">On this page ...</td>
+               </tr>
+               <tr>
+                  <td><a href="#6">Altering the graphical output</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#9">Rotatating the data - realigning the reference frame</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#12">Correcting for different reference frames in spatial data and Euler angles</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#14">Correcting HKL and CTF files</a></td>
+               </tr>
+            </table>
+         </div>
+         <p>First, let us import some example <a href="mtexdata.html">EBSD data</a> and plot the raw data
+         </p><pre class="codeinput">mtexdata <span class="string">forsterite</span>;
+
+plotx2east; plotzOutOfPlane
+plot(ebsd)</pre><img src="AliginingEBSDData_01.png"> <p>as well as some pole figure data</p><pre class="codeinput">close <span class="string">all</span>
+CS = ebsd(<span class="string">'forsterite'</span>).CS;
+plotPDF(ebsd(<span class="string">'forsterite'</span>).orientations,Miller(1,2,3,CS),<span class="string">'contourf'</span>)</pre><img src="AliginingEBSDData_02.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Altering the graphical output<a name="6"> </a></h2>
+         <p>If you are unsatisfied with the orientation of your EBSD map in the graphical output this might be simply because the alignment
+            of the reference frame of your data on your plot is not correct. In the above pictures the x-axis is plotted to east and the
+            z-axis is plotted out of plane. Assume you want to change this to z-axis into plane you need to do
+         </p><pre class="codeinput">plotzIntoPlane;
+plot(ebsd)</pre><img src="AliginingEBSDData_03.png"> <p>Observe, how the y-axis is inverted but the x-axis is still plotted in east direction. This change of the alignment of the
+            reference frame does not only effect spatial EBSD plots but also all pole figure plots.
+         </p><pre class="codeinput">plotPDF(ebsd(<span class="string">'fo'</span>).orientations,Miller(1,2,3,CS),<span class="string">'contourf'</span>)</pre><img src="AliginingEBSDData_04.png"> <p>However, by changing the alignment of the reference frame in the graphical output non of the imported spatial coordinats nor
+            the Euler angles are changed. In particular any estimated ODF is not effected by those changes of the alignment of the reference
+            frame in the plots.
+         </p>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Rotatating the data - realigning the reference frame<a name="9"> </a></h2>
+         <p>Sometimes it is necessary to relate the EBSD data to a different external reference frame, or to  change the external reference
+            frame from one to the other, e.g. if one wants to concatenate several ebsd data sets where the mounting was not done in perfect
+            coincidence. In these cases the data has to be rotated or shifted by the commands <a href="EBSD.rotate.html">rotate</a> and <a href="EBSD.shift.html">shift</a>. The following commands rotate the reference frame of the entire data set by 5 degree about the z-axis.
+         </p><pre class="codeinput"><span class="comment">% define a rotation</span>
+rot = rotation(<span class="string">'axis'</span>,zvector,<span class="string">'angle'</span>,5*degree);
+
+<span class="comment">% rotate the EBSD data</span>
+ebsd_rot = rotate(ebsd,rot);
+
+<span class="comment">% plot the rotated EBSD data</span>
+plot(ebsd_rot)</pre><img src="AliginingEBSDData_05.png"> <p>It should be stressed that this rotation on does not only effect the spatial data, i.e. the x, y values, but also the Euler
+            angles are rotated accordingly.
+         </p><pre class="codeinput">plotPDF(ebsd_rot(<span class="string">'fo'</span>).orientations,Miller(1,2,3,CS),<span class="string">'contourf'</span>)</pre><img src="AliginingEBSDData_06.png"> <h3 class="seealso">See also</h3>
+         <p><a href="EBSD.rotate.html">EBSD/rotate</a>, <a href="EBSD.shift.html">EBSD/shift</a>, <a href="EBSD.affinetrans.html">EBSD/affinetrans</a></p>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Correcting for different reference frames in spatial data and Euler angles<a name="12"> </a></h2>
+         <p>Sometimes the imported spatial data and the imported Euler angles do not coresspond to the same reference frame. Since MTEX
+            always assumes these reference frames to be the same it might be neccessary to correct for this misalignment. This can be
+            done by rotating the spatial data or the Euler angles seperately using the options <tt>keepXY</tt> or <tt>keepEuler</tt>. E.g. the following command only effect the spatial coordinates but not the Euler angles
+         </p><pre class="codeinput"><span class="comment">% rotate the EBSD data</span>
+ebsd_rot = rotate(ebsd,rot,<span class="string">'keepEuler'</span>);
+
+<span class="comment">% plot the rotated EBSD data</span>
+plot(ebsd_rot)</pre><img src="AliginingEBSDData_07.png"> <p>The pole figure remains unchanged:</p><pre class="codeinput">plotPDF(ebsd_rot(<span class="string">'forsterite'</span>).orientations,Miller(1,2,3,CS),<span class="string">'contourf'</span>)</pre><img src="AliginingEBSDData_08.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Correcting HKL and CTF files<a name="14"> </a></h2>
+         <p>Both *.ctf and *.ang data files are known to use different reference frames for spatial data and Euler angles. To corrrect
+            for misalignment the interface supports the options <tt>convertSpatial2EulerReferenceFrame</tt> and <tt>convertEuler2SpatialReferenceFrame</tt>, e.g.,
+         </p><pre class="codeinput">loadEBSD(<span class="string">'fname.ang'</span>,<span class="string">'convertSpatial2EulerReferenceFrame'</span>)
+loadEBSD(<span class="string">'fname.ang'</span>,<span class="string">'convertEuler2SpatialReferenceFrame'</span>)</pre><p>In the first case the spatial data are changed such that the Euler angles referene frame coincides with the spatial reference
+            frame and in the second case the Euler angles are altered to get coincidence.
+         </p><pre class="codeinput"><span class="comment">% revert z-axis convention</span>
+plotzOutOfPlane;</pre><p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

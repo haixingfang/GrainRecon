@@ -1,0 +1,102 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>MTEX - Analysing Neutron Pole Figures (Dubna) (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: dubna_demo -->
+      <!-- HEADSTUFF: dubna_demo -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:dubna_demo">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div class="myheader">
+         <table border="0" width="100%" cellpadding="10" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="left" style="color:white"><a style="color:white" href="matlab:edit dubna_demo">Open Matlab File in the Editor</a></td>
+               <td valign="baseline" align="right" style="color:white"><a style="color:white" href="mtex_product_page.html">MTEX</a></td>
+            </tr>
+         </table>
+      </div>
+      <div class="content">
+         <h1 class="refname">MTEX - Analysing Neutron Pole Figures (Dubna)</h1>
+         <div class="subheading">
+            <p>Detailed demonstration of the MTEX toolbox at the Dubna data example.</p>
+            <p>The data where meassured by Florian Wobbe at Dubna 2005 of a Quarz specimen using Neutron diffraction.</p>
+         </div>
+         <h2>Import diffraction data<a name="2"> </a></h2><pre class="codeinput"><span class="comment">% specify scrystal and specimen symmetry</span>
+cs = crystalSymmetry(<span class="string">'-3m'</span>,[1.4,1.4,1.5]);
+
+<span class="comment">% specify file names</span>
+fname = {<span class="keyword">...</span>
+  fullfile(mtexDataPath,<span class="string">'PoleFigure'</span>,<span class="string">'dubna'</span>, <span class="string">'Q(10-10)_amp.cnv'</span>),<span class="keyword">...</span>
+  fullfile(mtexDataPath,<span class="string">'PoleFigure'</span>,<span class="string">'dubna'</span>,<span class="string">'Q(10-11)(01-11)_amp.cnv'</span>),<span class="keyword">...</span>
+  fullfile(mtexDataPath,<span class="string">'PoleFigure'</span>,<span class="string">'dubna'</span>,<span class="string">'Q(11-22)_amp.cnv'</span>)};
+
+<span class="comment">% specify crystal directions</span>
+h = {Miller(1,0,-1,0,cs),[Miller(0,1,-1,1,cs),Miller(1,0,-1,1,cs)],Miller(1,1,-2,2,cs)};
+
+<span class="comment">% specify structure coefficients</span>
+c = {1,[0.52 ,1.23],1};
+
+<span class="comment">% import pole figure data</span>
+pf = loadPoleFigure(fname,h,cs,<span class="string">'superposition'</span>,c)</pre><pre class="codeoutput"> 
+pf = PoleFigure  
+  crystal symmetry : -3m1, X||a*, Y||b, Z||c*
+  specimen symmetry: 1
+ 
+  h = (10-10), r = 72 x 19 points
+  h = (01-11)(10-11), r = 72 x 19 points
+  h = (11-22), r = 72 x 19 points
+</pre><h2>plot pole figures<a name="3"> </a></h2><pre class="codeinput">plot(pf)</pre><img src="dubna_demo_01.png"> <h2>Correct pole figures<a name="4"> </a></h2><pre class="codeinput">pf_corrected = pf(pf.r.theta &lt; 70*degree | pf.r.theta &gt; 75*degree);
+
+plot(pf_corrected)</pre><img src="dubna_demo_02.png"> <h2>Rotate pole figures<a name="5"> </a></h2><pre class="codeinput">pf_rotated = rotate(pf_corrected,axis2quat(xvector,45*degree));
+plot(pf_rotated,<span class="string">'antipodal'</span>)</pre><img src="dubna_demo_03.png"> <h2>Recalculate ODF<a name="6"> </a></h2>
+         <p>We use here the option 'background' to specify the approximative background radiation and to increase the accuracy of the
+            reconstruction. Furthermore, we have seen from the pole figures that the ODF is quit sharp and hence using the zero range
+            method reduces the computational time.
+         </p><pre class="codeinput">odf = calcODF(pf_corrected,<span class="string">'background'</span>,10,<span class="string">'zero_range'</span>)</pre><pre class="codeoutput"> 
+odf = ODF  
+  crystal symmetry : -3m1, X||a*, Y||b, Z||c*
+  specimen symmetry: 1
+ 
+  Radially symmetric portion:
+    kernel: de la Vallee Poussin, halfwidth 5&deg;
+    center: 19826 orientations, resolution: 5&deg;
+    weight: 1
+ 
+</pre><h2>Error analysis<a name="7"> </a></h2><pre class="codeinput"><span class="comment">% calc RP1 error</span>
+calcError(pf_corrected,odf,<span class="string">'RP'</span>,1)
+
+<span class="comment">% difference plot</span>
+plotDiff(pf,odf)
+
+mtexColorbar</pre><pre class="codeoutput">progress: 100%
+ans =
+    0.5662    0.2671    0.3072
+progress: 100%
+</pre><img src="dubna_demo_04.png"> <h2>Recalculate c-axis pole figures<a name="8"> </a></h2><pre class="codeinput">plotPDF(odf,Miller(0,0,1,cs),<span class="string">'antipodal'</span>)</pre><img src="dubna_demo_05.png"> <h2>Plot inverse pole figure<a name="9"> </a></h2><pre class="codeinput">plotIPDF(odf,vector3d(1,1,2))</pre><img src="dubna_demo_06.png"> <h2>plot recalculated ODF<a name="10"> </a></h2><pre class="codeinput">plot(odf,<span class="string">'sections'</span>,6,<span class="string">'silent'</span>,<span class="string">'sigma'</span>)</pre><pre class="codeoutput">progress: 100%
+</pre><img src="dubna_demo_07.png"> <h2>rotate ODF back<a name="11"> </a></h2><pre class="codeinput">odfrotated = rotate(odf,axis2quat(xvector,45*degree));
+plot(odfrotated,<span class="string">'sections'</span>,8,<span class="string">'sigma'</span>);
+annotate(calcModes(odfrotated),<span class="string">'marker'</span>,<span class="string">'o'</span>,<span class="keyword">...</span>
+  <span class="string">'MarkerFaceColor'</span>,<span class="string">'none'</span>,<span class="string">'MarkerEdgeColor'</span>,<span class="string">'k'</span>);</pre><pre class="codeoutput">progress: 100%
+progress: 100%
+</pre><img src="dubna_demo_08.png"> <h2>volume analysis<a name="12"> </a></h2><pre class="codeinput">volume(odf,calcModes(odf),20*degree)</pre><pre class="codeoutput">progress: 100%
+ans =
+    0.3355
+</pre><p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

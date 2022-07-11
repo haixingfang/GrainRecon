@@ -1,0 +1,185 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>Triple points (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: TriplePoints -->
+      <!-- HEADSTUFF: TriplePoints -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:TriplePoints">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div class="myheader">
+         <table border="0" width="100%" cellpadding="10" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="left" style="color:white"><a style="color:white" href="matlab:edit TriplePoints">Open Matlab File in the Editor</a></td>
+               <td valign="baseline" align="right" style="color:white"><a style="color:white" href="mtex_product_page.html">MTEX</a></td>
+            </tr>
+         </table>
+      </div>
+      <div class="content">
+         <h1 class="refname">Triple points</h1>
+         <div class="subheading">
+            <p>how to detect triple points</p>
+         </div>
+         <div>
+            <table class="content">
+               <tr>
+                  <td class="header">On this page ...</td>
+               </tr>
+               <tr>
+                  <td><a href="#3">Calculation of triple points</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#4">Index triple points by phase</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#7">Index triple points by grains</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#8">Index triple points by grain boundary</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#9">Boundary segments from triple points</a></td>
+               </tr>
+            </table>
+         </div>
+         <h2>Calculation of triple points<a name="3"> </a></h2>
+         <p>MTEX automatically computes triple points during grain reconstruction. They are acessable similarly to <a href="BoundaryAnalysis.html">grain boundaries</a> as an property of the grain list.
+         </p><pre class="codeinput"><span class="comment">% import some EBSD data set</span>
+mtexdata <span class="string">small</span>
+
+<span class="comment">% compute grains</span>
+grains = calcGrains(ebsd(<span class="string">'indexed'</span>));
+
+<span class="comment">% extract all triple points</span>
+tP = grains.triplePoints</pre><pre class="codeoutput"> 
+tP = triplePointList  
+ 
+ points   mineral 1   mineral 2   mineral 2
+     15  Forsterite  Forsterite  Forsterite
+      7  Forsterite  Forsterite   Enstatite
+      4  Forsterite   Enstatite   Enstatite
+      8  Forsterite  Forsterite    Diopside
+     16  Forsterite   Enstatite    Diopside
+      4  Forsterite    Diopside    Diopside
+      2   Enstatite   Enstatite    Diopside
+      1   Enstatite    Diopside    Diopside
+     11    Diopside    Diopside    Diopside
+</pre><p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Index triple points by phase<a name="4"> </a></h2>
+         <p>You may index triple points by the adjacent phases. The following command gives you all triple points with at least one phase
+            being Forsterite
+         </p><pre class="codeinput">tP(<span class="string">'Forsterite'</span>)</pre><pre class="codeoutput"> 
+ans = triplePointList  
+ 
+ points   mineral 1   mineral 2   mineral 2
+     15  Forsterite  Forsterite  Forsterite
+      7  Forsterite  Forsterite   Enstatite
+      4  Forsterite   Enstatite   Enstatite
+      8  Forsterite  Forsterite    Diopside
+     16  Forsterite   Enstatite    Diopside
+      4  Forsterite    Diopside    Diopside
+</pre><p>The following command gives you all triple points with at least two phases being Forsterite</p><pre class="codeinput">tP(<span class="string">'Forsterite'</span>,<span class="string">'Forsterite'</span>)</pre><pre class="codeoutput"> 
+ans = triplePointList  
+ 
+ points   mineral 1   mineral 2   mineral 2
+     15  Forsterite  Forsterite  Forsterite
+      7  Forsterite  Forsterite   Enstatite
+      8  Forsterite  Forsterite    Diopside
+</pre><p>Finaly, we may mark all inner Diopside triple points</p><pre class="codeinput"><span class="comment">% smooth the grains a bit</span>
+grains = smooth(grains,2);
+
+<span class="comment">% and plot them</span>
+plot(grains);
+
+<span class="comment">% on top plot the triple points</span>
+hold <span class="string">on</span>
+plot(tP(<span class="string">'Diopside'</span>,<span class="string">'Diopside'</span>,<span class="string">'Diopside'</span>),<span class="string">'displayName'</span>,<span class="string">'Di-Di-Di'</span>,<span class="string">'color'</span>,<span class="string">'b'</span>)
+hold <span class="string">off</span></pre><img src="TriplePoints_01.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Index triple points by grains<a name="7"> </a></h2>
+         <p>Since, triple points are asociated to grains we may single out triple points that belong to a specific grain or some subset
+            of grains.
+         </p><pre class="codeinput"><span class="comment">% find the index of the largest grain</span>
+[~,id] = max(grains.area);
+
+<span class="comment">% the triple points that belong to the largest grain</span>
+tP = grains(id).triplePoints;
+
+<span class="comment">% plot these triple points</span>
+plot(grains(id),<span class="string">'FaceColor'</span>,[0.2 0.8 0.8],<span class="string">'displayName'</span>,<span class="string">'largest grains'</span>);
+hold <span class="string">on</span>
+plot(grains.boundary)
+plot(tP,<span class="string">'color'</span>,<span class="string">'r'</span>)
+hold <span class="string">off</span></pre><img src="TriplePoints_02.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Index triple points by grain boundary<a name="8"> </a></h2>
+         <p>Triple points are not only a property of grains but also of grain boundaries. Thus we may ask for all triple points that belong
+            to Fosterite - Forsterite boundaries with misorientation angle larger then 60 degree
+         </p><pre class="codeinput"><span class="comment">% all Fosterite - Forsterite boundary segments</span>
+gB_Fo = grains.boundary(<span class="string">'Forsterite'</span>,<span class="string">'Forsterite'</span>)
+
+<span class="comment">% Fo - Fo segments with misorientation angle larger 60 degree</span>
+gB_large = gB_Fo(gB_Fo.misorientation.angle&gt;60*degree)
+
+<span class="comment">% plot the triple points</span>
+plot(grains)
+hold <span class="string">on</span>
+plot(gB_large,<span class="string">'linewidth'</span>,2,<span class="string">'linecolor'</span>,<span class="string">'w'</span>)
+plot(gB_large.triplePoints,<span class="string">'color'</span>,<span class="string">'m'</span>)
+hold <span class="string">off</span></pre><pre class="codeoutput"> 
+gB_Fo = grainBoundary  
+ 
+ Segments   mineral 1   mineral 2
+      255  Forsterite  Forsterite
+ 
+gB_large = grainBoundary  
+ 
+ Segments   mineral 1   mineral 2
+       55  Forsterite  Forsterite
+</pre><img src="TriplePoints_03.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Boundary segments from triple points<a name="9"> </a></h2>
+         <p>On the other hand we may also ask for the boundary segments that build up a triple point. These are stored as the property
+            boundaryId for each triple points.
+         </p><pre class="codeinput"><span class="comment">% lets take Forsterite triple points</span>
+tP = grains.triplePoints(<span class="string">'Fo'</span>,<span class="string">'Fo'</span>,<span class="string">'Fo'</span>);
+
+<span class="comment">% the boundary segments which form the triple points</span>
+gB = grains.boundary(tP.boundaryId);
+
+<span class="comment">% plot the triple point boundary segments</span>
+plot(grains)
+hold <span class="string">on</span>
+plot(gB,<span class="string">'lineColor'</span>,<span class="string">'w'</span>,<span class="string">'linewidth'</span>,2)
+hold <span class="string">off</span></pre><img src="TriplePoints_04.png"> <p>Once we have extracted the boundary segments adjecent to a triple point we may also extract the corresponding misorientations.
+            The following command gives a n x 3 list of misorientations where n is the number of triple points
+         </p><pre class="codeinput">mori = gB.misorientation</pre><pre class="codeoutput"> 
+mori = misorientation  
+  size: 15 x 3
+  crystal symmetry : Forsterite (mmm)
+  crystal symmetry : Forsterite (mmm)
+  antipodal:         true
+ 
+</pre><p>Hence, we can compute for each triple point the sum of misorientation angles by</p><pre class="codeinput">sumMisAngle = sum(mori.angle,2);</pre><p>and my visualize it by</p><pre class="codeinput">plot(grains,<span class="string">'figSize'</span>,<span class="string">'large'</span>)
+hold <span class="string">on</span>
+plot(tP,sumMisAngle ./ degree,<span class="string">'markerEdgeColor'</span>,<span class="string">'w'</span>)
+hold <span class="string">off</span>
+mtexColorMap(blue2redColorMap)
+CLim(gcm,[80,180])
+mtexColorbar</pre><img src="TriplePoints_05.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

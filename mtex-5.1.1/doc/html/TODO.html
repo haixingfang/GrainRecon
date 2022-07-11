@@ -1,0 +1,167 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>Roadmap (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: TODO -->
+      <!-- HEADSTUFF: TODO -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:TODO">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div>
+         <table class="nav" summary="Navigation aid" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline"><b>MTEX</b> - A MATLAB Toolbox for Quantitative Texture Analysis</td>
+            </tr>
+         </table>
+         <p style="font-size:1px;"></p>
+      </div>
+      <div class="content">
+         <h1 class="refname">Roadmap</h1>
+         <div class="subheading"></div>
+         <div>
+            <table class="content">
+               <tr>
+                  <td class="header">On this page ...</td>
+               </tr>
+               <tr>
+                  <td><a href="#2">Assigned to Next Minor Release</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#3">Planned for Next Minor Release</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#4">Assigned to Next Major Release</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#5">Future</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#6">Supported/Implemented since MTEX 3.3</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#7">Supported/Implemented since MTEX 3.1</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#8">Supported/Implemented since MTEX 3.*</a></td>
+               </tr>
+            </table>
+         </div>
+         <h2>Assigned to Next Minor Release<a name="2"> </a></h2>
+         <p><b>Kernel Density Estimation</b></p>
+         <p>Improve automatic optimal kernel detection from EBSD data</p>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Planned for Next Minor Release<a name="3"> </a></h2>
+         <p><b>Grain Boundary Analysis</b> (Florian Bachmann)
+         </p>
+         <div>
+            <ul type="square">
+               <li>Compute grain boundary planes.</li>
+               <li>Analyze and visualize the distribution of grain boundary planes.</li>
+               <li>Classify twist / tild grain boundaries.</li>
+            </ul>
+         </div>
+         <p><b>Plotting</b>: support datacursor for spherical projections, (pole figures, inverse pole figure, odf plots) to get coordinate (and function
+            value)
+         </p>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Assigned to Next Major Release<a name="4"> </a></h2>
+         <p><b>Robust Mean Computation</b></p>
+         <p>Find and implement an algorithm that finds under certain conditions the true mean orientation for a given set of orientations!</p>
+         <p><b>Bingham Distribution</b></p>
+         <p>compute Fourier coefficients of Bingham ODFs.</p>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Future<a name="5"> </a></h2>
+         <p><b>EBSD Statistics</b></p>
+         <p>Implement results of K. G. v.d. Boogaart dissertation. i.e. allow MTEX to answer the following questions:</p>
+         <div>
+            <ul type="square">
+               <li>is an EBSD data set a random sample of a certain ODF</li>
+               <li>are two EBSD data sets random sample of the same ODF</li>
+            </ul>
+         </div>
+         <p><b>Misorientation Analysis</b></p>
+         <p>Allow to compute a misorientation ODF from EBSD data. Therefore, a new class MODF is needed which differs from an ordinary
+            ODF by the fact that the specimen symmetry is replaced by the crystal symmetry of the second phase.
+         </p>
+         <p>This requires a better find functionality in SO3Grid</p>
+         <div>
+            <ul type="square">
+               <li>allow volume computation for miss axes</li>
+               <li>allow annotations in misaxes plot</li>
+            </ul>
+         </div>
+         <p><b>ODF Analysis</b></p>
+         <p>Provide a function that is able to approximate an ODF by a small number of simple components, i.e. unimodal components, and
+            fibres.
+         </p>
+         <p><b>Joined Counts</b></p>
+         <p>Incorporate the results of M�ller.</p>
+         <p><b>Grain Simulation</b></p>
+         <p>Allow to simulate grains under certain assumptions. To be used for joined counts statistics and ODF -> MODF analysis.</p>
+         <p><b>Voronoi Decomposition of the Orientation Space</b></p>
+         <p>Use the Rodriguez representation to compute a Voronoi neighborhood graph of a set of orientations. This can be used for faster
+            searching in SO3Grids and for the decomposition of ODFs into components.
+         </p>
+         <p><b>New Class Fibre</b></p>
+         <p>Implement a new class fibre, which can be used for any computations involving fibres.</p>
+         <p><b>Minor Improvements</b></p>
+         <div>
+            <ul type="square">
+               <li>EBSD colorcoding</li>
+               <li>fix crystal coordinate system for symmetry 2/m</li>
+               <li>improve template files</li>
+               <li>say explicitly in generic wizard which columns has to be specified</li>
+               <li>implement grain/rotate, grain/flipud, grain/fliplr</li>
+               <li>better ODF import / export</li>
+               <li>add kernel names by Matthies</li>
+            </ul>
+         </div>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Supported/Implemented since MTEX 3.3<a name="6"> </a></h2>
+         <p><b>Single Grain Analysis</b></p>
+         <div>
+            <ul type="square">
+               <li>Detect polar, oblate and spherical grains.</li>
+               <li>Profiles through grains</li>
+            </ul>
+         </div>
+         <p><b>Topological Grain Data Structure</b> (Florian Bachmann)
+         </p>
+         <p>The function segment2d should provide a grain class that allows answering questions like:</p>
+         <div>
+            <ul type="square">
+               <li>give me all phase one to phase two grain boundaries</li>
+               <li>give me all grain boundaries between grains with a certain misorientation</li>
+            </ul>
+         </div>
+         <p>Therefore not only the neigboring grains has to be stored in the grain object but also the line segment representing the grain
+            boundary.
+         </p>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Supported/Implemented since MTEX 3.1<a name="7"> </a></h2>
+         <p><b>Computation of Material Properties</b></p>
+         <p>Compute various macroscopic material properties for EBSD data and ODFs.</p>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Supported/Implemented since MTEX 3.*<a name="8"> </a></h2>
+         <p><b>Bingham Distribution</b></p>
+         <p>Implement Bingham parameter estimation from EBSD data</p>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

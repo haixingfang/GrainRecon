@@ -1,0 +1,143 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>RK_symmetrised (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: kernel.RK_symmetrised -->
+      <!-- HEADSTUFF: kernel.RK_symmetrised -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:kernel.RK_symmetrised">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div>
+         <table class="nav" summary="Navigation aid" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline"><b>MTEX</b> - A MATLAB Toolbox for Quantitative Texture Analysis</td>
+               <td valign="baseline" align="right"><a href="matlab:edit kernel/RK_symmetrised">
+                     View Code</a></td>
+            </tr>
+         </table>
+         <p style="font-size:1px;"></p>
+      </div>
+      <div class="content">
+         <h1 class="refname">RK_symmetrised</h1>
+         <div class="subheading">
+            <p>(method of <a href="kernel_index.html">kernel</a>)
+            </p>
+         </div>
+         <p>sum Radon trasformed kernel</p>
+         <h2>Description<a name="3"> </a></h2>
+         <p>formulae</p>
+         <p><img src="kernel.RK_symmetrised_eq03519561261931719489.png"> </p>
+         <p><img src="kernel.RK_symmetrised_eq08245992877529295712.png"> </p>
+         <h2>Syntax<a name="4"> </a></h2><pre class="codeinput">f = RK_symmetrised(psi,g,h,r,c,CS,SS,varargin) -</pre><h2>Input<a name="5"> </a></h2>
+         <p>
+            <table cellpadding="4" cellspacing="0" class="funcref" width="100%">
+            <tr>
+            <td width="100px">
+            <tt>psi</tt>
+            </td>
+            <td>
+            <p><a href="kernel_index.html">kernel</a></p>
+            </td>
+            </tr>
+            <tr>
+            <td width="100px">
+            <tt>g</tt>
+            </td>
+            <td>
+            <p><a href="quaternion_index.html">quaternion</a>(s)</p>
+            </td>
+            </tr>
+            <tr>
+            <td width="100px">
+            <tt>h</tt>
+            </td>
+            <td>
+            <p>list of crystal directions</p>
+            </td>
+            </tr>
+            <tr>
+            <td width="100px">
+            <tt>r</tt>
+            </td>
+            <td>
+            <p>list of ein specimen directions</p>
+            </td>
+            </tr>
+            <tr>
+            <td width="100px">
+            <tt>c</tt>
+            </td>
+            <td>
+            <p>coefficients</p>
+            </td>
+            </tr>
+            <tr>
+            <td width="100px">
+            <tt>CS,SS</tt>
+            </td>
+            <td>
+            <p>crystal, specimen <a href="symmetry_index.html">symmetry</a></p>
+            </td>
+            </tr>
+            <tr>
+            <td width="100px">
+            <tt>param,val</tt>
+            </td>
+            <td>Parameters and values that control RK_symmetrised<table cellpadding="4" cellspacing="0" class="paramval" width="100%">
+            <tr>
+            <td class="header" width="100px">Parameter</td>
+            <td class="header">Description</td>
+            </tr>
+            <tr>
+            <td width="150px">
+            <tt>'antipodal'</tt>
+            </td>
+            <td>
+            <p>antipodal Radon transform <equation>
+            <img alt="$P(h,r) = (\mathcal{R}f(h,r) + \mathcal{R}f(-h,r))/2$" class="equation" height="15px" src="kernel.RK_symmetrised_tmp_eq14913632029063642768.png"
+            width="228px"/>
+            </equation>
+            </p>
+            </td>
+            </tr>
+            </table>
+            </td>
+            </tr>
+            </table>
+            
+         </p>
+         <h2>Output<a name="6"> </a></h2>
+         <p>
+            <table cellpadding="4" cellspacing="0" class="funcref" width="100%">
+            <tr>
+            <td width="100px">
+            <tt>matrix</tt>
+            </td>
+            <td>
+            <p>1. dim -&gt; g, 2.dim -&gt; r</p>
+            </td>
+            </tr>
+            </table>
+            
+         </p>
+         <h3 class="seealso">See also</h3>
+         <p><a href="kernel.k.html">kernel/k</a>, <a href="kernel.rkk.html">kernel/rkk</a></p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

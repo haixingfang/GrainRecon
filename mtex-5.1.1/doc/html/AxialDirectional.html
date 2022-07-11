@@ -1,0 +1,124 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>Antipodal Symmetry (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: AxialDirectional -->
+      <!-- HEADSTUFF: AxialDirectional -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:AxialDirectional">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div class="myheader">
+         <table border="0" width="100%" cellpadding="10" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="left" style="color:white"><a style="color:white" href="matlab:edit AxialDirectional">Open Matlab File in the Editor</a></td>
+               <td valign="baseline" align="right" style="color:white"><a style="color:white" href="mtex_product_page.html">MTEX</a></td>
+            </tr>
+         </table>
+      </div>
+      <div class="content">
+         <h1 class="refname">Antipodal Symmetry</h1>
+         <div class="subheading">
+            <p>MTEX allows to identify antipodal directions to model axes and to identify misorientations with opposite rotational angle.
+               The later is required when working with misorientations between grains of the same phase and the order of the grains is arbitrary.
+            </p>
+         </div>
+         <div>
+            <table class="content">
+               <tr>
+                  <td class="header">On this page ...</td>
+               </tr>
+               <tr>
+                  <td><a href="#3">Directions vs. Axes</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#7">The Angle between Directions and Axes</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#9">Antipodal Symmetry in Experimental Pole Figures</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#10">Antipodal Symmetry in Recalculated Pole Figures</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#12">Antipodal Symmetry in Inverse Pole Figures</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#16">EBSD Colocoding</a></td>
+               </tr>
+            </table>
+         </div>
+         <h2>Directions vs. Axes<a name="3"> </a></h2>
+         <p>In MTEX it is possible to consider three dimensional vectors either as directions or as axes. The key option to distinguish
+            between both interpretations is <b>antipodal</b>.
+         </p>
+         <p>Consider a pair of vectors</p><pre class="codeinput">v1 = vector3d(1,1,2);
+v2 = vector3d(1,1,-2);</pre><p>and plots them in a spherical projection</p><pre class="codeinput">plot([v1,v2],<span class="string">'label'</span>,{<span class="string">'v_1'</span>,<span class="string">'v_2'</span>})</pre><img src="AxialDirectional_01.png"> <p>These vectors will appear either on the upper or on the lower hemisphere. In order to treat these vectors as axes, i.e. in
+            order to assume antipodal symmetry - one has to use the keyword <b>antipodal</b>.
+         </p><pre class="codeinput">plot([v1,v2],<span class="string">'label'</span>,{<span class="string">'v_1'</span>,<span class="string">'v_2'</span>},<span class="string">'antipodal'</span>)</pre><img src="AxialDirectional_02.png"> <p>Now the direction <tt>v_2</tt> is identified with the direction <tt>-v_2</tt> which plots at the upper hemisphere.
+         </p>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>The Angle between Directions and Axes<a name="7"> </a></h2>
+         <p>Another example, where antipodal symmetry matters is the angle between two vectors. In the absence of antipodal geometry we
+            have
+         </p><pre class="codeinput">angle(v1,v2) / degree</pre><pre class="codeoutput">ans =
+  109.4712
+</pre><p>whereas, if antipodal symmetry is assumed we obtain</p><pre class="codeinput">angle(v1,v2,<span class="string">'antipodal'</span>) / degree</pre><pre class="codeoutput">ans =
+   70.5288
+</pre><p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Antipodal Symmetry in Experimental Pole Figures<a name="9"> </a></h2>
+         <p>Due to Friedel's law experimental pole figures always provide antipodal symmetry. One consequence of this fact is that MTEX
+            plots pole figure data always on the upper hemisphere. Moreover if you annotate a certain direction to pole figure data, it
+            is always interpreted as an axis, i.e. projected to the upper hemisphere if necessary
+         </p><pre class="codeinput">mtexdata <span class="string">dubna</span>
+
+<span class="comment">% plot the first pole figure</span>
+plot(pf({1}))
+
+<span class="comment">% annotate a axis on the souther hemisphere</span>
+annotate(vector3d(1,0,-1),<span class="string">'labeled'</span>,<span class="string">'backgroundColor'</span>,<span class="string">'w'</span>)</pre><img src="AxialDirectional_03.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Antipodal Symmetry in Recalculated Pole Figures<a name="10"> </a></h2>
+         <p>However, in the case of pole figures calculated from an ODF antipodal symmetry is in general not present.</p><pre class="codeinput"><span class="comment">% some prefered orientation</span>
+o = orientation(<span class="string">'Euler'</span>,20*degree,30*degree,0,<span class="string">'ZYZ'</span>,CS);
+
+<span class="comment">% define an unimodal ODF</span>
+odf = unimodalODF(o);
+
+<span class="comment">% plot pole figures</span>
+plotPDF(odf,[Miller(1,2,2,CS),-Miller(1,2,2,CS)])</pre><img src="AxialDirectional_04.png"> <p>Hence, if one wants to compare calculated pole figures with experimental ones, one has to add antipodal symmetry.</p><pre class="codeinput">plotPDF(odf,Miller(1,2,2,CS),<span class="string">'antipodal'</span>)</pre><img src="AxialDirectional_05.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Antipodal Symmetry in Inverse Pole Figures<a name="12"> </a></h2>
+         <p>The same reasoning as above holds true for inverse pole figures. If we look at complete, inverse pole figures they do not
+            posses antipodal symmetry in general
+         </p><pre class="codeinput">plotIPDF(odf,[yvector,-yvector],<span class="string">'complete'</span>)</pre><img src="AxialDirectional_06.png"> <p>However, if we add the keyword antipodal, antipodal symmetry is enforced.</p><pre class="codeinput">plotIPDF(odf,yvector,<span class="string">'antipodal'</span>,<span class="string">'complete'</span>)</pre><img src="AxialDirectional_07.png"> <p>Notice how MTEX, automatically reduces the fundamental region of inverse pole figures in the case that antipodal symmetry
+            is present.
+         </p><pre class="codeinput">plotIPDF(odf,yvector)</pre><img src="AxialDirectional_08.png"> <pre class="codeinput">plotIPDF(odf,yvector,<span class="string">'antipodal'</span>)</pre><img src="AxialDirectional_09.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>EBSD Colocoding<a name="16"> </a></h2>
+         <p>Antipodal symmetry effects also the colocoding of ebsd plots. Let's first import some data.</p><pre class="codeinput">mtexdata <span class="string">forsterite</span></pre><p>Now we plot these data with a colorcoding according to the inverse (100) pole figure. If we use the Laue group for inverse
+            pole figure color coding we add antipodal symmetry to the inverse pole figure
+         </p><pre class="codeinput">ipfKey = ipfColorKey(ebsd(<span class="string">'fo'</span>).CS.Laue);
+
+<span class="comment">% plot the color key</span>
+plot(ipfKey)</pre><img src="AxialDirectional_10.png"> <p>Here the colorized data</p><pre class="codeinput">plot(ebsd(<span class="string">'fo'</span>),ipfKey.orientation2color(ebsd(<span class="string">'fo'</span>).orientations))</pre><img src="AxialDirectional_11.png"> <p>If we use the point group of proper rotations this antipodal symmetry is not present and a larger region of the inverse pole
+            figure is colorized
+         </p><pre class="codeinput">ipfKey = ipfColorKey(ebsd(<span class="string">'fo'</span>).CS.properGroup);
+
+<span class="comment">% the colorcode</span>
+plot(ipfKey)</pre><img src="AxialDirectional_12.png"> <p>Here the colorized data</p><pre class="codeinput">plot(ebsd(<span class="string">'fo'</span>),ipfKey.orientation2color(ebsd(<span class="string">'fo'</span>).orientations))</pre><img src="AxialDirectional_13.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

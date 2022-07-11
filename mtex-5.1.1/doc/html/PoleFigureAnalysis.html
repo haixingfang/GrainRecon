@@ -1,0 +1,432 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>Pole Figures (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: PoleFigureAnalysis -->
+      <!-- HEADSTUFF: PoleFigureAnalysis -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:PoleFigureAnalysis">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div>
+         <table class="nav" summary="Navigation aid" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline"><b>MTEX</b> - A MATLAB Toolbox for Quantitative Texture Analysis</td>
+            </tr>
+         </table>
+         <p style="font-size:1px;"></p>
+      </div>
+      <div class="content">
+         <h1 class="refname">Pole Figures</h1>
+         <div class="subheading">
+            <p>Explains how to import pole figure data, how to correct them, and how to recover an ODF.</p>
+         </div>
+         <p>
+            <table class="ref" width="90%">
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('PoleFigureAnalysisIntro_block','PoleFigureAnalysisIntro_expandable_text');" valign="top"
+            width="15">
+            <img id="PoleFigureAnalysisIntro_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="PoleFigureAnalysisIntro.html">First Steps<td valign="top" width="75%">Get in touch with PoleFigure Data in MTEX.</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="PoleFigureAnalysisIntro_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="PoleFigureAnalysisIntro.html#3">Import of Pole Figures</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="PoleFigureAnalysisIntro.html#6">Plotting Pole Figure Data</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="PoleFigureAnalysisIntro.html#7">Modify Pole Figure Data</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="PoleFigureAnalysisIntro.html#8">Calculate an ODF from Pole Figure Data</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="PoleFigureAnalysisIntro.html#9">Simulate Pole Figure Data</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('ImportPoleFigureData_block','ImportPoleFigureData_expandable_text');" valign="top"
+            width="15">
+            <img id="ImportPoleFigureData_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="ImportPoleFigureData.html">Importing Pole Figure Data<td valign="top" width="75%">How to import Pole Figure Data</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="ImportPoleFigureData_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="ImportPoleFigureData.html#3">Importing pole figure data using the import wizard</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ImportPoleFigureData.html#6">Supported Data Formats</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ImportPoleFigureData.html#7">The Import Script</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ImportPoleFigureData.html#10">Writing your own interface</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('ModifyPoleFigureData_block','ModifyPoleFigureData_expandable_text');" valign="top"
+            width="15">
+            <img id="ModifyPoleFigureData_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="ModifyPoleFigureData.html">Modify Pole Figure Data<td valign="top" width="75%">Explains how to manipulate pole figure
+            data in MTEX.</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="ModifyPoleFigureData_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="ModifyPoleFigureData.html#3">Import diffraction data</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ModifyPoleFigureData.html#4">Splitting and Reordering of Pole Figures</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ModifyPoleFigureData.html#6">Correct pole figure data</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ModifyPoleFigureData.html#7">Normalize pole figures</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ModifyPoleFigureData.html#9">Modify certain pole figure values</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ModifyPoleFigureData.html#12">Remove certain measurements from the data</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ModifyPoleFigureData.html#13">Rotate pole figures</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('PoleFigure2odf_block','PoleFigure2odf_expandable_text');" valign="top" width="15">
+            <img id="PoleFigure2odf_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="PoleFigure2odf.html">ODF Estimation from Pole Figure Data<td valign="top" width="75%">This page describes how to
+            use MTEX to estimate an ODF from pole figure data.</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="PoleFigure2odf_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="PoleFigure2odf.html#5">ODF Estimation</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="PoleFigure2odf.html#8">Error analysis</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="PoleFigure2odf.html#11">Discretization</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="PoleFigure2odf.html#13">Zero Range Method</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="PoleFigure2odf.html#14">Ghost Corrections</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="PoleFigure2odf.html#15">Theory</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('PF2ODFAmbiguity_block','PF2ODFAmbiguity_expandable_text');" valign="top" width="15">
+            <img id="PF2ODFAmbiguity_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="PF2ODFAmbiguity.html">Ambiguity of the Pole Figure to ODF Reconstruction Problem<td valign="top" width="75%">demonstrates
+            different sources of ambiguity when reconstructing an ODF from pole figure diffraction data.</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="PF2ODFAmbiguity_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="PF2ODFAmbiguity.html#3">The ambiguity due to too few pole figures</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="PF2ODFAmbiguity.html#14">The ambiguity due to too Friedel's law</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="PF2ODFAmbiguity.html#20">The inherent ambiguity of the pole figure - ODF relationship</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('ghost_demo_block','ghost_demo_expandable_text');" valign="top" width="15">
+            <img id="ghost_demo_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="ghost_demo.html">Ghost Effect Analysis<td valign="top" width="75%">Explains the ghost effect to ODF reconstruction
+            and the MTEX option ghostcorrection.</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="ghost_demo_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="ghost_demo.html#3">Introduction</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ghost_demo.html#4">Construct Model ODF</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ghost_demo.html#5">Simulate pole figures</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ghost_demo.html#6">ODF Estimation</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ghost_demo.html#8">Compare RP Errors</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ghost_demo.html#11">Compare Reconstruction Errors</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ghost_demo.html#14">Plot the ODFs</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ghost_demo.html#20">Calculate Fourier coefficients</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ghost_demo.html#21">Calculate Reconstruction Errors from Fourier Coefficients</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ghost_demo.html#24">Plot Fourier Coefficients   </a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('PoleFigureSimulation_demo_block','PoleFigureSimulation_demo_expandable_text');"
+            valign="top" width="15">
+            <img id="PoleFigureSimulation_demo_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="PoleFigureSimulation_demo.html">Simulating Pole Figure data<td valign="top" width="75%">Simulate arbitrary pole figure
+            data</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="PoleFigureSimulation_demo_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="PoleFigureSimulation_demo.html#3">Introduction</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="PoleFigureSimulation_demo.html#5">Simulate Pole Figure Data</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="PoleFigureSimulation_demo.html#11">ODF Estimation from Pole Figure Data</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="PoleFigureSimulation_demo.html#14">Exploration of the relationship between estimation error and number of single
+            orientations</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('PlotPoleFigures_block','PlotPoleFigures_expandable_text');" valign="top" width="15">
+            <img id="PlotPoleFigures_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="PlotPoleFigures.html">Plotting of Pole Figures<td valign="top" width="75%">Describes various possibilities to visualize
+            pole figure data.</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="PlotPoleFigures_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="PlotPoleFigures.html#3">Import of Pole Figures</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="PlotPoleFigures.html#4">Visualize the Data</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="PlotPoleFigures.html#6">Contour Plots</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="PlotPoleFigures.html#8">Plotting Recalculated Pole Figures</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            </table>
+            
+         </p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

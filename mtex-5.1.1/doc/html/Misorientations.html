@@ -1,0 +1,342 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>Misorientations (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: Misorientations -->
+      <!-- HEADSTUFF: Misorientations -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:Misorientations">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div class="myheader">
+         <table border="0" width="100%" cellpadding="10" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="left" style="color:white"><a style="color:white" href="matlab:edit Misorientations">Open Matlab File in the Editor</a></td>
+               <td valign="baseline" align="right" style="color:white"><a style="color:white" href="mtex_product_page.html">MTEX</a></td>
+            </tr>
+         </table>
+      </div>
+      <div class="content">
+         <h1 class="refname">Misorientations</h1>
+         <div class="subheading">
+            <p>Misorientation describes the relative orientation of two grains with respect to each other. Important concepts are twinnings
+               and CSL (coincidence site lattice),
+            </p>
+         </div>
+         <div>
+            <table class="content">
+               <tr>
+                  <td class="header">On this page ...</td>
+               </tr>
+               <tr>
+                  <td><a href="#3">The misorientation angle</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#9">Misorientations</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#12">Coincident lattice planes</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#14">Twinning misorientations</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#16">Highlight twinning boundaries</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#20">Phase transitions</a></td>
+               </tr>
+            </table>
+         </div>
+         <h2>The misorientation angle<a name="3"> </a></h2>
+         <p>First we import some EBSD data set, compute grains and plot them according to their mean orientation. Next we highlight grain
+            70 and grain 80
+         </p><pre class="codeinput">mtexdata <span class="string">twins</span>
+<span class="comment">% use only proper symmetry operations</span>
+ebsd(<span class="string">'M'</span>).CS = ebsd(<span class="string">'M'</span>).CS.properGroup;
+grains = calcGrains(ebsd(<span class="string">'indexed'</span>),<span class="string">'threshold'</span>,5*degree)
+CS = grains.CS; <span class="comment">% extract crystal symmetry</span>
+
+plot(grains,grains.meanOrientation,<span class="string">'micronbar'</span>,<span class="string">'off'</span>)
+hold <span class="string">on</span>
+plot(grains([74,85]).boundary,<span class="string">'edgecolor'</span>,<span class="string">'w'</span>,<span class="string">'linewidth'</span>,2)
+
+text(grains([74,85]),{<span class="string">'1'</span>,<span class="string">'2'</span>})</pre><pre class="codeoutput"> 
+grains = grain2d  
+ 
+ Phase  Grains  Pixels    Mineral  Symmetry  Crystal reference frame
+     1     126   22833  Magnesium       622       X||a*, Y||b, Z||c*
+ 
+ boundary segments: 3892
+ triple points: 122
+ 
+ Properties: GOS, meanRotation
+ 
+  I'm going to colorize the orientation data with the 
+  standard MTEX colorkey. To view the colorkey do:
+ 
+  oM = ipfColorKey(ori_variable_name)
+  plot(oM)
+</pre><img src="Misorientations_01.png"> <p>After extracting the mean orientation of grain 70 and 80</p><pre class="codeinput">ori1 = grains(74).meanOrientation
+ori2 = grains(85).meanOrientation</pre><pre class="codeoutput"> 
+ori1 = orientation  
+  size: 1 x 1
+  crystal symmetry : Magnesium (622, X||a*, Y||b, Z||c*)
+  specimen symmetry: 1
+ 
+  Bunge Euler angles in degree
+     phi1     Phi    phi2    Inv.
+  19.4774 78.0484 220.043       0
+ 
+ 
+ori2 = orientation  
+  size: 1 x 1
+  crystal symmetry : Magnesium (622, X||a*, Y||b, Z||c*)
+  specimen symmetry: 1
+ 
+  Bunge Euler angles in degree
+     phi1     Phi    phi2    Inv.
+  71.4509 167.781 200.741       0
+ 
+</pre><p>we may compute the misorientation angle between both orientations by</p><pre class="codeinput">angle(ori1, ori2) ./ degree</pre><pre class="codeoutput">ans =
+   85.7093
+</pre><p>Note that the misorientation angle is computed by default modulo crystal symmetry, i.e., the angle is always the smallest
+            angles between all possible pairs of symmetrically equivalent orientations. In our example this means that symmetrisation
+            of one orientation has no impact on the angle
+         </p><pre class="codeinput">angle(ori1, ori2.symmetrise) ./ degree</pre><pre class="codeoutput">ans =
+   85.7093
+   85.7093
+   85.7093
+   85.7093
+   85.7093
+   85.7093
+   85.7093
+   85.7093
+   85.7093
+   85.7093
+   85.7093
+   85.7093
+</pre><p>The misorientation angle neglecting crystal symmetry can be computed by</p><pre class="codeinput">angle(ori1, ori2.symmetrise,<span class="string">'noSymmetry'</span>)./ degree</pre><pre class="codeoutput">ans =
+  107.9464
+  100.9175
+   94.2925
+  136.6180
+  107.7066
+  179.5952
+  140.0598
+  137.3717
+  179.8061
+  101.4414
+  140.4168
+   85.7093
+</pre><p>We see that the smallest angle indeed coincides with the angle computed before.</p>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Misorientations<a name="9"> </a></h2>
+         <p>Remember that both orientations ori1 and ori2 map crystal coordinates onto specimen coordinates. Hence, the product of an
+            inverse orientation with another orientation transfers crystal coordinates from one crystal reference frame into crystal coordinates
+            with respect to another crystal reference frame. This transformation is called misorientation
+         </p><pre class="codeinput">mori = inv(ori1) * ori2</pre><pre class="codeoutput"> 
+mori = misorientation  
+  size: 1 x 1
+  crystal symmetry : Magnesium (622, X||a*, Y||b, Z||c*)
+  crystal symmetry : Magnesium (622, X||a*, Y||b, Z||c*)
+ 
+  Bunge Euler angles in degree
+     phi1     Phi    phi2    Inv.
+  149.581 94.2922 150.134       0
+ 
+</pre><p>In the present case the misorientation describes the coordinate transform from the reference frame of grain 80 into the reference
+            frame of crystal 70. Take as an example the plane {11-20} with respect to the grain 80. Then the plane in grain 70 which alignes
+            parallel to this plane can be computed by
+         </p><pre class="codeinput">round(mori * Miller(1,1,-2,0,CS))</pre><pre class="codeoutput"> 
+ans = Miller  
+ size: 1 x 1
+ mineral: Magnesium (622, X||a*, Y||b, Z||c*)
+  h  2
+  k -1
+  i -1
+  l  0
+</pre><p>Conversely, the inverse of mori is the coordinate transform from crystal 70 to grain 80.</p><pre class="codeinput">round(inv(mori) * Miller(2,-1,-1,0,CS))</pre><pre class="codeoutput"> 
+ans = Miller  
+ size: 1 x 1
+ mineral: Magnesium (622, X||a*, Y||b, Z||c*)
+  h  1
+  k  1
+  i -2
+  l  0
+</pre><p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Coincident lattice planes<a name="12"> </a></h2>
+         <p>The coincidence between major lattice planes may suggest that the misorientation is a twinning misorientation. Lets analyse
+            whether there are some more alignments between major lattice planes.
+         </p><pre class="codeinput"><span class="comment">%m = Miller({1,-1,0,0},{1,1,-2,0},{1,-1,0,1},{0,0,0,1},CS);</span>
+m = Miller({1,-1,0,0},{1,1,-2,0},{-1,0,1,1},{0,0,0,1},CS);
+
+<span class="comment">% cycle through all major lattice planes</span>
+close <span class="string">all</span>
+<span class="keyword">for</span> im = 1:length(m)
+  <span class="comment">% plot the lattice planes of grains 80 with respect to the</span>
+  <span class="comment">% reference frame of grain 70</span>
+  plot(mori * m(im).symmetrise,<span class="string">'MarkerSize'</span>,10,<span class="keyword">...</span>
+    <span class="string">'DisplayName'</span>,char(m(im)),<span class="string">'figSize'</span>,<span class="string">'large'</span>,<span class="string">'noLabel'</span>,<span class="string">'upper'</span>)
+  hold <span class="string">all</span>
+<span class="keyword">end</span>
+hold <span class="string">off</span>
+
+<span class="comment">% mark the corresponding lattice planes in the twin</span>
+mm = round(unique(mori*m.symmetrise,<span class="string">'noSymmetry'</span>),<span class="string">'maxHKL'</span>,6);
+annotate(mm,<span class="string">'labeled'</span>,<span class="string">'MarkerSize'</span>,5,<span class="string">'figSize'</span>,<span class="string">'large'</span>)
+
+<span class="comment">% show legend</span>
+legend({},<span class="string">'location'</span>,<span class="string">'SouthEast'</span>,<span class="string">'FontSize'</span>,13);</pre><img src="Misorientations_02.png"> <p>we observe an almost perfect match for the lattice planes {11-20} to {-2110} and {1-101} to {-1101} and good coincidences
+            for the lattice plane {1-100} to {0001} and {0001} to {0-661}. Lets compute the angles explicitly
+         </p><pre class="codeinput">angle(mori * Miller(1,1,-2,0,CS),Miller(2,-1,-1,0,CS)) / degree
+angle(mori * Miller(1,0,-1,-1,CS),Miller(1,-1,0,1,CS)) / degree
+angle(mori * Miller(0,0,0,1,CS) ,Miller(1,0,-1,0,CS),<span class="string">'noSymmetry'</span>) / degree
+angle(mori * Miller(1,1,-2,2,CS),Miller(1,0,-1,0,CS)) / degree
+angle(mori * Miller(1,0,-1,0,CS),Miller(1,1,-2,2,CS)) / degree</pre><pre class="codeoutput">ans =
+    0.4489
+ans =
+    0.2193
+ans =
+   59.6757
+ans =
+    2.6092
+ans =
+    2.5387
+</pre><p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Twinning misorientations<a name="14"> </a></h2>
+         <p>Lets define a misorientation that makes a perfect fit between the {11-20} lattice planes and between the {10-11} lattice planes</p><pre class="codeinput">mori = orientation(<span class="string">'map'</span>,Miller(1,1,-2,0,CS),Miller(2,-1,-1,0,CS),<span class="keyword">...</span>
+  Miller(-1,0,1,1,CS),Miller(1,0,-1,1,CS))
+
+<span class="comment">% the rotational axis</span>
+round(mori.axis)
+
+<span class="comment">% the rotational angle</span>
+mori.angle / degree</pre><pre class="codeoutput"> 
+mori = misorientation  
+  size: 1 x 1
+  crystal symmetry : Magnesium (622, X||a*, Y||b, Z||c*)
+  crystal symmetry : Magnesium (622, X||a*, Y||b, Z||c*)
+ 
+  Bunge Euler angles in degree
+  phi1     Phi    phi2    Inv.
+   330 93.6529     330       0
+ 
+ 
+ans = Miller  
+ size: 1 x 1
+ mineral: Magnesium (622, X||a*, Y||b, Z||c*)
+  h -1
+  k  2
+  i -1
+  l  0
+ans =
+   86.3471
+</pre><p>and plot the same figure as before with the exact twinning misorientation.</p><pre class="codeinput"><span class="comment">% cycle through all major lattice planes</span>
+close <span class="string">all</span>
+<span class="keyword">for</span> im = 1:length(m)
+  <span class="comment">% plot the lattice planes of grains 80 with respect to the</span>
+  <span class="comment">% reference frame of grain 70</span>
+  plot(mori * m(im).symmetrise,<span class="string">'MarkerSize'</span>,10,<span class="keyword">...</span>
+    <span class="string">'DisplayName'</span>,char(m(im)),<span class="string">'figSize'</span>,<span class="string">'large'</span>,<span class="string">'noLabel'</span>,<span class="string">'upper'</span>)
+  hold <span class="string">all</span>
+<span class="keyword">end</span>
+hold <span class="string">off</span>
+
+<span class="comment">% mark the corresponding lattice planes in the twin</span>
+mm = round(unique(mori*m.symmetrise,<span class="string">'noSymmetry'</span>),<span class="string">'maxHKL'</span>,6);
+annotate(mm,<span class="string">'labeled'</span>,<span class="string">'MarkerSize'</span>,5,<span class="string">'figSize'</span>,<span class="string">'large'</span>)
+
+<span class="comment">% show legend</span>
+legend({},<span class="string">'location'</span>,<span class="string">'NorthWest'</span>,<span class="string">'FontSize'</span>,13);</pre><img src="Misorientations_03.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Highlight twinning boundaries<a name="16"> </a></h2>
+         <p>It turns out that in the previous EBSD map many grain boundaries have a misorientation close to the twinning misorientation
+            we just defined. Lets Lets highlight those twinning boundaries
+         </p><pre class="codeinput"><span class="comment">% consider only Magnesium to Magnesium grain boundaries</span>
+gB = grains.boundary(<span class="string">'Mag'</span>,<span class="string">'Mag'</span>);
+
+<span class="comment">% check for small deviation from the twinning misorientation</span>
+isTwinning = angle(gB.misorientation,mori) &lt; 5*degree;
+
+<span class="comment">% plot the grains and highlight the twinning boundaries</span>
+plot(grains,grains.meanOrientation,<span class="string">'micronbar'</span>,<span class="string">'off'</span>)
+hold <span class="string">on</span>
+plot(gB(isTwinning),<span class="string">'edgecolor'</span>,<span class="string">'w'</span>,<span class="string">'linewidth'</span>,2)
+hold <span class="string">off</span></pre><pre class="codeoutput">  I'm going to colorize the orientation data with the 
+  standard MTEX colorkey. To view the colorkey do:
+ 
+  oM = ipfColorKey(ori_variable_name)
+  plot(oM)
+</pre><img src="Misorientations_04.png"> <p>From this picture we see that large fraction of grain boudaries are twinning boundaries. To make this observation more evident
+            we may plot the boundary misorientation angle distribution function. This is simply the angle distribution of all boundary
+            misorientations and can be displayed with
+         </p><pre class="codeinput">close <span class="string">all</span>
+plotAngleDistribution(gB.misorientation)</pre><img src="Misorientations_05.png"> <p>From this we observe that we have about 50 percent twinning boundaries. Analogously we may also plot the axis distribution</p><pre class="codeinput">plotAxisDistribution(gB.misorientation,<span class="string">'contour'</span>)</pre><img src="Misorientations_06.png"> <p>which emphasises a strong portion of rotations about the (-12-10) axis.</p>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Phase transitions<a name="20"> </a></h2>
+         <p>Misorientations may not only be defined between crystal frames of the same phase. Lets consider the phases Magnetite and Hematite.</p><pre class="codeinput">CS_Mag = loadCIF(<span class="string">'Magnetite'</span>)
+CS_Hem = loadCIF(<span class="string">'Hematite'</span>)</pre><pre class="codeoutput"> 
+CS_Mag = crystalSymmetry  
+ 
+  mineral : Magnetite    
+  symmetry: m-3m         
+  a, b, c : 8.4, 8.4, 8.4
+ 
+ 
+CS_Hem = crystalSymmetry  
+ 
+  mineral        : Hematite          
+  symmetry       : -3m1              
+  a, b, c        : 5, 5, 14          
+  reference frame: X||a*, Y||b, Z||c*
+ 
+</pre><p>The phase transition from Magnetite to Hematite is described in literature by {111}_m parallel {0001}_h and {-101}_m parallel
+            {10-10}_h The corresponding misorientation is defined in MTEX by
+         </p><pre class="codeinput">Mag2Hem = orientation(<span class="string">'map'</span>,<span class="keyword">...</span>
+  Miller(1,1,1,CS_Mag),Miller(0,0,0,1,CS_Hem),<span class="keyword">...</span>
+  Miller(-1,0,1,CS_Mag),Miller(1,0,-1,0,CS_Hem))</pre><pre class="codeoutput"> 
+Mag2Hem = misorientation  
+  size: 1 x 1
+  crystal symmetry : Magnetite (m-3m)
+  crystal symmetry : Hematite (-3m1, X||a*, Y||b, Z||c*)
+ 
+  Bunge Euler angles in degree
+  phi1     Phi    phi2    Inv.
+   120 54.7356      45       0
+ 
+</pre><p>Assume a Magnetite grain with orientation</p><pre class="codeinput">ori_Mag = orientation(<span class="string">'Euler'</span>,0,0,0,CS_Mag)</pre><pre class="codeoutput"> 
+ori_Mag = orientation  
+  size: 1 x 1
+  crystal symmetry : Magnetite (m-3m)
+  specimen symmetry: 1
+ 
+  Bunge Euler angles in degree
+  phi1  Phi phi2 Inv.
+     0    0    0    0
+ 
+</pre><p>Then we can compute all variants of the phase transition by</p><pre class="codeinput">symmetrise(ori_Mag) * inv(Mag2Hem)</pre><pre class="codeoutput"> 
+ans = orientation  
+  size: 48 x 1
+  crystal symmetry : Hematite (-3m1, X||a*, Y||b, Z||c*)
+  specimen symmetry: 1
+ 
+</pre><p>and the corresponding pole figures by</p><pre class="codeinput">plotPDF(symmetrise(ori_Mag) * inv(Mag2Hem),<span class="keyword">...</span>
+  Miller({1,0,-1,0},{1,1,-2,0},{0,0,0,1},CS_Hem))</pre><img src="Misorientations_07.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

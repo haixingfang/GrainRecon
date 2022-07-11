@@ -1,0 +1,122 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>Pole Figure Color Coding (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: ColorCoding_demo -->
+      <!-- HEADSTUFF: ColorCoding_demo -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:ColorCoding_demo">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div class="myheader">
+         <table border="0" width="100%" cellpadding="10" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="left" style="color:white"><a style="color:white" href="matlab:edit ColorCoding_demo">Open Matlab File in the Editor</a></td>
+               <td valign="baseline" align="right" style="color:white"><a style="color:white" href="mtex_product_page.html">MTEX</a></td>
+            </tr>
+         </table>
+      </div>
+      <div class="content">
+         <h1 class="refname">Pole Figure Color Coding</h1>
+         <div class="subheading">
+            <p>Explains how to control color coding across multiple plots.</p>
+         </div>
+         <p>A central issue when interpreting plots is to have a consistent color coding among all plots. In MTEX this can be achieved
+            in two ways. If the minimum and maximum values are known then one can specify the color range directly using the options <b>colorrange</b> or <b>contourf</b>, or the command <a href="setcolorrange.html">setcolorrange</a> is used which allows setting the color range afterward.
+         </p>
+         <div>
+            <table class="content">
+               <tr>
+                  <td class="header">On this page ...</td>
+               </tr>
+               <tr>
+                  <td><a href="#4">A sample ODFs and Simulated Pole Figure Data</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#5">Setting a Colormap</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#9">Tight Colorcoding</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#10">Equal Colorcoding</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#11">Setting an Explicit Colorrange</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#12">Setting the Contour Levels</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#13">Modifying the Color range After Plotting</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#14">Logarithmic Plots</a></td>
+               </tr>
+            </table>
+         </div>
+         <h2>A sample ODFs and Simulated Pole Figure Data<a name="4"> </a></h2>
+         <p>Let us first define some model ODF_index.html ODFs> to be plotted later on.</p><pre class="codeinput">cs = crystalSymmetry(<span class="string">'-3m'</span>);
+odf = fibreODF(Miller(1,1,0,cs),zvector)
+pf = calcPoleFigure(odf,[Miller(1,0,0,cs),Miller(1,1,1,cs)],<span class="keyword">...</span>
+  equispacedS2Grid(<span class="string">'points'</span>,500,<span class="string">'antipodal'</span>));</pre><pre class="codeoutput"> 
+odf = ODF  
+  crystal symmetry : -3m1, X||a*, Y||b, Z||c*
+  specimen symmetry: 1
+ 
+  Fibre symmetric portion:
+    kernel: de la Vallee Poussin, halfwidth 10&deg;
+    fibre: (11-20) - 0,0,1
+    weight: 1
+ 
+</pre><p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Setting a Colormap<a name="5"> </a></h2>
+         <p>By default, MTEX uses the default MATLAB colormap <b>jet</b>, which varies from blue to red for increasing values.
+         </p><pre class="codeinput">plot(pf)</pre><img src="ColorCoding_demo_01.png"> <p>However, sometimes more simple colormaps are preferred, like the LaboTeX colormap</p><pre class="codeinput">mtexColorMap <span class="string">LaboTeX</span></pre><img src="ColorCoding_demo_02.png"> <p>or a gray scale colormap.</p><pre class="codeinput">mtexColorMap <span class="string">white2black</span></pre><img src="ColorCoding_demo_03.png"> <p>One can set a default colormap adding the following command to the configuration file mtex_settings.m</p><pre class="codeinput">setMTEXpref(<span class="string">'defaultColorMap'</span>,LaboTeXColorMap);</pre><p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Tight Colorcoding<a name="9"> </a></h2>
+         <p>When the <a href="PoleFigure.plot.html">plot</a> is called without any other option, the chosen color coding is the one called  <b>tight</b>, which ranges the data independently from the other plots, i.e., for each subplot the largest value is assigned to the maximum
+            color and the smallest value is assigned to the minimum color from the colormap.
+         </p><pre class="codeinput">close <span class="string">all</span>
+plot(pf)</pre><img src="ColorCoding_demo_04.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Equal Colorcoding<a name="10"> </a></h2>
+         <p>The <b>tight</b> colorcoding makes the reading and comparison between pole figures hard. If you want to have one colorcoding for all plots
+            within one figure use the option <b>colorrange</b> to <b>equal</b>.
+         </p><pre class="codeinput">plot(pf,<span class="string">'colorrange'</span>,<span class="string">'equal'</span>)</pre><img src="ColorCoding_demo_05.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Setting an Explicit Colorrange<a name="11"> </a></h2>
+         <p>If you want to have a unified colorcoding for several figures you can set the colorrange directly in the <a href="ODF.plotPDF.html">plot command</a></p><pre class="codeinput">close <span class="string">all</span>
+plotPDF(odf,[Miller(1,0,0,cs),Miller(1,1,1,cs)],<span class="keyword">...</span>
+  <span class="string">'colorrange'</span>,[0 4],<span class="string">'antipodal'</span>);
+figure
+plotPDF(.5*odf+.5*uniformODF(cs),[Miller(1,0,0,cs),Miller(1,1,1,cs)],<span class="keyword">...</span>
+  <span class="string">'colorrange'</span>,[0 4],<span class="string">'antipodal'</span>);</pre><img src="ColorCoding_demo_06.png"> <img src="ColorCoding_demo_07.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Setting the Contour Levels<a name="12"> </a></h2>
+         <p>In the case of contoured plots, you can also specify the <b>contour levels</b> directly
+         </p><pre class="codeinput">close <span class="string">all</span>
+plotPDF(odf,[Miller(1,0,0,cs),Miller(1,1,1,cs)],<span class="keyword">...</span>
+  <span class="string">'contourf'</span>,0:1:5,<span class="string">'antipodal'</span>)</pre><img src="ColorCoding_demo_08.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Modifying the Color range After Plotting<a name="13"> </a></h2>
+         <p>The color range of the figures can also be adjusted afterward using the command <a href="setcolorrange.html">setcolorrange</a></p><pre class="codeinput">CLim(gcm,[0.38,3.9])</pre><img src="ColorCoding_demo_09.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Logarithmic Plots<a name="14"> </a></h2>
+         <p>Sometimes logarithmic scaled plots are of interest. For this case all plots in MTEX understand the option <b>logarithmic</b>, e.g. TODO:
+         </p><pre class="codeinput"><span class="comment">%close all;</span>
+<span class="comment">%plotPDF(odf,[Miller(1,0,0,cs),Miller(1,1,1,cs)],'antipodal','logarithmic')</span>
+<span class="comment">%setcolorrange([0.01 12]);</span>
+<span class="comment">%mtexColorbar</span></pre><p>Finally, lets set back the default colormap.</p><pre class="codeinput">setMTEXpref(<span class="string">'defaultColorMap'</span>,WhiteJetColorMap);</pre><p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

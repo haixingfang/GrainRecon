@@ -1,0 +1,149 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>scatter (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: orientation.scatter -->
+      <!-- HEADSTUFF: orientation.scatter -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:orientation.scatter">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div>
+         <table class="nav" summary="Navigation aid" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline"><b>MTEX</b> - A MATLAB Toolbox for Quantitative Texture Analysis</td>
+               <td valign="baseline" align="right"><a href="matlab:edit orientation/scatter">
+                     View Code</a></td>
+            </tr>
+         </table>
+         <p style="font-size:1px;"></p>
+      </div>
+      <div class="content">
+         <h1 class="refname">scatter</h1>
+         <div class="subheading">
+            <p>(method of <a href="orientation_index.html">orientation</a>)
+            </p>
+         </div>
+         <p>plots orientations in 3d</p>
+         <h2>Syntax<a name="3"> </a></h2><pre class="codeinput">scatter(ori)</pre><h2>Input<a name="4"> </a></h2>
+         <p>
+            <table cellpadding="4" cellspacing="0" class="funcref" width="100%">
+            <tr>
+            <td width="100px">
+            <tt>ori</tt>
+            </td>
+            <td>
+            <p><a href="orientation_index.html">orientation</a></p>
+            </td>
+            </tr>
+            <tr>
+            <td width="100px">
+            <tt>param,val</tt>
+            </td>
+            <td>Parameters and values that control scatter<table cellpadding="4" cellspacing="0" class="paramval" width="100%">
+            <tr>
+            <td class="header" width="100px">Parameter</td>
+            <td class="header">Description</td>
+            </tr>
+            <tr>
+            <td width="150px">
+            <tt>'axisAngle'</tt>
+            </td>
+            <td>
+            <p>axis angle projection</p>
+            </td>
+            </tr>
+            <tr>
+            <td width="150px">
+            <tt>'Rodrigues'</tt>
+            </td>
+            <td>
+            <p>rodrigues parameterization</p>
+            </td>
+            </tr>
+            <tr>
+            <td width="150px">
+            <tt>'Euler'</tt>
+            </td>
+            <td>
+            <p>3d Bunge Euler plot</p>
+            </td>
+            </tr>
+            <tr>
+            <td width="150px">
+            <tt>'points'</tt>
+            </td>
+            <td>
+            <p>number of orientations to be plotted</p>
+            </td>
+            </tr>
+            <tr>
+            <td width="150px">
+            <tt>'center'</tt>
+            </td>
+            <td>
+            <p>orientation center</p>
+            </td>
+            </tr>
+            </table>
+            </td>
+            </tr>
+            <tr>
+            <td width="100px">
+            <tt>param</tt>
+            </td>
+            <td>Options that control the scatter behavior<table cellpadding="4" cellspacing="0" class="paramval" width="100%">
+            <tr>
+            <td class="header" width="100px">Parameter</td>
+            <td class="header">Description</td>
+            </tr>
+            <tr>
+            <td width="150px">
+            <tt>'ignoreFundamentalRegion'</tt>
+            </td>
+            <td>
+            <p>plot orientation as they are</p>
+            </td>
+            </tr>
+            <tr>
+            <td width="150px">
+            <tt>'project2FundamentalRegion'</tt>
+            </td>
+            <td>
+            <p>project orientations to fundamentalRegion (default)</p>
+            </td>
+            </tr>
+            <tr>
+            <td width="150px">
+            <tt>'restrict2FundamentalRegion'</tt>
+            </td>
+            <td>
+            <p>ignore all orientations outside the fundamentalRegion</p>
+            </td>
+            </tr>
+            </table>
+            </td>
+            </tr>
+            </table>
+            
+         </p>
+         <h3 class="seealso">See also</h3>
+         <p><a href="vector3d.text.html">vector3d/text</a>, <a href="orientation.plot.html">orientation/plot</a></p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

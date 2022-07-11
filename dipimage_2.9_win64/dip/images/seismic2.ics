@@ -1,0 +1,12 @@
+	
+ics_version	1.0
+filename	seismic2
+layout	parameters	3
+layout	order	bits	x	y
+layout	sizes	16	256	256
+layout	coordinates	video
+layout	significant_bits	16
+representation	format	integer
+representation	sign	signed
+representation	byte_order	2	1
+representation	SCIL_TYPE	g2d

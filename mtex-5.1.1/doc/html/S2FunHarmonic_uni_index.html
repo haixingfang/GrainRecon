@@ -1,0 +1,131 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>Univariate S2FunHarmonic (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: S2FunHarmonic_uni_index -->
+      <!-- HEADSTUFF: S2FunHarmonic_uni_index -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:S2FunHarmonic_uni_index">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div>
+         <table class="nav" summary="Navigation aid" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline"><b>MTEX</b> - A MATLAB Toolbox for Quantitative Texture Analysis</td>
+            </tr>
+         </table>
+         <p style="font-size:1px;"></p>
+      </div>
+      <div class="content">
+         <h1 class="refname">Univariate <tt>S2FunHarmonic</tt></h1>
+         <div class="subheading"></div>
+         <h2>Defining a <tt>S2FunHarmonic</tt><a name="1"> </a></h2>
+         <p><b>Definition via function values</b></p>
+         <p>At first you need some vertices</p><pre class="codeinput">nodes = equispacedS2Grid(<span class="string">'resolution'</span>,3*degree,<span class="string">'antipodal'</span>);
+nodes = nodes(:);</pre><p>Next you define function values for the vertices</p><pre class="codeinput">y = smiley(nodes);
+
+<span class="comment">% plot the discrete data</span>
+plot(nodes,y)</pre><img src="S2FunHarmonic_uni_index_01.png"> <p>Now the actual command to get <tt>sF1</tt> of type <tt>S2FunHarmonic</tt></p><pre class="codeinput">sF1 = interp(nodes, y, <span class="string">'harmonicApproximation'</span>)
+
+<span class="comment">% plot the spherical function</span>
+plot(sF1)</pre><pre class="codeoutput"> 
+sF1 = S2FunHarmonic  
+ bandwidth: 48
+ antipodal: true
+</pre><img src="S2FunHarmonic_uni_index_02.png"> <div>
+            <ul type="square">
+               <li>The <tt>bandwidth</tt> property shows the maximal polynomial degree of the function.Internally for a given bandwidth there are stored <img src="S2FunHarmonic_uni_index_eq07204186098443340480.png">  Fourier-coefficients.
+               </li>
+               <li>The <tt>antipodal</tt> flag shows that <img src="S2FunHarmonic_uni_index_eq05142536305060616777.png">  holds for all <img src="S2FunHarmonic_uni_index_eq03296369778268784901.png"> .
+               </li>
+            </ul>
+         </div>
+         <p>For the same result you could also run <tt>S2FunHarmonic.approximation(nodes, y)</tt> and give some additional options (<a href="S2FunHarmonic.approximation.html">see here</a>).
+         </p>
+         <p><b>Definition via function handle</b></p>
+         <p>If you have a function handle for the function you could create a <tt>S2FunHarmonic</tt> via quadrature. At first lets define a function handle which takes <a href="vector3d_index.html"><tt>vector3d</tt></a> as an argument and returns double:
+         </p><pre class="codeinput">f = @(v) 0.1*(v.theta+sin(8*v.x).*sin(8*v.y));
+
+<span class="comment">% plot the function at discrete points</span>
+plot(nodes,f(nodes))</pre><img src="S2FunHarmonic_uni_index_03.png"> <p>Now you can call the quadrature command to get <tt>sF2</tt> of type <tt>S2FunHarmonic</tt></p><pre class="codeinput">sF2 = S2FunHarmonic.quadrature(f, <span class="string">'bandwidth'</span>, 150)
+
+plot(sF2)</pre><pre class="codeoutput"> 
+sF2 = S2FunHarmonic  
+ bandwidth: 150
+</pre><img src="S2FunHarmonic_uni_index_04.png"> <div>
+            <ul type="square">
+               <li>If you would leave the <tt>'bandwidth'</tt> option empty the default bandwidth would be considered, which is 128.
+               </li>
+               <li>The quadrature is faster than the approximation, because it does not have to solve a system of equations. But the knowledge
+                  of the function handle is also a strong requirement.
+               </li>
+               <li>For more options <a href="S2FunHarmonic.quadrature.html">see here</a>.
+               </li>
+            </ul>
+         </div>
+         <p><b>Definition via Fourier-coefficients</b></p>
+         <p>If you already know the Fourier-coefficients, you can simply hand them as a column vector to the constructor of <tt>S2FunHarmonic</tt></p><pre class="codeinput">fhat = rand(25, 1);
+sF3 = S2FunHarmonic(fhat)</pre><pre class="codeoutput"> 
+sF3 = S2FunHarmonic  
+ bandwidth: 4
+</pre><h2>Operations<a name="10"> </a></h2>
+         <p>The idea of <tt>S2Fun</tt> is to calculate with functions like Matlab does with vectors and matrices.
+         </p>
+         <p><b>Basic arithmetic operations</b></p>
+         <p>addition/subtraction</p><pre class="codeinput">sF1+sF2; sF1+2;
+sF1-sF2; sF2-4;</pre><p>multiplication/division</p><pre class="codeinput">sF1.*sF2; 2.*sF1;
+sF1./(sF2+1); 2./sF2; sF2./4;</pre><p>power</p><pre class="codeinput">sF1.^sF2; 2.^sF1; sF2.^4;</pre><p>absolute value of a function</p><pre class="codeinput">abs(sF1);</pre><p><b>min/max</b></p>
+         <p>calculates the local min/max of a single function</p><pre class="codeinput">[minvalue, minnodes] = min(sF1);
+[maxvalue, maxnodes] = max(sF1);</pre><div>
+            <ul type="square">
+               <li>as default <tt>min</tt> or <tt>max</tt> returns the smallest or the biggest value (global optima) with all nodes for which the value is obtained
+               </li>
+               <li>with the option <tt>min(sF1, 'numLocal', n)</tt> the <tt>n</tt> nodes with the belonging biggest or smallest values are returned
+               </li>
+               <li><tt>min(sF1)</tt> is the same as running <a href="S2Funharmonic.steepestDescent.html"><tt>steepestDescent</tt></a>|(sF1)|
+               </li>
+            </ul>
+         </div>
+         <p>min/max of two functions in the pointwise sense</p><pre class="codeinput">min(sF1, sF2);</pre><div>
+            <ul type="square">
+               <li>See all options of min/max <a href="S2FunHarmonic.min.html">here</a></li>
+            </ul>
+         </div>
+         <p><b>Other operations</b></p>
+         <p>calculate the <img src="S2FunHarmonic_uni_index_eq11809360406450963432.png"> -norm, which is only the <img src="S2FunHarmonic_uni_index_eq06246994178291117440.png"> -norm of the Fourier-coefficients
+         </p><pre class="codeinput">norm(sF1);</pre><p>calculate the mean value of a function</p><pre class="codeinput">mean(sF1);</pre><p>calculate the surface integral of a function</p><pre class="codeinput">sum(sF1);</pre><p>rotate a function</p><pre class="codeinput">r = rotation(<span class="string">'Euler'</span>, [pi/4 0 0]);
+rotate(sF1, r);</pre><p>symmetrise a given function</p><pre class="codeinput">cs = crystalSymmetry(<span class="string">'6/m'</span>);
+sFs = symmetrise(sF1, cs);</pre><div>
+            <ul type="square">
+               <li><tt>sFs</tt> is of type <a href="S2FunHarmonicSym_index.html"><tt>S2FunHarmonicSym</tt></a></li>
+            </ul>
+         </div>
+         <p><b>Gradient</b></p>
+         <p>Calculate the gradient as a function <tt>G</tt> of type <a href="S2VectorFieldHarmonic_index.html"><tt>S2VectorFieldHarmonic</tt></a></p><pre class="codeinput">G = grad(sF1);</pre><p>The direct evaluation of the gradient is faster and returns <a href="vector3d_index.html"><tt>vector3d</tt></a></p><pre class="codeinput">nodes = vector3d.rand(100);
+grad(sF1, nodes);</pre><h2>Visualization<a name="30"> </a></h2>
+         <p>There are different ways to visualize a <tt>S2FunHarmonic</tt></p>
+         <p>The default <tt>plot</tt>-command be default plots the function on the upper hemisphere
+         </p><pre class="codeinput">plot(sF1);</pre><img src="S2FunHarmonic_uni_index_05.png"> <div>
+            <ul type="square">
+               <li><tt>plot(sF1)</tt> is the same as <tt>contourf(sF1)</tt></li>
+            </ul>
+         </div>
+         <p>nonfilled contour plot plots only the contour lines</p><pre class="codeinput">contour(sF1, <span class="string">'LineWidth'</span>, 2);</pre><img src="S2FunHarmonic_uni_index_06.png"> <p>color plot without the contour lines</p><pre class="codeinput">pcolor(sF1);</pre><img src="S2FunHarmonic_uni_index_07.png"> <p>3D plot of a sphere colored accordingly to the function values.</p><pre class="codeinput">plot3d(sF2);</pre><img src="S2FunHarmonic_uni_index_08.png"> <p>3D plot where the radius of the sphere is transformed according to the function values</p><pre class="codeinput">surf(sF2);</pre><img src="S2FunHarmonic_uni_index_09.png"> <p>Plot the intersection of the surf plot with a plane with normal vector <tt>v</tt></p><pre class="codeinput">plotSection(sF2, zvector);</pre><img src="S2FunHarmonic_uni_index_10.png"> <p>plotting the Fourier coefficients</p><pre class="codeinput">plotSpektra(sF1);
+set(gca,<span class="string">'FontSize'</span>, 20);</pre><img src="S2FunHarmonic_uni_index_11.png"> <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

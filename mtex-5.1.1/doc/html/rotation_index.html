@@ -1,0 +1,292 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>Rotations (The Class rotation) (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: rotation_index -->
+      <!-- HEADSTUFF: rotation_index -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:rotation_index">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div class="myheader">
+         <table border="0" width="100%" cellpadding="10" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="left" style="color:white"><a style="color:white" href="matlab:edit rotation_index">Open Matlab File in the Editor</a></td>
+               <td valign="baseline" align="right" style="color:white"><a style="color:white" href="mtex_product_page.html">MTEX</a></td>
+            </tr>
+         </table>
+      </div>
+      <div class="content">
+         <h1 class="refname">Rotations (The Class <a href="rotation_index.html">rotation</a>)
+         </h1>
+         <div class="subheading">
+            <p>This section describes the class  <a href="rotation.rotation.html"><b>rotation</b></a> and gives an overview on how to work with rotations in MTEX.
+            </p>
+         </div>
+         <div>
+            <table class="content">
+               <tr>
+                  <td class="header">On this page ...</td>
+               </tr>
+               <tr>
+                  <td><a href="#3">Class Description</a></td>
+               </tr>
+               <tr>
+                  <td><span class="subsection"><a href="#4"> Euler Angle Conventions</a></span></td>
+               </tr>
+               <tr>
+                  <td><span class="subsection"><a href="#8"> Other Ways of Defining a Rotation</a></span></td>
+               </tr>
+               <tr>
+                  <td><span class="subsection"><a href="#15"> Calculating with Rotations</a></span></td>
+               </tr>
+               <tr>
+                  <td><span class="subsection"><a href="#23"> Conversion into Euler Angles and Rodrigues Parametrisation</a></span></td>
+               </tr>
+               <tr>
+                  <td><span class="subsection"><a href="#24"> Plotting Rotations</a></span></td>
+               </tr>
+               <tr>
+                  <td><a href="#25">Complete Function list</a></td>
+               </tr>
+            </table>
+         </div>
+         <h2>Class Description<a name="3"> </a></h2>
+         <p>The class <b>rotation</b> is an inheritance of the class <a href="quaternion_index.html"><b>quaternion</b></a> and allow to work with rotations as with matrixes in MTEX.
+         </p>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h3> Euler Angle Conventions<a name="4"> </a></h3>
+         <p>There are several ways to specify a rotation in MTEX. A well-known possibility are the so called <b>Euler angles</b>. In texture analysis the following conventions are commonly used
+         </p>
+         <div>
+            <ul type="square">
+               <li>Bunge (phi1,Phi,phi2)       - ZXZ</li>
+               <li>Matthies (alpha,beta,gamma) - ZYZ</li>
+               <li>Roe (Psi,Theta,Phi)</li>
+               <li>Kocks (Psi,Theta,phi)</li>
+               <li>Canova (omega,Theta,phi)</li>
+            </ul>
+         </div>
+         <p><b>Defining a Rotation by Bunge Euler Angles</b></p>
+         <p>The default Euler angle convention in MTEX are the Bunge Euler angles. Here a rotation is determined by three consecutive
+            rotations, the first about the z-axis, the second about the y-axis, and the third again about the z-axis. Hence, one needs
+            three angles to define an rotation by Euler angles. The following command defines a rotation by its three Bunge Euler angles
+         </p><pre class="codeinput">o = rotation(<span class="string">'Euler'</span>,30*degree,50*degree,10*degree)</pre><pre class="codeoutput"> 
+o = rotation  
+  size: 1 x 1
+ 
+  Bunge Euler angles in degree
+  phi1  Phi phi2 Inv.
+    30   50   10    0
+ 
+</pre><p><b>Defining a Rotation by Other Euler Angle Conventions</b></p>
+         <p>In order to define a rotation by a Euler angle convention different to the default Euler angle convention you to specify the
+            convention as an additional parameter, e.g.
+         </p><pre class="codeinput">o = rotation(<span class="string">'Euler'</span>,30*degree,50*degree,10*degree,<span class="string">'Roe'</span>)</pre><pre class="codeoutput"> 
+o = rotation  
+  size: 1 x 1
+ 
+  Bunge Euler angles in degree
+  phi1  Phi phi2 Inv.
+   120   50  280    0
+ 
+</pre><p><b>Changing the Default Euler Angle Convention</b></p>
+         <p>The default euler angle convention can be changed by the command <b>setpref</b>, for a permanent change the <a href="matlab:edit('mtex_settings.m')">mtex_settings</a> should be edited. Compare
+         </p><pre class="codeinput">setMTEXpref(<span class="string">'EulerAngleConvention'</span>,<span class="string">'Roe'</span>)
+o</pre><pre class="codeoutput"> 
+o = rotation  
+  size: 1 x 1
+ 
+  Roe Euler angles in degree
+  Psi Theta   Phi  Inv.
+   30    50    10     0
+ 
+</pre><pre class="codeinput">setMTEXpref(<span class="string">'EulerAngleConvention'</span>,<span class="string">'Bunge'</span>)
+o</pre><pre class="codeoutput"> 
+o = rotation  
+  size: 1 x 1
+ 
+  Bunge Euler angles in degree
+  phi1  Phi phi2 Inv.
+   120   50  280    0
+ 
+</pre><p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h3> Other Ways of Defining a Rotation<a name="8"> </a></h3>
+         <p><b>The axis angle parametrisation</b></p>
+         <p>A very simple possibility to specify a rotation is to specify the rotational axis and the rotational angle.</p><pre class="codeinput">o = rotation(<span class="string">'axis'</span>,xvector,<span class="string">'angle'</span>,30*degree)</pre><pre class="codeoutput"> 
+o = rotation  
+  size: 1 x 1
+ 
+  Bunge Euler angles in degree
+  phi1  Phi phi2 Inv.
+     0   30    0    0
+ 
+</pre><p><b>Four vectors defining a rotation</b></p>
+         <p>Given four vectors u1, v1, u2, v2 there is a unique rotations q such that q u1 = v1 and q u2 = v2.</p><pre class="codeinput">o = rotation(<span class="string">'map'</span>,xvector,yvector,zvector,zvector)</pre><pre class="codeoutput"> 
+o = rotation  
+  size: 1 x 1
+ 
+  Bunge Euler angles in degree
+  phi1  Phi phi2 Inv.
+    90    0    0    0
+ 
+</pre><p>If only two vectors are specified the rotation with the smallest angle is returned that maps the first vector onto the second
+            one.
+         </p><pre class="codeinput">o = rotation(<span class="string">'map'</span>,xvector,yvector)</pre><pre class="codeoutput"> 
+o = rotation  
+  size: 1 x 1
+ 
+  Bunge Euler angles in degree
+  phi1  Phi phi2 Inv.
+    90    0    0    0
+ 
+</pre><p><b>A fibre of rotations</b></p>
+         <p>The set of all rotations that rotate a certain vector u onto a certain vector v define a fibre in the rotation space. A discretisation
+            of such a fibre is defined by
+         </p><pre class="codeinput">u = xvector;
+v = yvector;
+o = rotation(<span class="string">'fibre'</span>,u,v)</pre><pre class="codeoutput"> 
+o = rotation  
+  size: 1 x 361
+ 
+</pre><p><b>Defining a rotation by a 3 times 3 matrix</b></p><pre class="codeinput">o = rotation(<span class="string">'matrix'</span>,eye(3))</pre><pre class="codeoutput"> 
+o = rotation  
+  size: 1 x 1
+ 
+  Bunge Euler angles in degree
+  phi1  Phi phi2 Inv.
+     0    0    0    0
+ 
+</pre><p><b>Defining a rotation by a quaternion</b></p>
+         <p>A last possibility is to define a rotation by a quaternion, i.e., by its components a,b,c,d.</p><pre class="codeinput">o = rotation(<span class="string">'quaternion'</span>,1,0,0,0)</pre><pre class="codeoutput"> 
+o = rotation  
+  size: 1 x 1
+ 
+  Bunge Euler angles in degree
+  phi1  Phi phi2 Inv.
+     0    0    0    0
+ 
+</pre><p>Actually, MTEX represents internally every rotation as a quaternion. Hence, one can write</p><pre class="codeinput">q = quaternion(1,0,0,0)
+o = rotation(q)</pre><pre class="codeoutput"> 
+q = Quaternion  
+  size: 1 x 1
+  a b c d
+  1 0 0 0
+ 
+o = rotation  
+  size: 1 x 1
+ 
+  Bunge Euler angles in degree
+  phi1  Phi phi2 Inv.
+     0    0    0    0
+ 
+</pre><p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h3> Calculating with Rotations<a name="15"> </a></h3>
+         <p><b>Rotating Vectors</b></p>
+         <p>Let</p><pre class="codeinput">o = rotation(<span class="string">'Euler'</span>,90*degree,90*degree,0*degree)</pre><pre class="codeoutput"> 
+o = rotation  
+  size: 1 x 1
+ 
+  Bunge Euler angles in degree
+  phi1  Phi phi2 Inv.
+    90   90    0    0
+ 
+</pre><p>a certain rotation. Then the rotation of the xvector is computed via</p><pre class="codeinput">v = o * xvector</pre><pre class="codeoutput"> 
+v = vector3d  
+ size: 1 x 1
+  x y z
+  0 1 0
+</pre><p>The inverse rotation is computed via the <a href="rotation.mldivide.html">backslash operator</a></p><pre class="codeinput">o \ v</pre><pre class="codeoutput"> 
+ans = vector3d  
+ size: 1 x 1
+  x y z
+  1 0 0
+</pre><p><b>Concatenating Rotations</b></p>
+         <p>Let</p><pre class="codeinput">rot1 = rotation(<span class="string">'Euler'</span>,90*degree,0,0);
+rot2 = rotation(<span class="string">'Euler'</span>,0,60*degree,0);</pre><p>be two rotations. Then the rotation defined by applying first rotation one and then rotation two is computed by</p><pre class="codeinput">rot = rot2 * rot1</pre><pre class="codeoutput"> 
+rot = rotation  
+  size: 1 x 1
+ 
+  Bunge Euler angles in degree
+  phi1  Phi phi2 Inv.
+     0   60   90    0
+ 
+</pre><p><b>Computing the rotation angle and the rotational axis</b></p>
+         <p>Then rotational angle and the axis of rotation can be computed via then commands <a href="quaternion.angle.html">angle(rot)</a> and <a href="quaternion.axis.html">axis(rot)</a></p><pre class="codeinput">angle(rot)/degree
+
+axis(rot)</pre><pre class="codeoutput">ans =
+  104.4775
+ 
+ans = vector3d  
+ size: 1 x 1
+         x         y         z
+  0.447214 -0.447214  0.774597
+</pre><p>If two rotations are specified the command <a href="quaternion.angle.html">angle(rot1,rot2)</a> computes the rotational angle between both rotations
+         </p><pre class="codeinput">angle(rot1,rot2)/degree</pre><pre class="codeoutput">ans =
+  104.4775
+</pre><p><b>The inverse Rotation</b></p>
+         <p>The inverse rotation you get from the command <a href="quaternion.inv.html">inv(rot)</a></p><pre class="codeinput">inv(rot)</pre><pre class="codeoutput"> 
+ans = rotation  
+  size: 1 x 1
+ 
+  Bunge Euler angles in degree
+  phi1  Phi phi2 Inv.
+    90   60  180    0
+ 
+</pre><p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h3> Conversion into Euler Angles and Rodrigues Parametrisation<a name="23"> </a></h3>
+         <p>There are methods to transform quaternion in almost any other parameterization of rotations as they are:</p>
+         <div>
+            <ul type="square">
+               <li><a href="quaternion.Euler.html">Euler(rot)</a>   in Euler angle
+               </li>
+               <li><a href="quaternion.Rodrigues.html">Rodrigues(rot)</a> % in Rodrigues parameter
+               </li>
+            </ul>
+         </div><pre class="codeinput">[alpha,beta,gamma] = Euler(rot,<span class="string">'Matthies'</span>)</pre><pre class="codeoutput">alpha =
+    4.7124
+beta =
+    1.0472
+gamma =
+    3.1416
+</pre><p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h3> Plotting Rotations<a name="24"> </a></h3>
+         <p>The <a href="quaternion.plot.html">plot</a> function allows you to visualize an rotation by plotting how the standard basis x,y,z transforms under the rotation.
+         </p><pre class="codeinput">plot(rot)</pre><img src="rotation_index_01.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Complete Function list<a name="25"> </a></h2>
+         <p><table width="90%"><tr><td width="200px"><a href="rotation.char.html"><tt>char</tt></a></td><td>quaternion to char</td></tr><tr><td
+            width="200px"><a href="rotation.display.html"><tt>display</tt></a></td><td>standart output</td></tr><tr><td width="200px"><a
+            href="rotation.dot.html"><tt>dot</tt></a></td><td>compute rot1 . rot2</td></tr><tr><td width="200px"><a href="rotation.dot_outer.html"><tt>dot_outer</tt></a></td><td/></tr><tr><td
+            width="200px"><a href="rotation.line.html"><tt>line</tt></a></td><td>draw rotations connected by lines</td></tr><tr><td width="200px"><a
+            href="rotation.matrix.html"><tt>matrix</tt></a></td><td>quaternion to direction cosine matrix conversion</td></tr><tr><td
+            width="200px"><a href="rotation.mldivide.html"><tt>mldivide</tt></a></td><td>o \ v </td></tr><tr><td width="200px"><a href="rotation.mtimes.html"><tt>mtimes</tt></a></td><td>r
+            = a * b</td></tr><tr><td width="200px"><a href="rotation.permute.html"><tt>permute</tt></a></td><td>overloads permute</td></tr><tr><td
+            width="200px"><a href="rotation.power.html"><tt>power</tt></a></td><td>r.^n</td></tr><tr><td width="200px"><a href="rotation.project2FundamentalRegion.html"><tt>project2FundamentalRegion</tt></a></td><td>projects
+            rotation to a fundamental region</td></tr><tr><td width="200px"><a href="rotation.repmat.html"><tt>repmat</tt></a></td><td>overloads
+            repmat</td></tr><tr><td width="200px"><a href="rotation.reshape.html"><tt>reshape</tt></a></td><td>overloads reshape</td></tr><tr><td
+            width="200px"><a href="rotation.rotation.html"><tt>rotation</tt></a></td><td>defines an rotation</td></tr><tr><td width="200px"><a
+            href="rotation.subSet.html"><tt>subSet</tt></a></td><td>indexing of rotation</td></tr><tr><td width="200px"><a href="rotation.subsasgn.html"><tt>subsasgn</tt></a></td><td>overloads
+            subsasgn</td></tr><tr><td width="200px"><a href="rotation.subsref.html"><tt>subsref</tt></a></td><td>overloads subsref</td></tr><tr><td
+            width="200px"><a href="rotation.times.html"><tt>times</tt></a></td><td>r = a .* b</td></tr><tr><td width="200px"><a href="rotation.transpose.html"><tt>transpose</tt></a></td><td>array
+            of rotations</td></tr><tr><td width="200px"><a href="rotation.uminus.html"><tt>uminus</tt></a></td><td>implements rotation</td></tr><tr><td
+            width="200px"><a href="rotation.unique.html"><tt>unique</tt></a></td><td>disjoint list of rotations</td></tr></table>
+         </p>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

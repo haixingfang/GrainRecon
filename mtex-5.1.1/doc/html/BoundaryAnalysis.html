@@ -1,0 +1,288 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>Grain Boundaries (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: BoundaryAnalysis -->
+      <!-- HEADSTUFF: BoundaryAnalysis -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:BoundaryAnalysis">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div>
+         <table class="nav" summary="Navigation aid" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline"><b>MTEX</b> - A MATLAB Toolbox for Quantitative Texture Analysis</td>
+            </tr>
+         </table>
+         <p style="font-size:1px;"></p>
+      </div>
+      <div class="content">
+         <h1 class="refname">Grain Boundaries</h1>
+         <div class="subheading">
+            <p>MTEX provides several functionalities to analyze grain boundaries with respect to twinning, CSL boundaries, etc.</p>
+         </div>
+         <p>
+            <table class="ref" width="90%">
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('BoundaryPlots_block','BoundaryPlots_expandable_text');" valign="top" width="15">
+            <img id="BoundaryPlots_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="BoundaryPlots.html">Grain Boundaries<td valign="top" width="75%">Overview about colorizing grain boundaries</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="BoundaryPlots_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="BoundaryPlots.html#4">The grain boundary</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="BoundaryPlots.html#7">Visualizing special grain boundaries</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="BoundaryPlots.html#8">SUB: Phase boundaries</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="BoundaryPlots.html#9">SUB: Subboundaries</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="BoundaryPlots.html#10">SUB: Misorientation</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="BoundaryPlots.html#13">SUB: Classifying special boundaries</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('BoundaryMisorientations_block','BoundaryMisorientations_expandable_text');" valign="top"
+            width="15">
+            <img id="BoundaryMisorientations_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="BoundaryMisorientations.html">Misorientations at grain boundaries<td valign="top" width="75%">Analyse misorientations
+            along grain boundaries This example explains how to analyse boundary misorientation by means of misorientation axes</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="BoundaryMisorientations_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="BoundaryMisorientations.html#1">Import EBSD data and select a subregion</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="BoundaryMisorientations.html#2">Grain modelling</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="BoundaryMisorientations.html#3">Visualize the misorientation angle at grain boundaries</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="BoundaryMisorientations.html#4">Visualize the misorientation axes in specimen coordinates</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('TwinningAnalysis_block','TwinningAnalysis_expandable_text');" valign="top" width="15">
+            <img id="TwinningAnalysis_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="TwinningAnalysis.html">Twinning Analysis<td valign="top" width="75%">Explains how to detect and quantify twin boundaries</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="TwinningAnalysis_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="TwinningAnalysis.html#3">Data import and grain detection</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="TwinningAnalysis.html#6">Properties of grain boundaries</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="TwinningAnalysis.html#10">Merge twins along twin boundaries</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="TwinningAnalysis.html#11">Grain relationships</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="TwinningAnalysis.html#13">Calculate the twinned area</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="TwinningAnalysis.html#14">Setting Up the EBSD Data for the Merged Grains</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('CSLBoundaries_block','CSLBoundaries_expandable_text');" valign="top" width="15">
+            <img id="CSLBoundaries_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="CSLBoundaries.html">CSL Boundaries<td valign="top" width="75%">Explains how to analyze CSL grain boundaries</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="CSLBoundaries_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="CSLBoundaries.html#3">Data import and grain detection</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="CSLBoundaries.html#5">Detecting CSL Boundaries</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="CSLBoundaries.html#6">Mark triple points</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="CSLBoundaries.html#7">Merging grains with common CSL(3) boundary</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="CSLBoundaries.html#9">Colorizing misorientations </a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="CSLBoundaries.html#12">Misorientations in the 3d fundamental zone</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="CSLBoundaries.html#13">Analyzing the misorientation distribution function</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('TriplePoints_block','TriplePoints_expandable_text');" valign="top" width="15">
+            <img id="TriplePoints_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="TriplePoints.html">Triple points<td valign="top" width="75%">how to detect triple points</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="TriplePoints_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="TriplePoints.html#3">Calculation of triple points</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="TriplePoints.html#4">Index triple points by phase</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="TriplePoints.html#7">Index triple points by grains</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="TriplePoints.html#8">Index triple points by grain boundary</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="TriplePoints.html#9">Boundary segments from triple points</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            </table>
+            
+         </p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

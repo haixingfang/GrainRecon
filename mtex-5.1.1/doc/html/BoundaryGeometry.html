@@ -1,0 +1,154 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>Grain Boundary Tutorial (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: BoundaryGeometry -->
+      <!-- HEADSTUFF: BoundaryGeometry -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:BoundaryGeometry">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div class="myheader">
+         <table border="0" width="100%" cellpadding="10" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="left" style="color:white"><a style="color:white" href="matlab:edit BoundaryGeometry">Open Matlab File in the Editor</a></td>
+               <td valign="baseline" align="right" style="color:white"><a style="color:white" href="mtex_product_page.html">MTEX</a></td>
+            </tr>
+         </table>
+      </div>
+      <div class="content">
+         <h1 class="refname">Grain Boundary Tutorial</h1>
+         <div class="subheading">
+            <p>geometrical properties of grain boundaries</p>
+         </div>
+         <div>
+            <table class="content">
+               <tr>
+                  <td class="header">On this page ...</td>
+               </tr>
+               <tr>
+                  <td><a href="#3">Grain boundaries generation</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#4">Properties of grain boundaries</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#6">Line intersections</a></td>
+               </tr>
+            </table>
+         </div>
+         <h2>Grain boundaries generation<a name="3"> </a></h2>
+         <p>To work with grain boundaries we need some ebsd data and have to detect grains within the data set.</p><pre class="codeinput"><span class="comment">% load some example data</span>
+mtexdata <span class="string">twins</span>
+
+<span class="comment">% detect grains</span>
+[grains,ebsd.grainId,ebsd.mis2mean] = calcGrains(ebsd(<span class="string">'indexed'</span>))
+
+<span class="comment">% smooth them</span>
+grains = grains.smooth
+
+<span class="comment">% visualize the grains</span>
+plot(grains,grains.meanOrientation)
+
+<span class="comment">% extract the grain boundaries</span>
+gB = grains.boundary</pre><pre class="codeoutput"> 
+grains = grain2d  
+ 
+ Phase  Grains  Pixels    Mineral  Symmetry  Crystal reference frame
+     1     121   22833  Magnesium     6/mmm       X||a*, Y||b, Z||c*
+ 
+ boundary segments: 3825
+ triple points: 114
+ 
+ Properties: GOS, meanRotation
+ 
+ 
+ebsd = EBSD  
+ 
+ Phase  Orientations     Mineral       Color  Symmetry  Crystal reference frame
+     0     46 (0.2%)  notIndexed                                               
+     1  22833 (100%)   Magnesium  light blue     6/mmm       X||a*, Y||b, Z||c*
+ 
+ Properties: bands, bc, bs, error, mad, x, y, grainId, mis2mean
+ Scan unit : um
+ 
+ 
+ebsd = EBSD  
+ 
+ Phase  Orientations     Mineral       Color  Symmetry  Crystal reference frame
+     0     46 (0.2%)  notIndexed                                               
+     1  22833 (100%)   Magnesium  light blue     6/mmm       X||a*, Y||b, Z||c*
+ 
+ Properties: bands, bc, bs, error, mad, x, y, grainId, mis2mean
+ Scan unit : um
+ 
+ 
+grains = grain2d  
+ 
+ Phase  Grains  Pixels    Mineral  Symmetry  Crystal reference frame
+     1     121   22833  Magnesium     6/mmm       X||a*, Y||b, Z||c*
+ 
+ boundary segments: 3825
+ triple points: 114
+ 
+ Properties: GOS, meanRotation
+ 
+  I'm going to colorize the orientation data with the 
+  standard MTEX colorkey. To view the colorkey do:
+ 
+  oM = ipfColorKey(ori_variable_name)
+  plot(oM)
+ 
+gB = grainBoundary  
+ 
+ Segments   mineral 1  mineral 2
+      606  notIndexed  Magnesium
+     3219   Magnesium  Magnesium
+</pre><img src="BoundaryGeometry_01.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Properties of grain boundaries<a name="4"> </a></h2>
+         <p>A variable of type grain boundary contains the following properties</p>
+         <div>
+            <ul type="square">
+               <li>misorientation</li>
+               <li>direction</li>
+               <li>segLength</li>
+            </ul>
+         </div>
+         <p>These can be used to colorize the grain boundaries. By the following command we plot the grain boundaries colorized by the
+            misorientation angle
+         </p><pre class="codeinput">plot(gB(<span class="string">'indexed'</span>),gB(<span class="string">'indexed'</span>).misorientation.angle./degree,<span class="string">'linewidth'</span>,2)
+mtexColorbar</pre><img src="BoundaryGeometry_02.png"> <p>The output tells us that we have 3219 Magnesium to Magnesium boundary segments and 606 boundary segements where the grains
+            are cutted by the scanning boundary. To restrict the grain boundaries to a specific phase transistion you shall do
+         </p><pre class="codeinput">plot(gB,gB.direction.rho,<span class="string">'linewidth'</span>,2)</pre><img src="BoundaryGeometry_03.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Line intersections<a name="6"> </a></h2>
+         <p>Let start by defining some line by its endpoints and plot in on top of the boundary plot</p><pre class="codeinput">xy1 = [0,10];   <span class="comment">% staring point</span>
+xy2 = [31,41]; <span class="comment">% end point</span>
+
+plot(grains.boundary)
+line([xy1(1);xy2(1)],[xy1(2);xy2(2)],<span class="string">'linestyle'</span>,<span class="string">':'</span>,<span class="string">'linewidth'</span>,2,<span class="string">'color'</span>,<span class="string">'cyan'</span>)</pre><img src="BoundaryGeometry_04.png"> <p>The command <a href="grainBoundary_intersect.html">intersect</a> computes the intersections of all boundary segments with the given line
+         </p><pre class="codeinput">[x,y] = grains.boundary.intersect(xy1,xy2);
+hold <span class="string">on</span>
+scatter(x,y,<span class="string">'red'</span>)
+hold <span class="string">off</span>
+<span class="comment">% find the number of intersection points</span>
+sum(~isnan(x))</pre><pre class="codeoutput">ans =
+    10
+</pre><img src="BoundaryGeometry_05.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

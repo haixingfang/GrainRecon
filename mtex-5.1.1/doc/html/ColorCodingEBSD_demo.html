@@ -1,0 +1,213 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>EBSD Color Coding (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: ColorCodingEBSD_demo -->
+      <!-- HEADSTUFF: ColorCodingEBSD_demo -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:ColorCodingEBSD_demo">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div class="myheader">
+         <table border="0" width="100%" cellpadding="10" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="left" style="color:white"><a style="color:white" href="matlab:edit ColorCodingEBSD_demo">Open Matlab File in the Editor</a></td>
+               <td valign="baseline" align="right" style="color:white"><a style="color:white" href="mtex_product_page.html">MTEX</a></td>
+            </tr>
+         </table>
+      </div>
+      <div class="content">
+         <h1 class="refname">EBSD Color Coding</h1>
+         <div class="subheading">
+            <p>Explains EBSD color coding.</p>
+         </div>
+         <div>
+            <table class="content">
+               <tr>
+                  <td class="header">On this page ...</td>
+               </tr>
+               <tr>
+                  <td><a href="#4">Colorcoding of orientations</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#5">Assigning the Euler angles to the RGB values</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#10">Colorcoding according to inverse pole figure</a></td>
+               </tr>
+            </table>
+         </div>
+         <h3 class="seealso">See also</h3>
+         <p><a href="EBSD.plotspatial.html">EBSD/plotspatial</a>, <a href="grain.plotGrains.html">grain/plotGrains</a>, <a href="ebsdColorbar.html">ebsdColorbar</a>, <a href="orientation2color.html">orientation2color</a></p>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Colorcoding of orientations<a name="4"> </a></h2>
+         <p>In order to visualize orientation maps as they are measured by EBSD one has to assign a color to each possible orientation.
+            As an example, one may think of representing an orientation by its Euler angles ph1, Phi, phi2 and taking these as the RGB
+            values of a color. Of course, there are many other ways to do this. Before presenting all the possibilities MTEX offers to
+            assign a color to each orientation let us shortly summarize what properties we expect from such an assignment.
+         </p>
+         <div>
+            <ol>
+               <li>crystallographic equivalent orientations should have the same color</li>
+               <li>similar orientations should have similar colors</li>
+               <li>different orientations should have different colors</li>
+               <li>the whole colorspace should be used for full contrast</li>
+               <li>if the orientations are concentrated in a small region of the orientation space, the colorspace should be exhaust by this
+                  region
+               </li>
+            </ol>
+         </div>
+         <p>It should be noted that it is impossible to have all the 4 points mentioned above represented by a single colorcoding. This
+            is mainly due the fact that the orientation space is three dimensional and the colorspace is only two dimensional, i.e., there
+            are too few colors to cover the whole orientation space in an unambiguous way. Hence, some compromises have to be accepted
+            and some assumptions have to be made.
+         </p>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Assigning the Euler angles to the RGB values<a name="5"> </a></h2>
+         <p>Using the Euler angles as the RGB values is probably the simplest way of mapping an orientation to a color. In MTEX such a
+            color key is defined as a variable of type <a href="orientationColorKey.html">orientatiomColorKey</a></p><pre class="codeinput"><span class="comment">% we have to set up a crystal symmetry first, as it defines the fundamental</span>
+<span class="comment">% region for the Euler angles</span>
+cs = crystalSymmetry(<span class="string">'432'</span>)
+
+<span class="comment">% thise defins the orientation map</span>
+oM = BungeColorKey(cs)</pre><pre class="codeoutput"> 
+cs = crystalSymmetry  
+ 
+  symmetry: 432    
+  a, b, c : 1, 1, 1
+ 
+oM = 
+  BungeColorKey with properties:
+
+       center: [1&times;1 quaternion]
+    phi1Range: [0 6.2832]
+    phi2Range: [0 1.5708]
+     PhiRange: [0 1.5708]
+          CS1: [6&times;4 crystalSymmetry]
+          CS2: [1&times;1 specimenSymmetry]
+    antipodal: 0
+</pre><p>Given an arbitrary orientation</p><pre class="codeinput">ori = orientation(<span class="string">'Euler'</span>,10*degree,20*degree,0*degree)</pre><pre class="codeoutput"> 
+ori = orientation  
+  size: 1 x 1
+  crystal symmetry : 1, X||a, Y||b*, Z||c*
+  specimen symmetry: 1
+ 
+  Bunge Euler angles in degree
+  phi1  Phi phi2 Inv.
+    10   20    0    0
+ 
+</pre><p>we can compute the corresponding color as rgb values by</p><pre class="codeinput">rgb = oM.orientation2color(ori)</pre><pre class="codeoutput">rgb =
+    0.0278    0.2222         0
+</pre><p>Lets visualize the orientation map by plotting it in orientation space as phi_2 sections</p><pre class="codeinput">plot(oM,<span class="string">'sections'</span>,6,<span class="string">'phi2'</span>)</pre><img src="ColorCodingEBSD_demo_01.png"> <p>Although this visualization looks very smooth, the orientation map using Euler angles introduces lots of color jumps, i.e.,
+            the point 2 of our requirement list is not satisfied. This becomes obvious when plotting the colors as sigma sections, i.e.,
+            when section according to phi_1 - phi_2
+         </p><pre class="codeinput">plot(oM,<span class="string">'sections'</span>,6,<span class="string">'sigma'</span>)</pre><img src="ColorCodingEBSD_demo_02.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Colorcoding according to inverse pole figure<a name="10"> </a></h2>
+         <p>The standard way of mapping orientations to colors is based on inverse pole figures. The following orientation map assigns
+            a color to each direction of the fundamental sector of the inverse pole figure
+         </p><pre class="codeinput">oM = ipfHSVKey(cs)
+
+plot(oM)</pre><pre class="codeoutput">oM = 
+  ipfHSVKey with properties:
+
+             colorPostRotation: [1&times;1 rotation]
+               colorStretching: 1
+                   whiteCenter: [1&times;1 vector3d]
+                     grayValue: [0.2000 0.5000]
+                  grayGradient: 0.5000
+                      maxAngle: Inf
+    inversePoleFigureDirection: [1&times;1 vector3d]
+                        dirMap: [1&times;1 HSVDirectionKey]
+                           CS1: [6&times;4 crystalSymmetry]
+                           CS2: [1&times;1 specimenSymmetry]
+                     antipodal: 0
+</pre><img src="ColorCodingEBSD_demo_03.png"> <p>We may also look at the inverse pole figure sphere in 3d. One can nicely observe how the color map follows the given symmetry
+            group.
+         </p><pre class="codeinput">close <span class="string">all</span>
+plot(oM,<span class="string">'3d'</span>)</pre><img src="ColorCodingEBSD_demo_04.png"> <p>Alternatively, we may plot the color mapping in 2d on the entire sphere together with the symmetry elements</p><pre class="codeinput">plot(oM,<span class="string">'complete'</span>)
+
+hold <span class="string">on</span>
+plot(cs)
+hold <span class="string">off</span></pre><img src="ColorCodingEBSD_demo_05.png"> <p>The orientation map provides several options to alter the alignment of the colors. Lets give some examples</p><pre class="codeinput"><span class="comment">% we may interchange green and blue by setting</span>
+oM.colorPostRotation = reflection(yvector);
+
+plot(oM)</pre><img src="ColorCodingEBSD_demo_06.png"> <p>or shift the cycle of colors red, green, blue by</p><pre class="codeinput">oM.colorPostRotation = rotation(<span class="string">'axis'</span>,zvector,<span class="string">'angle'</span>,120*degree);
+
+plot(oM)</pre><img src="ColorCodingEBSD_demo_07.png"> <p>Lets now consider an EBSD map</p><pre class="codeinput">mtexdata <span class="string">forsterite</span>
+
+plot(ebsd)</pre><img src="ColorCodingEBSD_demo_08.png"> <p>and assume we want to colorize the Forsterite phase according to its orientation. Then we first define the orientation mapping.
+            Note that we can pass the phase we want to color instead of the crysta symmetry
+         </p><pre class="codeinput">oM = ipfHSVKey(ebsd(<span class="string">'Forsterite'</span>))</pre><pre class="codeoutput">oM = 
+  ipfHSVKey with properties:
+
+             colorPostRotation: [1&times;1 rotation]
+               colorStretching: 1
+                   whiteCenter: [1&times;1 vector3d]
+                     grayValue: [0.2000 0.5000]
+                  grayGradient: 0.5000
+                      maxAngle: Inf
+    inversePoleFigureDirection: [1&times;1 vector3d]
+                        dirMap: [1&times;1 HSVDirectionKey]
+                           CS1: [4&times;2 crystalSymmetry]
+                           CS2: [1&times;1 specimenSymmetry]
+                     antipodal: 0
+</pre><p>We may also want to set the inverse pole figure direction. This is done by</p><pre class="codeinput">oM.inversePoleFigureDirection = zvector;</pre><p>Next we compute the color corresponding to each orientation we want to plot.</p><pre class="codeinput">color = oM.orientation2color(ebsd(<span class="string">'Forsterite'</span>).orientations);</pre><p>Finally, we can use these colors to visualize the orientations of the Forsterite phase</p><pre class="codeinput">plot(ebsd(<span class="string">'Forsterite'</span>),color)</pre><img src="ColorCodingEBSD_demo_09.png"> <p>We can visualize the orientations of the forsterite phase also the other way round by plotting them into the inverse pole
+            figure map.
+         </p><pre class="codeinput">plot(oM)
+
+hold <span class="string">on</span>
+plotIPDF(ebsd(<span class="string">'Forsterite'</span>).orientations,oM.inversePoleFigureDirection,<span class="keyword">...</span>
+  <span class="string">'MarkerSize'</span>,4,<span class="string">'MarkerFaceColor'</span>,<span class="string">'none'</span>,<span class="string">'MarkerEdgeColor'</span>,<span class="string">'k'</span>)
+hold <span class="string">off</span></pre><pre class="codeoutput">  I'm plotting 12500 random orientations out of 152345 given orientations
+</pre><img src="ColorCodingEBSD_demo_10.png"> <p>Since orientations measured by EBSD devices are pure rotations specified by its Euler angles, we may restrict the crystal
+            symmetry group to pure rotations as well. As this group is smaller, in general, the corresponding fundamental sector is larger,
+            which allows distinguishing more rotations
+         </p><pre class="codeinput"><span class="comment">% this restricts the crystal symmetries used for visualization</span>
+<span class="comment">% to proper rotations</span>
+ebsd(<span class="string">'Forsterite'</span>).CS = ebsd(<span class="string">'Forsterite'</span>).CS.properGroup;
+oM = ipfHSVKey(ebsd(<span class="string">'Forsterite'</span>))
+
+<span class="comment">%</span>
+plot(oM)</pre><pre class="codeoutput">oM = 
+  ipfHSVKey with properties:
+
+             colorPostRotation: [1&times;1 rotation]
+               colorStretching: 1
+                   whiteCenter: [1&times;1 vector3d]
+                     grayValue: [0.2000 0.5000]
+                  grayGradient: 0.5000
+                      maxAngle: Inf
+    inversePoleFigureDirection: [1&times;1 vector3d]
+                        dirMap: [1&times;1 HSVDirectionKey]
+                           CS1: [4&times;1 crystalSymmetry]
+                           CS2: [1&times;1 specimenSymmetry]
+                     antipodal: 0
+</pre><img src="ColorCodingEBSD_demo_11.png"> <p>We observe that the fundamental sector is twice as large as for the original crystal symmetry. Furthermore, the measured Euler
+            angles are not symmetric within this enlarged fundamental sector
+         </p><pre class="codeinput">hold <span class="string">on</span>
+plotIPDF(ebsd(<span class="string">'Forsterite'</span>).orientations,oM.inversePoleFigureDirection,<span class="keyword">...</span>
+  <span class="string">'MarkerSize'</span>,4,<span class="string">'MarkerFaceColor'</span>,<span class="string">'none'</span>,<span class="string">'MarkerEdgeColor'</span>,<span class="string">'k'</span>)
+hold <span class="string">off</span></pre><pre class="codeoutput">  I'm plotting 25000 random orientations out of 152345 given orientations
+</pre><img src="ColorCodingEBSD_demo_12.png"> <p>Lets finish this example by plotting the ebsd map of the Forsterite orientations color mapped according to this restricted
+            symmetry group. The advantage of restricting the symmetry group is that we can distinguish more grains.
+         </p><pre class="codeinput">color = oM.orientation2color(ebsd(<span class="string">'Forsterite'</span>).orientations);
+
+plot(ebsd(<span class="string">'Forsterite'</span>),color)</pre><img src="ColorCodingEBSD_demo_13.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

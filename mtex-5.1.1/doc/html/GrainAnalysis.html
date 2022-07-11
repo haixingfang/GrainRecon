@@ -1,0 +1,340 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>Grains (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: GrainAnalysis -->
+      <!-- HEADSTUFF: GrainAnalysis -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:GrainAnalysis">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div>
+         <table class="nav" summary="Navigation aid" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline"><b>MTEX</b> - A MATLAB Toolbox for Quantitative Texture Analysis</td>
+            </tr>
+         </table>
+         <p style="font-size:1px;"></p>
+      </div>
+      <div class="content">
+         <h1 class="refname">Grains</h1>
+         <div class="subheading">
+            <p>Explains how to reconstruct grains form EBSD data, visualize Grains and EBSD, analyzing misorientations</p>
+         </div>
+         <p>
+            <table class="ref" width="90%">
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('GrainReconstructionDemo_block','GrainReconstructionDemo_expandable_text');" valign="top"
+            width="15">
+            <img id="GrainReconstructionDemo_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="GrainReconstructionDemo.html">First Steps and Function Overview<td valign="top" width="75%">Get in touch with grains.</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="GrainReconstructionDemo_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="GrainReconstructionDemo.html#1">Grain reconstruction from EBSD data</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="GrainReconstructionDemo.html#7">Smoothing grain boundaries</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="GrainReconstructionDemo.html#8">Grain properties</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="GrainReconstructionDemo.html#12">Changing lists of grains</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('GrainReconstruction_block','GrainReconstruction_expandable_text');" valign="top"
+            width="15">
+            <img id="GrainReconstruction_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="GrainReconstruction.html">Grain Reconstruction<td valign="top" width="75%">Grain Reconstruction from EBSD data.</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="GrainReconstruction_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="GrainReconstruction.html#4">Basic grain reconstruction</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="GrainReconstruction.html#6">The grainId and how to select EBSD inside specific grains</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="GrainReconstruction.html#9">Misorientation to mean orientation</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="GrainReconstruction.html#11">Filling notindexed holes</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="GrainReconstruction.html#18">Non convex data sets</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="GrainReconstruction.html#20">Grain smoothing</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="GrainReconstruction.html#22">Grain reconstruction by the multiscale clustering method</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="GrainReconstruction.html#26">TESTING OMLY</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('GrainStatistics_block','GrainStatistics_expandable_text');" valign="top" width="15">
+            <img id="GrainStatistics_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="GrainStatistics.html">Working with Grains<td valign="top" width="75%">How to index grains and access shape properties.</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="GrainStatistics_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="GrainStatistics.html#5">Accessing individual grains</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="GrainStatistics.html#11">Indexing by a Condition </a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="GrainStatistics.html#16">Indexing by orientation or position</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="GrainStatistics.html#18">Grain-size Analysis</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="GrainStatistics.html#25">Spatial Dependencies</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('GrainSpatialPlots_block','GrainSpatialPlots_expandable_text');" valign="top" width="15">
+            <img id="GrainSpatialPlots_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="GrainSpatialPlots.html">Plotting grains<td valign="top" width="75%">how to colorize grains</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="GrainSpatialPlots_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="GrainSpatialPlots.html#4">Phase maps</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="GrainSpatialPlots.html#7">Orientation Maps</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="GrainSpatialPlots.html#10">Plotting arbitrary properties</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="GrainSpatialPlots.html#13">Colorizing circular properties</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="GrainSpatialPlots.html#14">Plotting the orientation within a grain</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="GrainSpatialPlots.html#16">Visualizing directions</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="GrainSpatialPlots.html#17">Labeling Grains</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('GrainSingleAnalysis_block','GrainSingleAnalysis_expandable_text');" valign="top"
+            width="15">
+            <img id="GrainSingleAnalysis_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="GrainSingleAnalysis.html">Analyzing Individual Grains<td valign="top" width="75%">how to work with single grains</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="GrainSingleAnalysis_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="GrainSingleAnalysis.html#3">Connection between grains and EBSD data</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="GrainSingleAnalysis.html#9">Visualize the misorientation within a grain</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="GrainSingleAnalysis.html#10">Testing on Bingham distribution for a single grain</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="GrainSingleAnalysis.html#13">Profiles through a single grain</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('GrainMisorientationAnalysis_block','GrainMisorientationAnalysis_expandable_text');"
+            valign="top" width="15">
+            <img id="GrainMisorientationAnalysis_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="GrainMisorientationAnalysis.html">Misorientation Analysis<td valign="top" width="75%">How to analyze misorientations.</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="GrainMisorientationAnalysis_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="GrainMisorientationAnalysis.html#3">Definition</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="GrainMisorientationAnalysis.html#4">The sample data set</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="GrainMisorientationAnalysis.html#6">Intragranular misorientations</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="GrainMisorientationAnalysis.html#15">Boundary misorientations</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="GrainMisorientationAnalysis.html#18">The angle distribution</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="GrainMisorientationAnalysis.html#22">The axis distribution</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            </table>
+            
+         </p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

@@ -1,0 +1,185 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>Analyzing Individual Grains (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: GrainSingleAnalysis -->
+      <!-- HEADSTUFF: GrainSingleAnalysis -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:GrainSingleAnalysis">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div class="myheader">
+         <table border="0" width="100%" cellpadding="10" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="left" style="color:white"><a style="color:white" href="matlab:edit GrainSingleAnalysis">Open Matlab File in the Editor</a></td>
+               <td valign="baseline" align="right" style="color:white"><a style="color:white" href="mtex_product_page.html">MTEX</a></td>
+            </tr>
+         </table>
+      </div>
+      <div class="content">
+         <h1 class="refname">Analyzing Individual Grains</h1>
+         <div class="subheading">
+            <p>how to work with single grains</p>
+         </div>
+         <div>
+            <table class="content">
+               <tr>
+                  <td class="header">On this page ...</td>
+               </tr>
+               <tr>
+                  <td><a href="#3">Connection between grains and EBSD data</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#9">Visualize the misorientation within a grain</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#10">Testing on Bingham distribution for a single grain</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#13">Profiles through a single grain</a></td>
+               </tr>
+            </table>
+         </div>
+         <h2>Connection between grains and EBSD data<a name="3"> </a></h2>
+         <p>As usual, we start by importing some EBSD data and computing grains</p><pre class="codeinput">close <span class="string">all</span>
+mtexdata <span class="string">forsterite</span>
+plotx2east
+
+<span class="comment">% consider only indexed data for grain segmentation</span>
+ebsd = ebsd(<span class="string">'indexed'</span>);
+
+<span class="comment">% compute the grains</span>
+[grains,ebsd.grainId,ebsd.mis2mean] = calcGrains(ebsd);</pre><p>The <a href="grain2d_index.html">grains</a> contain. We can access these data by
+         </p><pre class="codeinput">grain_selected = grains( grains.grainSize &gt;=  1160)
+ebsd_selected = ebsd(grain_selected)</pre><pre class="codeoutput"> 
+grain_selected = grain2d  
+ 
+ Phase  Grains  Pixels     Mineral  Symmetry  Crystal reference frame
+     1      32   62262  Forsterite       mmm                         
+ 
+ boundary segments: 11070
+ triple points: 782
+ 
+ Properties: GOS, meanRotation
+ 
+ 
+ebsd_selected = EBSD  
+ 
+ Phase  Orientations     Mineral       Color  Symmetry  Crystal reference frame
+     1  62262 (100%)  Forsterite  light blue       mmm                         
+ 
+ Properties: bands, bc, bs, error, mad, x, y, grainId, mis2mean
+ Scan unit : um
+ 
+</pre><p>A more convenient way to select grains in daily practice is by spatial coordinates.</p><pre class="codeinput">grain_selected = grains(12000,3000)</pre><pre class="codeoutput"> 
+grain_selected = grain2d  
+ 
+ Phase  Grains  Pixels     Mineral  Symmetry  Crystal reference frame
+     1       1    1208  Forsterite       mmm                         
+ 
+ boundary segments: 238
+ triple points: 18
+ 
+  Id   Phase   Pixels          GOS   phi1   Phi   phi2
+ 640       1     1208   0.00806772    153    68    237
+ 
+</pre><p>you can get the id of this grain by</p><pre class="codeinput">grain_selected.id</pre><pre class="codeoutput">ans =
+   640
+</pre><p>let's look for the grain with the largest grain orientation spread</p><pre class="codeinput">[~,id] = max(grains.GOS)
+grain_selected = grains(id)</pre><pre class="codeoutput">id =
+        1856
+ 
+grain_selected = grain2d  
+ 
+ Phase  Grains  Pixels     Mineral  Symmetry  Crystal reference frame
+     1       1    2614  Forsterite       mmm                         
+ 
+ boundary segments: 458
+ triple points: 28
+ 
+   Id   Phase   Pixels        GOS   phi1   Phi   phi2
+ 1856       1     2614   0.170662    153   109    247
+ 
+</pre><pre class="codeinput">plot(grain_selected.boundary,<span class="string">'linewidth'</span>,2)
+hold <span class="string">on</span>
+plot(ebsd(grain_selected))
+hold <span class="string">off</span></pre><img src="GrainSingleAnalysis_01.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Visualize the misorientation within a grain<a name="9"> </a></h2><pre class="codeinput">close
+plot(grain_selected.boundary,<span class="string">'linewidth'</span>,2)
+hold <span class="string">on</span>
+plot(ebsd(grain_selected),ebsd(grain_selected).mis2mean.angle./degree)
+hold <span class="string">off</span>
+mtexColorbar</pre><img src="GrainSingleAnalysis_02.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Testing on Bingham distribution for a single grain<a name="10"> </a></h2>
+         <p>Although the orientations of an individual grain are highly concentrated, they may vary in the shape. In particular, if the
+            grain was deformed by some process, we are interested in quantifications.
+         </p><pre class="codeinput">cs = ebsd(grain_selected).CS;
+ori = ebsd(grain_selected).orientations;
+plotPDF(ori,[Miller(0,0,1,cs),Miller(0,1,1,cs),Miller(1,1,1,cs)],<span class="string">'antipodal'</span>)</pre><pre class="codeoutput">  I'm plotting 1250 random orientations out of 2614 given orientations
+  You can specify the the number points by the option "points".
+  The option "all" ensures that all data are plotted
+</pre><img src="GrainSingleAnalysis_03.png"> <p>Testing on the distribution shows a gentle prolatness, nevertheless we would reject the hypothesis for some level of significance,
+            since the distribution is highly concentrated and the numerical results vague.
+         </p><pre class="codeinput">calcBinghamODF(ori,<span class="string">'approximated'</span>)</pre><pre class="codeoutput"> 
+ans = ODF  
+  crystal symmetry : Forsterite (mmm)
+  specimen symmetry: 1
+ 
+  Bingham portion:
+     kappa: 0 1156.7723 1493.9082 1580.029
+    weight: 1
+ 
+</pre><pre class="codeinput">T_spherical = bingham_test(ori,<span class="string">'spherical'</span>,<span class="string">'approximated'</span>);
+T_prolate   = bingham_test(ori,<span class="string">'prolate'</span>,  <span class="string">'approximated'</span>);
+T_oblate    = bingham_test(ori,<span class="string">'oblate'</span>,   <span class="string">'approximated'</span>);
+
+[T_spherical T_prolate T_oblate]</pre><pre class="codeoutput">ans =
+     1     1     1
+</pre><p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Profiles through a single grain<a name="13"> </a></h2>
+         <p>Sometimes, grains show large orientation difference when being deformed and then its of interest, to characterize the lattice
+            rotation. One way is to order orientations along certain line segment and look at the profile.
+         </p>
+         <p>We proceed by specifying such a line segment</p><pre class="codeinput">close,   plot(grain_selected.boundary,<span class="string">'linewidth'</span>,2)
+hold <span class="string">on</span>, plot(ebsd(grain_selected),ebsd(grain_selected).orientations)
+
+<span class="comment">% line segment</span>
+lineSec =  [18826   6438; 18089 10599];
+
+line(lineSec(:,1),lineSec(:,2),<span class="string">'linewidth'</span>,2)</pre><img src="GrainSingleAnalysis_04.png"> <p>The command <a href="EBSD.spatialProfile.html">spatialProfile</a> restricts the EBSD data to this line
+         </p><pre class="codeinput">ebsd_line = spatialProfile(ebsd(grain_selected),lineSec);</pre><p>Next, we plot the misorientation angle to the first point of the line as well as the orientation gradient</p><pre class="codeinput">close <span class="string">all</span> <span class="comment">% close previous plots</span>
+
+<span class="comment">% misorientation angle to the first orientation on the line</span>
+plot(ebsd_line.y,<span class="keyword">...</span>
+  angle(ebsd_line(1).orientations,ebsd_line.orientations)/degree)
+
+<span class="comment">% misorientation gradient</span>
+hold <span class="string">all</span>
+plot(0.5*(ebsd_line.y(1:end-1)+ebsd_line.y(2:end)),<span class="keyword">...</span>
+  angle(ebsd_line(1:end-1).orientations,ebsd_line(2:end).orientations)/degree)
+hold <span class="string">off</span>
+
+xlabel(<span class="string">'y'</span>); ylabel(<span class="string">'misorientation angle in degree'</span>)
+
+legend(<span class="string">'to reference orientation'</span>,<span class="string">'orientation gradient'</span>)</pre><img src="GrainSingleAnalysis_05.png"> <p>We can also plot the orientations along this line into inverse pole figures and colorize them according to their y-coordinate</p><pre class="codeinput">close, plotIPDF(ebsd_line.orientations,[xvector,yvector,zvector],<span class="keyword">...</span>
+  <span class="string">'property'</span>,ebsd_line.y,<span class="string">'markersize'</span>,3,<span class="string">'antipodal'</span>)
+
+mtexColorbar</pre><img src="GrainSingleAnalysis_06.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

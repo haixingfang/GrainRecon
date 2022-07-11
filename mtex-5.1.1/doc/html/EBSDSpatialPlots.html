@@ -1,0 +1,227 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>Plotting spatially indexed EBSD data (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: EBSDSpatialPlots -->
+      <!-- HEADSTUFF: EBSDSpatialPlots -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:EBSDSpatialPlots">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div class="myheader">
+         <table border="0" width="100%" cellpadding="10" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="left" style="color:white"><a style="color:white" href="matlab:edit EBSDSpatialPlots">Open Matlab File in the Editor</a></td>
+               <td valign="baseline" align="right" style="color:white"><a style="color:white" href="mtex_product_page.html">MTEX</a></td>
+            </tr>
+         </table>
+      </div>
+      <div class="content">
+         <h1 class="refname">Plotting spatially indexed EBSD data</h1>
+         <div class="subheading">
+            <p>How to visualize EBSD data</p>
+         </div>
+         <p>This section gives you an overview of the functionality MTEX offers to visualize spatial orientation data.</p>
+         <div>
+            <table class="content">
+               <tr>
+                  <td class="header">On this page ...</td>
+               </tr>
+               <tr>
+                  <td><a href="#4">Phase Plots</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#9">Visualizing arbitrary properties</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#10">Visualizing orientations</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#17">Customizing the color</a></td>
+               </tr>
+               <tr>
+                  <td><span class="subsection"><a href="#18"> Coloring certain fibres</a></span></td>
+               </tr>
+               <tr>
+                  <td><span class="subsection"><a href="#23"> Coloring certain orientations</a></span></td>
+               </tr>
+               <tr>
+                  <td><a href="#26">Combining different plots</a></td>
+               </tr>
+            </table>
+         </div>
+         <h2>Phase Plots<a name="4"> </a></h2>
+         <p>Let us first import some EBSD data with a <a href="matlab:edit mtexdata"> script file</a></p><pre class="codeinput">close <span class="string">all</span>; plotx2east
+mtexdata <span class="string">forsterite</span>
+csFo = ebsd(<span class="string">'Forsterite'</span>).CS</pre><pre class="codeoutput"> 
+csFo = crystalSymmetry  
+ 
+  mineral : Forsterite
+  color   : light blue
+  symmetry: mmm       
+  a, b, c : 4.8, 10, 6
+ 
+</pre><p>By default, MTEX plots a phase map for EBSD data.</p><pre class="codeinput">plot(ebsd)</pre><img src="EBSDSpatialPlots_01.png"> <p>You can access the color of each phase by</p><pre class="codeinput">ebsd(<span class="string">'Diopside'</span>).color</pre><pre class="codeoutput">ans =
+    1.0000    0.5000    0.5000
+</pre><p>These values are RGB values, e.g. to make the color for diopside even more red we can do</p><pre class="codeinput">ebsd(<span class="string">'Diopside'</span>).color = [1 0 0];
+
+plot(ebsd(<span class="string">'indexed'</span>))</pre><img src="EBSDSpatialPlots_02.png"> <p>By default, not indexed phases are plotted as white. To directly specify a color for some EBSD data use the option <tt>FaceColor</tt>.
+         </p><pre class="codeinput">hold <span class="string">on</span>
+plot(ebsd(<span class="string">'notIndexed'</span>),<span class="string">'FaceColor'</span>,<span class="string">'black'</span>)
+hold <span class="string">off</span></pre><img src="EBSDSpatialPlots_03.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Visualizing arbitrary properties<a name="9"> </a></h2>
+         <p>Apart from the phase information, we can use any other property to colorize the EBSD data. As an example, we may plot the
+            band contrast
+         </p><pre class="codeinput">plot(ebsd,ebsd.bc)
+
+colormap <span class="string">gray</span> <span class="comment">% this makes the image grayscale</span>
+
+mtexColorbar</pre><img src="EBSDSpatialPlots_04.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Visualizing orientations<a name="10"> </a></h2>
+         <p>Actually, we can pass any list of numbers or colors as a second input argument to be visualized together with the ebsd data.
+            In order to visualize orientations in an EBSD map, we have first to compute a color for each orientation. The most simple
+            way is to assign to each orientation its rotational angle. This is done by the command
+         </p><pre class="codeinput">plot(ebsd(<span class="string">'Forsterite'</span>),ebsd(<span class="string">'Forsterite'</span>).orientations.angle./degree)
+mtexColorbar</pre><img src="EBSDSpatialPlots_05.png"> <p>Obviously, the rotational angle is not a very distintive representative for orientations. A more common approach is to define
+            a colorization of the fundamental secor of the inverse pole figure, a so called ipf color key, and to colorize orientations
+            according to their position in a fixed inverse pole figure. Let's consider the following standard key.
+         </p><pre class="codeinput"><span class="comment">% this defines an ipf color key for the Forsterite phase</span>
+ipfKey = ipfHSVKey(ebsd(<span class="string">'Forsterite'</span>))
+
+<span class="comment">% this is the colored fundamental sector</span>
+plot(ipfKey)</pre><pre class="codeoutput">ipfKey = 
+  ipfHSVKey with properties:
+
+             colorPostRotation: [1&times;1 rotation]
+               colorStretching: 1
+                   whiteCenter: [1&times;1 vector3d]
+                     grayValue: [0.2000 0.5000]
+                  grayGradient: 0.5000
+                      maxAngle: Inf
+    inversePoleFigureDirection: [1&times;1 vector3d]
+                        dirMap: [1&times;1 HSVDirectionKey]
+                           CS1: [4&times;2 crystalSymmetry]
+                           CS2: [1&times;1 specimenSymmetry]
+                     antipodal: 0
+</pre><img src="EBSDSpatialPlots_06.png"> <p>In order to apply this color key for colorizing the map we proceed as follows</p><pre class="codeinput"><span class="comment">% compute the colors</span>
+color = ipfKey.orientation2color(ebsd(<span class="string">'Fo'</span>).orientations);
+
+<span class="comment">% plot the colors</span>
+close <span class="string">all</span>
+plot(ebsd(<span class="string">'Forsterite'</span>),color)</pre><img src="EBSDSpatialPlots_07.png"> <p>Orientation color key usually provide several options to alter the alignment of colors. Let's give some examples</p><pre class="codeinput"><span class="comment">% we may interchange green and blue by setting</span>
+ipfKey.colorPostRotation = reflection(yvector);
+
+plot(ipfKey)</pre><img src="EBSDSpatialPlots_08.png"> <p>or cycle of colors red, green, blue by</p><pre class="codeinput">ipfKey.colorPostRotation = rotation(<span class="string">'axis'</span>,zvector,<span class="string">'angle'</span>,120*degree);
+
+plot(ipfKey)</pre><img src="EBSDSpatialPlots_09.png"> <p>Furthermore, we can explicitly set the inverse pole figure directions by</p><pre class="codeinput">ipfKey.inversePoleFigureDirection = zvector;
+
+<span class="comment">% compute the colors again</span>
+color = ipfKey.orientation2color(ebsd(<span class="string">'Forsterite'</span>).orientations);
+
+<span class="comment">% and plot them</span>
+close <span class="string">all</span>
+plot(ebsd(<span class="string">'Forsterite'</span>),color)</pre><img src="EBSDSpatialPlots_10.png"> <p>Besides the recommended color key <a href="ipfHSVKey.html">ipfHSVKey</a> MTEX includes a bunch of other color keys
+         </p>
+         <div>
+            <ul type="square">
+               <li><a href="ipfTSLKey.html">ipfTSLKey</a></li>
+               <li><a href="ipfHKLKey.html">ipfHKLKey</a></li>
+               <li><a href="BungeColorKey.html">BungeColorKey</a></li>
+               <li><a href="PatalaColorKey.html">PatalaColorKey</a></li>
+               <li><a href="axisAngleColorKey.html">axisAngleColorKey</a></li>
+               <li><a href="spotColorKey.html">spotColorKey</a></li>
+               <li><a href="ipfSpotKey.html">ipfSpotKey</a></li>
+            </ul>
+         </div>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Customizing the color<a name="17"> </a></h2>
+         <p>In some cases, it might be useful to color certain orientations after one needs. This can be done in two ways, either to color
+            a certain fibre or a certain orientation.
+         </p>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h3> Coloring certain fibres<a name="18"> </a></h3>
+         <p>To color a fibre, one has to specify the crystal direction <b>h</b> together with its RGB color and the specimen direction <b>r</b>, which should be marked.
+         </p><pre class="codeinput"><span class="comment">% define a fibre</span>
+f = fibre(Miller(1,1,1,csFo),zvector);
+
+<span class="comment">% set up coloring</span>
+ipfKey = ipfSpotKey(csFo);
+ipfKey.inversePoleFigureDirection = f.r;
+ipfKey.center = f.h;
+ipfKey.color = [0 0 1];
+ipfKey.psi = deLaValeePoussinKernel(<span class="string">'halfwidth'</span>,7.5*degree);
+
+plot(ebsd(<span class="string">'fo'</span>),ipfKey.orientation2color(ebsd(<span class="string">'fo'</span>).orientations))</pre><img src="EBSDSpatialPlots_11.png"> <p>the option <tt>halfwidth</tt> controls half of the intensity of the color at a given distance. Here we have chosen the (111)[001] fibre to be drawn in
+            blue, and at 7.5 degrees, where the blue should be only lighter.
+         </p><pre class="codeinput">plot(ipfKey)
+hold <span class="string">on</span>
+circle(f.h.project2FundamentalRegion,15*degree,<span class="string">'linewidth'</span>,2)</pre><img src="EBSDSpatialPlots_12.png"> <p>the percentage of blue colored area in the map is equivalent to the fibre volume</p><pre class="codeinput">vol = volume(ebsd(<span class="string">'fo'</span>).orientations,f,15*degree)
+
+plotIPDF(ebsd(<span class="string">'fo'</span>).orientations,zvector,<span class="string">'markercolor'</span>,<span class="string">'k'</span>,<span class="string">'marker'</span>,<span class="string">'x'</span>,<span class="string">'points'</span>,200)
+hold <span class="string">off</span></pre><pre class="codeoutput">vol =
+    0.2480
+  I'm plotting 200 random orientations out of 152345 given orientations
+</pre><img src="EBSDSpatialPlots_13.png"> <p>we can easily extend the colorcoding</p><pre class="codeinput">ipfKey.center = [Miller(0,0,1,csFo),Miller(0,1,1,csFo),Miller(1,1,1,csFo),<span class="keyword">...</span>
+  Miller(11,4,4,csFo), Miller(5,0,2,csFo) , Miller(5,5,2,csFo)];
+
+ipfKey.color = [[1 0 0];[0 1 0];[0 0 1];[1 0 1];[1 1 0];[0 1 1]];
+
+close <span class="string">all</span>;
+plot(ebsd(<span class="string">'fo'</span>),ipfKey.orientation2color(ebsd(<span class="string">'fo'</span>).orientations))</pre><img src="EBSDSpatialPlots_14.png"> <pre class="codeinput">plot(ipfKey,<span class="string">'complete'</span>)</pre><img src="EBSDSpatialPlots_15.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h3> Coloring certain orientations<a name="23"> </a></h3>
+         <p>We might be interested in locating some special orientation in our orientation map. The definition of colors for certain orientations
+            is carried out similarly as in the case of fibres
+         </p><pre class="codeinput">ipfKey = spotColorKey(ebsd(<span class="string">'Fo'</span>));
+ipfKey.center = mean(ebsd(<span class="string">'Forsterite'</span>).orientations,<span class="string">'robust'</span>);
+ipfKey.color = [0,0,1];
+ipfKey.psi = deLaValeePoussinKernel(<span class="string">'halfwidth'</span>,20*degree);
+
+plot(ebsd(<span class="string">'fo'</span>),ipfKey.orientation2color(ebsd(<span class="string">'fo'</span>).orientations))
+
+<span class="comment">% and the correspoding colormap</span>
+figure(2)
+plot(ipfKey,<span class="string">'sections'</span>,9,<span class="string">'sigma'</span>)</pre><img src="EBSDSpatialPlots_16.png"> <img src="EBSDSpatialPlots_17.png"> <p>the area of the colored EBSD data in the map corresponds to the volume portion (in percent)</p><pre class="codeinput">vol = 100 * volume(ebsd(<span class="string">'fo'</span>).orientations,ipfKey.center,20*degree)</pre><pre class="codeoutput">vol =
+   15.6277
+</pre><p>actually, the colored measurements stress a peak in the ODF</p><pre class="codeinput">close <span class="string">all</span>
+odf = calcODF(ebsd(<span class="string">'fo'</span>).orientations,<span class="string">'halfwidth'</span>,10*degree,<span class="string">'silent'</span>);
+plot(odf,<span class="string">'sections'</span>,9,<span class="string">'silent'</span>,<span class="string">'sigma'</span>)
+mtexColorbar</pre><img src="EBSDSpatialPlots_18.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Combining different plots<a name="26"> </a></h2>
+         <p>Combining different plots can be done either by plotting only subsets of the EBSD data or via the option <tt>'faceAlpha'</tt>. Note that the option <tt>'faceAlpha'</tt> requires the renderer of the figure to be set to <tt>'opengl'</tt>.
+         </p><pre class="codeinput">close <span class="string">all</span>;
+plot(ebsd,ebsd.bc,<span class="string">'micronbar'</span>,<span class="string">'off'</span>)
+mtexColorMap <span class="string">black2white</span>
+
+ipfKey = ipfSpotKey(csFo);
+ipfKey.inversePoleFigureDirection = zvector;
+ipfKey.center = Miller(1,1,1,csFo);
+ipfKey.color = [0 0 1];
+ipfKey.psi = deLaValeePoussinKernel(<span class="string">'halfwidth'</span>,7.5*degree);
+
+hold <span class="string">on</span>
+plot(ebsd(<span class="string">'fo'</span>),ipfKey.orientation2color(ebsd(<span class="string">'fo'</span>).orientations),<span class="string">'FaceAlpha'</span>,0.5)
+hold <span class="string">off</span></pre><img src="EBSDSpatialPlots_19.png"> <p>another example</p><pre class="codeinput">close <span class="string">all</span>;
+plot(ebsd,ebsd.bc)
+mtexColorMap <span class="string">black2white</span>
+
+hold <span class="string">on</span>
+plot(ebsd(<span class="string">'fo'</span>),<span class="string">'FaceAlpha'</span>,0.5)
+hold <span class="string">off</span></pre><img src="EBSDSpatialPlots_20.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

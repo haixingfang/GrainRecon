@@ -1,0 +1,15 @@
+	
+ics_version	1.0
+filename	disks
+layout	parameters	3
+layout	order	bits	x	y
+layout	sizes	64	256	256
+layout	coordinates	video
+layout	significant_bits	64
+representation	format	real
+representation	sign	signed
+representation	compression	uncompressed
+representation	byte_order	8	7	6	5	4	3	2	1
+parameter	origin	0.000000	0.000000	0.000000
+parameter	labels	intensity	x-position	y-position
+history	software	DIPlib with dipIO

@@ -1,0 +1,77 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>Configuration (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: configuration -->
+      <!-- HEADSTUFF: configuration -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:configuration">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div>
+         <table class="nav" summary="Navigation aid" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline"><b>MTEX</b> - A MATLAB Toolbox for Quantitative Texture Analysis</td>
+            </tr>
+         </table>
+         <p style="font-size:1px;"></p>
+      </div>
+      <div class="content">
+         <h1 class="refname">Configuration</h1>
+         <div class="subheading">
+            <p>Explains how to globally configure MTEX, i.e. how to set a default Euler angle convention.</p>
+         </div>
+         <h2>Global Configuration<a name="1"> </a></h2>
+         <p>The central place of all configuration of the MTEX toolbox is the m-file <a href="matlab:edit mtex_settings.m">mtex_settings.m</a>. There the following items can be customized
+         </p>
+         <div>
+            <ul type="square">
+               <li>default Euler angle convention</li>
+               <li>the default plotting style</li>
+               <li>file extension associated with EBSD and pole figure files</li>
+               <li>path to the CIF files</li>
+               <li>the default maximum iteration depth of the function <a href="PoleFigure.calcODF.html">calcODF</a></li>
+               <li>the amount of available memory</li>
+               <li>the path to the temporary files</li>
+               <li>the name of the log file</li>
+            </ul>
+         </div>
+         <h2>The Option System<a name="2"> </a></h2>
+         <p>Many functions provided by MTEX can be customized by options. An option is passed to a method as a string parameter followed
+            by a value. For example, almost all plotting methods support the option <tt>RESOLUTION</tt> followed by a double value specifying the resolution
+         </p><pre class="codeinput">odf = SantaFe
+plotPDF(odf,Miller(1,0,0,odf.CS),<span class="string">'resolution'</span>,5*degree,<span class="string">'contour'</span>);</pre><pre class="codeoutput"> 
+odf = ODF  
+  crystal symmetry : m-3m
+  specimen symmetry: 222
+ 
+  Uniform portion:
+    weight: 0.73
+ 
+  Radially symmetric portion:
+    kernel: de la Vallee Poussin, halfwidth 10&deg;
+    center: (297&deg;,48&deg;,27&deg;)
+    weight: 0.27
+ 
+</pre><img src="configuration_01.png"> <p>Options that are not followed by a value are called flags. In the above example, <tt>contour</tt> is a flag that says the plotting routine to plot contour lines. Options and flags to a function are always optional and can
+            be passed in any order. If conflicting options or flags are passed, i.e., the resolution is specified twice, the later option
+            in the list is considered to be the right one.
+         </p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

@@ -1,0 +1,113 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>Slip Systems (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: SlipSystems -->
+      <!-- HEADSTUFF: SlipSystems -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:SlipSystems">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div class="myheader">
+         <table border="0" width="100%" cellpadding="10" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="left" style="color:white"><a style="color:white" href="matlab:edit SlipSystems">Open Matlab File in the Editor</a></td>
+               <td valign="baseline" align="right" style="color:white"><a style="color:white" href="mtex_product_page.html">MTEX</a></td>
+            </tr>
+         </table>
+      </div>
+      <div class="content">
+         <h1 class="refname">Slip Systems</h1>
+         <div class="subheading">
+            <p>How to analyze slip transmission at grain boundaries</p>
+         </div>
+         <div>
+            <table class="content">
+               <tr>
+                  <td class="header">On this page ...</td>
+               </tr>
+               <tr>
+                  <td><a href="#4">Burgers vector and normal directions</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#11">Rotating slip systems</a></td>
+               </tr>
+            </table>
+         </div>
+         <h2>Burgers vector and normal directions<a name="4"> </a></h2>
+         <p>Consider hexagonal symmetry of alpha-Titanium</p><pre class="codeinput">cs = crystalSymmetry(<span class="string">'622'</span>,[3,3,4.7],<span class="string">'x||a'</span>,<span class="string">'mineral'</span>,<span class="string">'Titanium (Alpha)'</span>)</pre><pre class="codeoutput"> 
+cs = crystalSymmetry  
+ 
+  mineral        : Titanium (Alpha) 
+  symmetry       : 622              
+  a, b, c        : 3, 3, 4.7        
+  reference frame: X||a, Y||b*, Z||c
+ 
+</pre><p>Then basal slip is defined by the Burgers vector (or slip direction)</p><pre class="codeinput">b = Miller(2,-1,-1,0,cs,<span class="string">'UVTW'</span>)</pre><pre class="codeoutput"> 
+b = Miller  
+ size: 1 x 1
+ mineral: Titanium (Alpha) (622, X||a, Y||b*, Z||c)
+  U  2
+  V -1
+  T -1
+  W  0
+</pre><p>and the slip plane normal</p><pre class="codeinput">n = Miller(0,1,-1,0,cs,<span class="string">'HKIL'</span>)</pre><pre class="codeoutput"> 
+n = Miller  
+ size: 1 x 1
+ mineral: Titanium (Alpha) (622, X||a, Y||b*, Z||c)
+  h  0
+  k  1
+  i -1
+  l  0
+</pre><p>Accordingly we can define a slip system in MTEX by</p><pre class="codeinput">sSBasal = slipSystem(b,n)</pre><pre class="codeoutput"> 
+sSBasal = slipSystem  
+ mineral: Titanium (Alpha) (622, X||a, Y||b*, Z||c)
+ CRSS: 1
+ size: 1 x 1
+  U   V   T   W | H   K   I   L
+  2  -1  -1   0   0   1  -1   0
+</pre><p>The most important slip systems for cubic, hexagonal and trigonal crystal lattices are already implemented into MTEX. Those
+            can be accessed by
+         </p><pre class="codeinput">sSBasal = slipSystem.basal(cs)</pre><pre class="codeoutput"> 
+sSBasal = slipSystem  
+ mineral: Titanium (Alpha) (622, X||a, Y||b*, Z||c)
+ CRSS: 1
+ size: 1 x 1
+  U   V   T   W | H   K   I   L
+  1   1  -2   0   0   0   0   1
+</pre><p>Obviously, this is not the only basal slip system in hexagonal lattices. There are also symmetrically equivalent ones, which
+            can be computed by
+         </p><pre class="codeinput">sSBasalSym = sSBasal.symmetrise(<span class="string">'antipodal'</span>)</pre><pre class="codeoutput"> 
+sSBasalSym = slipSystem  
+ mineral: Titanium (Alpha) (622, X||a, Y||b*, Z||c)
+ CRSS: 1
+ size: 3 x 1
+   U   V   T   W | H   K   I   L
+   1   1  -2   0   0   0   0   1
+   1  -2   1   0   0   0   0   1
+  -2   1   1   0   0   0   0   1
+</pre><p>The length of the burgers vector, i.e., the amount of displacment is</p><pre class="codeinput">sSBasalSym.b.norm</pre><pre class="codeoutput">ans =
+    3.0000
+    3.0000
+    3.0000
+</pre><p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Rotating slip systems<a name="11"> </a></h2>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

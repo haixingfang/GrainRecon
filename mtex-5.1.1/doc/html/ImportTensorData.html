@@ -1,0 +1,76 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>Importing Tensor Data (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: ImportTensorData -->
+      <!-- HEADSTUFF: ImportTensorData -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:ImportTensorData">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div>
+         <table class="nav" summary="Navigation aid" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline"><b>MTEX</b> - A MATLAB Toolbox for Quantitative Texture Analysis</td>
+            </tr>
+         </table>
+         <p style="font-size:1px;"></p>
+      </div>
+      <div class="content">
+         <h1 class="refname">Importing Tensor Data</h1>
+         <div class="subheading">
+            <p>How to import Tensor Data</p>
+         </div>
+         <div>
+            <table class="content">
+               <tr>
+                  <td class="header">On this page ...</td>
+               </tr>
+               <tr>
+                  <td><a href="#2">Importing Tensor data using the import wizard</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#3">The generic interface</a></td>
+               </tr>
+            </table>
+         </div>
+         <h2>Importing Tensor data using the import wizard<a name="2"> </a></h2>
+         <p>The most simplest way to load Tensor data is to use the <a href="matlab:import_wizard('tensor')">import wizard</a>, which can be started either by typing into the command line
+         </p><pre class="codeinput">import_wizard(<span class="string">'tensor'</span>);</pre><img src="ImportTensorData_01.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>The generic interface<a name="3"> </a></h2>
+         <p>The most comfortable way to import a tensor is by using the command <tt>tensorName.load</tt></p><pre class="codeinput">fname = fullfile(mtexDataPath,<span class="string">'tensor'</span>,<span class="string">'Olivine1997PC.GPa'</span>);
+
+cs = crystalSymmetry(<span class="string">'mmm'</span>,[4.7646 10.2296 5.9942],<span class="string">'mineral'</span>,<span class="string">'Olivin'</span>);
+
+C = stiffnessTensor.load(fname,cs)</pre><pre class="codeoutput"> 
+C = stiffnessTensor  
+  unit   : GPa              
+  rank   : 4 (3 x 3 x 3 x 3)
+  mineral: Olivin (mmm)     
+ 
+  tensor in Voigt matrix representation:
+ 320.5  68.2  71.6     0     0     0
+  68.2 196.5  76.8     0     0     0
+  71.6  76.8 233.5     0     0     0
+     0     0     0    64     0     0
+     0     0     0     0    77     0
+     0     0     0     0     0  78.7
+</pre><p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

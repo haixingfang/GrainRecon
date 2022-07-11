@@ -1,0 +1,136 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>Simulating EBSD data (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: EBSDSimulation_demo -->
+      <!-- HEADSTUFF: EBSDSimulation_demo -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:EBSDSimulation_demo">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div class="myheader">
+         <table border="0" width="100%" cellpadding="10" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="left" style="color:white"><a style="color:white" href="matlab:edit EBSDSimulation_demo">Open Matlab File in the Editor</a></td>
+               <td valign="baseline" align="right" style="color:white"><a style="color:white" href="mtex_product_page.html">MTEX</a></td>
+            </tr>
+         </table>
+      </div>
+      <div class="content">
+         <h1 class="refname">Simulating EBSD data</h1>
+         <div class="subheading">
+            <p>How to simulate an arbitrary number of individual orientations data from any ODF.</p>
+         </div>
+         <div>
+            <table class="content">
+               <tr>
+                  <td class="header">On this page ...</td>
+               </tr>
+               <tr>
+                  <td><a href="#6">Simulate EBSD Data</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#7">ODF Estimation from EBSD Data</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#11">Exploration of the relationship between estimation error and number of single orientations</a></td>
+               </tr>
+            </table>
+         </div>
+         <p>MTEX allows one to simulate an arbitrary number of EBSD data from any ODF. This is quite helpful if you want to analyze the
+            EBSD to ODF estimation routine.
+         </p>
+         <p><b>Define a Model ODF</b></p>
+         <p>Let us first define a simple fibre symmetric ODF.</p><pre class="codeinput">cs = crystalSymmetry(<span class="string">'32'</span>);
+fibre_odf = 0.5*uniformODF(cs) + 0.5*fibreODF(Miller(0,0,0,1,cs),zvector);</pre><pre class="codeinput">plot(fibre_odf,<span class="string">'sections'</span>,6,<span class="string">'silent'</span>)</pre><img src="EBSDSimulation_demo_01.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Simulate EBSD Data<a name="6"> </a></h2>
+         <p>This ODF we use now to simulate 10000 individual orientations.</p><pre class="codeinput">ori = calcOrientations(fibre_odf,10000)</pre><pre class="codeoutput"> 
+ori = orientation  
+  size: 10000 x 1
+  crystal symmetry : 321, X||a*, Y||b, Z||c*
+  specimen symmetry: 1
+ 
+</pre><p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>ODF Estimation from EBSD Data<a name="7"> </a></h2>
+         <p>From the 10000 individual orientations, we can now estimate an ODF. First, we determine the optimal kernel function</p><pre class="codeinput">psi = calcKernel(ori)</pre><pre class="codeoutput"> estimate optimal kernel halfwidth: 100%
+ 
+psi = deLaValeePoussinKernel  
+  bandwidth: 51
+  halfwidth: 5.7&deg;
+ 
+</pre><p>and then we use this kernel function for kernel density estimation</p><pre class="codeinput">odf = calcODF(ori,<span class="string">'kernel'</span>,psi)</pre><pre class="codeoutput"> 
+odf = ODF  
+  crystal symmetry : 321, X||a*, Y||b, Z||c*
+  specimen symmetry: 1
+ 
+  Radially symmetric portion:
+    kernel: de la Vallee Poussin, halfwidth 5.7&deg;
+    center: 7137 orientations, resolution: 2.9&deg;
+    weight: 1
+ 
+</pre><p>which can be plotted,</p><pre class="codeinput">plot(odf,<span class="string">'sections'</span>,6,<span class="string">'silent'</span>)</pre><pre class="codeoutput">progress: 100%
+</pre><img src="EBSDSimulation_demo_02.png"> <p>and compared to the original model ODF.</p><pre class="codeinput">calcError(odf,fibre_odf,<span class="string">'resolution'</span>,5*degree)</pre><pre class="codeoutput">progress: 100%
+ans =
+    0.0951
+</pre><p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Exploration of the relationship between estimation error and number of single orientations<a name="11"> </a></h2>
+         <p>For a more systematic analysis of the estimation error, we simulate 10, 100, ..., 1000000 single orientations of the model
+            ODF and calculate the approximation error for the ODFs estimated from these data.
+         </p><pre class="codeinput">e = [];
+<span class="keyword">for</span> i = 1:6
+
+  ori = calcOrientations(fibre_odf,10^i,<span class="string">'silent'</span>);
+
+  psi1 = calcKernel(ori,<span class="string">'SamplingSize'</span>,10000,<span class="string">'silent'</span>);
+  odf = calcODF(ori,<span class="string">'kernel'</span>,psi1,<span class="string">'silent'</span>);
+  e(i,1) = calcError(odf,fibre_odf,<span class="string">'resolution'</span>,2.5*degree);
+
+  psi2 = calcKernel(ori,<span class="string">'method'</span>,<span class="string">'RuleOfThumb'</span>,<span class="string">'silent'</span>);
+  odf = calcODF(ori,<span class="string">'kernel'</span>,psi2,<span class="string">'silent'</span>);
+  e(i,2) = calcError(odf,fibre_odf,<span class="string">'resolution'</span>,2.5*degree);
+
+  psi3 = calcKernel(ori,<span class="string">'method'</span>,<span class="string">'magicRule'</span>,<span class="string">'silent'</span>);
+  odf = calcODF(ori,<span class="string">'kernel'</span>,psi3,<span class="string">'silent'</span>);
+  e(i,3) = calcError(odf,fibre_odf,<span class="string">'resolution'</span>,2.5*degree);
+
+  disp([<span class="string">'RuleOfThumb: '</span> int2str(psi2.halfwidth/degree) mtexdegchar <span class="keyword">...</span>
+    <span class="string">' KLCV: '</span> int2str(psi1.halfwidth/degree) mtexdegchar <span class="keyword">...</span>
+    <span class="string">' magicRule: '</span> int2str(psi3.halfwidth/degree) mtexdegchar <span class="keyword">...</span>
+    ]);
+
+<span class="keyword">end</span></pre><pre class="codeoutput">RuleOfThumb: 89&deg; KLCV: 24&deg; magicRule: 31&deg;
+progress: 100%
+progress: 100%
+RuleOfThumb: 40&deg; KLCV: 15&deg; magicRule: 22&deg;
+RuleOfThumb: 18&deg; KLCV: 9&deg; magicRule: 16&deg;
+progress: 100%
+RuleOfThumb: 10&deg; KLCV: 6&deg; magicRule: 11&deg;
+progress: 100%
+RuleOfThumb: 9&deg; KLCV: 5&deg; magicRule: 8&deg;
+progress: 100%
+progress: 100%
+RuleOfThumb: 7&deg; KLCV: 4&deg; magicRule: 6&deg;
+</pre><p>Plot the error in dependency of the number of single orientations.</p><pre class="codeinput">close <span class="string">all</span>;
+loglog(10.^(1:length(e)),e)
+legend(<span class="string">'Default'</span>,<span class="string">'RuleOfThumb'</span>,<span class="string">'magicRule'</span>)
+xlabel(<span class="string">'Number of orientations'</span>)
+ylabel(<span class="string">'Estimation Error'</span>)
+title(<span class="string">'Error between original fibre ODF model and simulated ebsd'</span>,<span class="string">'FontWeight'</span>,<span class="string">'bold'</span>)</pre><img src="EBSDSimulation_demo_03.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

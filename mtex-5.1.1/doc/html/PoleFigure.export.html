@@ -1,0 +1,101 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>export (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: PoleFigure.export -->
+      <!-- HEADSTUFF: PoleFigure.export -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:PoleFigure.export">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div>
+         <table class="nav" summary="Navigation aid" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline"><b>MTEX</b> - A MATLAB Toolbox for Quantitative Texture Analysis</td>
+               <td valign="baseline" align="right"><a href="matlab:edit PoleFigure/export">
+                     View Code</a></td>
+            </tr>
+         </table>
+         <p style="font-size:1px;"></p>
+      </div>
+      <div class="content">
+         <h1 class="refname">export</h1>
+         <div class="subheading">
+            <p>(method of <a href="PoleFigure_index.html">PoleFigure</a>)
+            </p>
+         </div>
+         <p>export pole figure in an ASCII file</p>
+         <p>the pole figure data for each crystal direction are stored in a seperate ASCII file. The ASCII file contains three columns
+            - <tt>theta</tt> - <tt>rho</tt> - <tt>intensity</tt>, where (<tt>theta</tt>, <tt>rho</tt>) are the polar coordinates of the specimen directions and <tt>intensity</tt> is the diffraction intensity
+         </p>
+         <h2>Syntax<a name="3"> </a></h2>
+         <p>
+            <div class="syntax" width="100%">
+            <div>
+            <tt>export(pf,filename,'param1',val1,'param2',val2)</tt>
+            </div>
+            </div>
+            
+         </p>
+         <h2>Input<a name="4"> </a></h2>
+         <p>
+            <table cellpadding="4" cellspacing="0" class="funcref" width="100%">
+            <tr>
+            <td width="100px">
+            <tt>pf</tt>
+            </td>
+            <td>
+            <p><a href="PoleFigure_index.html">PoleFigure</a></p>
+            </td>
+            </tr>
+            <tr>
+            <td width="100px">
+            <tt>filename</tt>
+            </td>
+            <td>
+            <p>string</p>
+            </td>
+            </tr>
+            <tr>
+            <td width="100px">
+            <tt>param,val</tt>
+            </td>
+            <td>Parameters and values that control export<table cellpadding="4" cellspacing="0" class="paramval" width="100%">
+            <tr>
+            <td class="header" width="100px">Parameter</td>
+            <td class="header">Description</td>
+            </tr>
+            <tr>
+            <td width="150px">
+            <tt>'DEGREE'</tt>
+            </td>
+            <td>
+            <p>theta / rho output in degree instead of radians</p>
+            </td>
+            </tr>
+            </table>
+            </td>
+            </tr>
+            </table>
+            
+         </p>
+         <h3 class="seealso">See also</h3>
+         <p><a href="loadPoleFigure_generic.html">loadPoleFigure_generic</a></p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

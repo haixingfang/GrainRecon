@@ -1,0 +1,512 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>EBSD (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: EBSDAnalysis -->
+      <!-- HEADSTUFF: EBSDAnalysis -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:EBSDAnalysis">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div>
+         <table class="nav" summary="Navigation aid" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline"><b>MTEX</b> - A MATLAB Toolbox for Quantitative Texture Analysis</td>
+            </tr>
+         </table>
+         <p style="font-size:1px;"></p>
+      </div>
+      <div class="content">
+         <h1 class="refname">EBSD</h1>
+         <div class="subheading">
+            <p>Data Import of Electron Backscatter Diffraction Data, Correct Data, Estimate Orientation Density Functions out of EBSD Data,
+               Model Grains and Misorientation Density Functions
+            </p>
+         </div>
+         <p>
+            <table class="ref" width="90%">
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('EBSDTutorial_block','EBSDTutorial_expandable_text');" valign="top" width="15">
+            <img id="EBSDTutorial_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="EBSDTutorial.html">Short EBSD Analysis Tutorial <td valign="top" width="75%">How to detect grains in EBSD data and
+            estimate an ODF.</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="EBSDTutorial_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="EBSDTutorial.html#2">Data import</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="EBSDTutorial.html#6">Visualize EBSD data</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('ImportEBSDData_block','ImportEBSDData_expandable_text');" valign="top" width="15">
+            <img id="ImportEBSDData_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="ImportEBSDData.html">Importing EBSD Data<td valign="top" width="75%">How to import EBSD Data</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="ImportEBSDData_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="ImportEBSDData.html#4">Importing EBSD data using the import wizard</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ImportEBSDData.html#6">Supported Data Formats</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ImportEBSDData.html#7">The Import Script</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ImportEBSDData.html#10">Writing your own interface</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('EBSDModifyData_block','EBSDModifyData_expandable_text');" valign="top" width="15">
+            <img id="EBSDModifyData_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="EBSDModifyData.html">Modify EBSD Data<td valign="top" width="75%">How to correct EBSD data for measurement errors.</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="EBSDModifyData_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="EBSDModifyData.html#5">Selecting a certain phase</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="EBSDModifyData.html#9">Restricting to a region of interest</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="EBSDModifyData.html#16">Remove Inaccurate Orientation Measurements</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('EBSDSmoothing_block','EBSDSmoothing_expandable_text');" valign="top" width="15">
+            <img id="EBSDSmoothing_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="EBSDSmoothing.html">Smoothing of EBSD Data<td valign="top" width="75%">Discusses how to smooth and to fill missing
+            values in EBSD data</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="EBSDSmoothing_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="EBSDSmoothing.html#3">Smoothing a single grain</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="EBSDSmoothing.html#6">SUB: The Mean Filter</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="EBSDSmoothing.html#8">SUB: The Median Filter</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="EBSDSmoothing.html#9">SUB: The Kuwahara Filer</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="EBSDSmoothing.html#10">SUB: The Smoothing Spline Filter</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="EBSDSmoothing.html#11">SUB: The halfquadratic Filter</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="EBSDSmoothing.html#12">SUB: The Infimal Convolution Filter</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="EBSDSmoothing.html#13">Interpolating Missing Data</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="EBSDSmoothing.html#14">SUB: A synthetic example</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="EBSDSmoothing.html#17">SUB: A real world example</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('AnalyzeEBSDData_block','AnalyzeEBSDData_expandable_text');" valign="top" width="15">
+            <img id="AnalyzeEBSDData_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="AnalyzeEBSDData.html">Analyze EBSD Data <td valign="top" width="75%"/></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="AnalyzeEBSDData_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="AnalyzeEBSDData.html#4">Data import</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="AnalyzeEBSDData.html#5">Orientation plot</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('EBSDOrientationPlots_block','EBSDOrientationPlots_expandable_text');" valign="top"
+            width="15">
+            <img id="EBSDOrientationPlots_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="EBSDOrientationPlots.html">Plotting Individual Orientations<td valign="top" width="75%">Basics of the plot types
+            for individual orientations data</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="EBSDOrientationPlots_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="EBSDOrientationPlots.html#6">Scatter Pole Figure Plot</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="EBSDOrientationPlots.html#7">Scatter (Inverse) Pole Figure Plot</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="EBSDOrientationPlots.html#8">Scatter Plot in ODF Sections</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="EBSDOrientationPlots.html#9">Scatter Plot in Axis Angle or Rodrigues Space</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="EBSDOrientationPlots.html#11">Orientation plots for EBSD and grains</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('EBSD2odf_block','EBSD2odf_expandable_text');" valign="top" width="15">
+            <img id="EBSD2odf_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="EBSD2odf.html">ODF Estimation from EBSD data<td valign="top" width="75%">How to estimate an ODF from single orientation
+            measurements.</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="EBSD2odf_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="EBSD2odf.html#3">ODF Estimation</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="EBSD2odf.html#5">Automatic halfwidth selection</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="EBSD2odf.html#8">Effect of halfwidth selection</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('EBSDBingham_block','EBSDBingham_expandable_text');" valign="top" width="15">
+            <img id="EBSDBingham_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="EBSDBingham.html">Bingham distribution and EBSD data<td valign="top" width="75%">testing rotational symmetry of individual
+            orientations</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="EBSDBingham_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="EBSDBingham.html#3">Bingham Distribution</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="EBSDBingham.html#6">The bipolar case and unimodal distribution</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="EBSDBingham.html#13">Prolate case and fibre distribution</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="EBSDBingham.html#20">Oblate case</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('EBSDSpatialPlots_block','EBSDSpatialPlots_expandable_text');" valign="top" width="15">
+            <img id="EBSDSpatialPlots_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="EBSDSpatialPlots.html">Plotting spatially indexed EBSD data<td valign="top" width="75%">How to visualize EBSD data</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="EBSDSpatialPlots_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="EBSDSpatialPlots.html#4">Phase Plots</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="EBSDSpatialPlots.html#9">Visualizing arbitrary properties</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="EBSDSpatialPlots.html#10">Visualizing orientations</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="EBSDSpatialPlots.html#17">Customizing the color</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="EBSDSpatialPlots.html#18">SUB: Coloring certain fibres</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="EBSDSpatialPlots.html#23">SUB: Coloring certain orientations</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="EBSDSpatialPlots.html#26">Combining different plots</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('EBSDSharpPlot_block','EBSDSharpPlot_expandable_text');" valign="top" width="15">
+            <img id="EBSDSharpPlot_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="EBSDSharpPlot.html">Visualizing EBSD data with sharp textures<td valign="top" width="75%">How visualize texture gradients
+            within grains</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="EBSDSharpPlot_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="EBSDSharpPlot.html#7">Sharpening the default colorcoding</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('EBSDSimulation_demo_block','EBSDSimulation_demo_expandable_text');" valign="top"
+            width="15">
+            <img id="EBSDSimulation_demo_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="EBSDSimulation_demo.html">Simulating EBSD data<td valign="top" width="75%">How to simulate an arbitrary number of
+            individual orientations data from any ODF.</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="EBSDSimulation_demo_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="EBSDSimulation_demo.html#6">Simulate EBSD Data</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="EBSDSimulation_demo.html#7">ODF Estimation from EBSD Data</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="EBSDSimulation_demo.html#11">Exploration of the relationship between estimation error and number of single orientations</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            </table>
+            
+         </p>
+         <p>EBSD data is stored in the class <a href="EBSD_index.html">EBSD</a> while grains are stored as variables of type <a href="grain2d_index.html">grain2d</a>. The following mindmap may induce a general idea analysing EBSD Data with MTEX.
+         </p>
+         <p><img src="grain.png"> </p>
+         <p><b><a href="GrainReconstruction.html">Grains</a></b>  are a basic concept for spatially indexed EBSD Data. With grain modelling comes up the possibility of getting more information
+            out of the EBSD Data - e.g. fabric analysis, characterisation of misorientation
+         </p>
+         <p><b><a href="EBSDOrientationPlots.html">Visualizing EBSD Data</a></b> is a central part to understand the crystallographic orientation of a specimen. The most naive way to do this is by plotting
+            the individual orientations as poles in pole figures or spatially indexed points in some map with colorcoded orientations.
+            Moreover one gets with grains the possibility to take a closer look on grain boundaries and depending on the case, even in
+            the internal structure of the grains.
+         </p>
+         <p><b><a href="EBSD2odf.html">Estimating ODFs from EBSD Data</a></b> is also interesting when one has large datasets with and the plotting of individual measurements produces crowded pole figures.
+            Nevertheless the selection of the optimal halfwidth for different dataset is a difficult question, in particular in matters
+            of grains.
+         </p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

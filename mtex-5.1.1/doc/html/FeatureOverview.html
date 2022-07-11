@@ -1,0 +1,127 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>Feature Overview (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: FeatureOverview -->
+      <!-- HEADSTUFF: FeatureOverview -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:FeatureOverview">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div>
+         <table class="nav" summary="Navigation aid" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline"><b>MTEX</b> - A MATLAB Toolbox for Quantitative Texture Analysis</td>
+            </tr>
+         </table>
+         <p style="font-size:1px;"></p>
+      </div>
+      <div class="content">
+         <h1 class="refname">Feature Overview</h1>
+         <div class="subheading">
+            <p>Gives an overview of the central features of the MTEX toolbox.</p>
+         </div>
+         <div>
+            <table class="content">
+               <tr>
+                  <td class="header">On this page ...</td>
+               </tr>
+               <tr>
+                  <td><a href="#2">Analyze and Visualize Crystallographic Geometries</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#3">Calculate with Model ODFs</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#4">Import, Analyze and Visualize Diffraction Data</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#5">Import, Analyze and Visualize EBSD Data</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#6">Recover Orientation Density Functions (ODFs)</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#7">Calculate Texture Characteristics</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#8">Create Publication Ready Plots</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#9">Writing Scripts to Process Many Data Sets</a></td>
+               </tr>
+            </table>
+         </div>
+         <h2>Analyze and Visualize Crystallographic Geometries<a name="2"> </a></h2>
+         <p>In MTEX you can define arbitrary crystal and specimen symmetries with arbitrary geometries using the class <a href="symmetry_index.html">symmetry</a>. <a href="Miller_index.html">Miller indice</a> may be <a href="Miller.plot.html">plotted</a> in various spherical projections, the <a href="vector3d.angle.html">angle</a> between two Miller indices can be computed or all <a href="Miller.symmetrise.html">crystallographically equivalent directions</a> can be computed. Orientations can be specified in terms of different Euler angle conventions, in terms of Rodrigues parameters,
+            matrices or axis - angle parametrization. Orientations can be applied to Miller indices, ODFs, pole figure data, and EBSD
+            data to perform rotations. Have also a look at the <a href="CrystalGeometry.html">Crystal Geometry help page</a>.
+         </p>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Calculate with Model ODFs<a name="3"> </a></h2>
+         <p>In MTEX it is very simple to define a model ODF as a <a href="uniformODF.html">uniform ODFs</a>, a <a href="unimodalODF.html">unimodal ODFs</a>, a <a href="fibreODF.hml">fibre ODFs</a>, a <a href="BinghamODF.html">Bingham ODF</a>, or any superposition of these components. Furthermore, the MTEX toolbox already contains some popular standard ODF as the
+            <a href="SantaFe.html">SantaFe</a> and the <a href="mix2.html">mix2</a> sample ODFs. How to better work model ODFs in MTEX can be found <a href="ODFAnalysis.html">here</a>.
+         </p>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Import, Analyze and Visualize Diffraction Data<a name="4"> </a></h2>
+         <p>Up to now MTEX already supports a wide range of <a href="ImportPoleFigureData.html">pole figure formats</a>. Furthermore, there is a <a href="loadPoleFigure_generic.html">generic interface</a> that allows importing pole figure data that are stored in ASCII files in the theta - rho - intensity notation.
+         </p>
+         <p>It is also very simple to write your own interface using the powerful generic methods provided by MTEX. Once the data are
+            imported by you, there are many <a href="PoleFigure_index.html">methods</a> to analyze and modify them. The <a href="dubna_demo.html">Dubna Demo</a> is a practical example demonstrating how to apply MTEX for pole figure analysis.
+         </p>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Import, Analyze and Visualize EBSD Data<a name="5"> </a></h2>
+         <p>MTEX provides a <a href="ImportEBSDData.html">generic interface</a> for EBSD data. This interface allows extracting orientations and phase information from almost arbitrary ASCII files. EBSD
+            data may be used for <a href="EBSD2odf.html">reconstruction</a>, Fourier coefficient estimation, etc. In fact, all methods that are available for ODFs may be applied to ODFs estimated from
+            EBSD. In particular, it is possible to compare ODFs estimated from EBSD data with those estimated from pole figure data using
+            the command <a href="ODF.calcError.html">calcError</a>. Another useful command in MTEX is <a href="ODF.calcEBSD.html">calcEBSD</a> which allows simulating EBSD data for a given ODF.
+         </p>
+         <p>A practical guide to EBSD data analysis with MTEX can be found <a href="ebsd_demo.html">here</a>.
+         </p>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Recover Orientation Density Functions (ODFs)<a name="6"> </a></h2>
+         <p>Using the method <a href="PoleFigure.calcODF.html">calcODF</a> MTEX allows you to recover an ODF from your pole figure data. This method is based on a discretization of the ODF space by
+            radially symmetric function and on the fast spherical Fourier transform. The algorithms have proven to be very stable and
+            adaptive, in particular, to very sharp textures with low symmetry.
+         </p>
+         <p>There are also several options like <i>regularization</i>, <i>resolution</i>, <i>zero_range_method</i>, <i>ghost_correction</i> that allow adopt the estimation method for your personal needs.
+         </p>
+         <p>A detailed description of the ODF reconstruction from pole figure data can be found at <a href="PoleFigure2odf.html">ODF Estimation</a>. The problem of ghost effect is discussed in greater detail in <a href="ghost_demo.html">Ghost Demo</a>.
+         </p>
+         <p>In order to recover an ODF from EBSD data, the method <a href="EBSD.calcODF.html">calcODF</a> has to be called. It computes an ODF to your EBSD data using <a href="EBSD2odf.html">kernel density estimation</a>.
+         </p>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Calculate Texture Characteristics<a name="7"> </a></h2>
+         <p>MTEX offers to compute a wide range of texture characteristics like <a href="ODF.calcModes.html">modal orientation</a>, <a href="ODF.entropy.html">entropy</a>, <a href="ODF.textureindex.html">texture index</a>, or <a href="ODF.volume.html">volume portion</a> to be computed for any model ODF or any recovered ODF. You can also calculate the Fourier coefficients using the command
+            <a href="ODF.Fourier.html">Fourier</a>. Furthermore, you can compare arbitrary ODF independently whether they are model ODFs, ODFs estimated from pole figure data
+            or estimated from EBSD data. The <a href="ODF_demo.html">ODF Analysis Demo</a> gives an overview over the texture characteristic that can be computed using MTEX.
+         </p>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Create Publication Ready Plots<a name="8"> </a></h2>
+         <p>Founded on the state of the art MATLAB plotting routines, MTEX allows you to create professional plots of <a href="ODF.plotPDF.html">pole figures</a>, <a href="ODF.plotIPDF.html">inverse pole figures</a>, and <a href="ODF.plotSection.html">ODF sections</a>. There are also many <a href="S2Grid.plot.html">plotting options</a> to adapt the plots to the specific standards of the journal you want to submit your paper. Plots may be <a href="savefigure.html">saved</a> in any image format, e.g. as pdf, jpg, png, eps, tiff, bmp. This is described in more details in the <a href="Plotting.html">Plot Demo</a>.
+         </p>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Writing Scripts to Process Many Data Sets<a name="9"> </a></h2>
+         <p>Using the MTEX toolbox it is easy to write little scripts that import pole figure data, pre-process them, recalculate an ODF,
+            post-process it, store it to a given location and finally create several plots. Such scripts can be easily applied to batch
+            process many pole figure data sets. <a href="examples_index.html">Examples</a> of those scripts are included in the help.
+         </p>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

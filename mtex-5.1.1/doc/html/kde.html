@@ -1,0 +1,66 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>kde (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: kde -->
+      <!-- HEADSTUFF: kde -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:kde">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div>
+         <table class="nav" summary="Navigation aid" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline"><b>MTEX</b> - A MATLAB Toolbox for Quantitative Texture Analysis</td>
+               <td valign="baseline" align="right"><a href="matlab:edit kde">
+                     View Code</a></td>
+            </tr>
+         </table>
+         <p style="font-size:1px;"></p>
+      </div>
+      <div class="content">
+         <h1 class="refname">kde</h1>
+         <div class="subheading">
+            <p>Reliable and extremely fast kernel density estimator for one-dimensional data;        Gaussian kernel is assumed and the bandwidth
+               is chosen automatically;        Unlike many other implementations, this one is immune to problems        caused by multimodal
+               densities with widely separated modes (see example). The        estimation does not deteriorate for multimodal densities,
+               because we never assume        a parametric model for the data. INPUTS:     data    - a vector of data from which the density
+               estimate is constructed;          n  - the number of mesh points used in the uniform discretization of the               interval
+               [MIN, MAX]; n has to be a power of two; if n is not a power of two, then               n is rounded up to the next power of
+               two, i.e., n is set to n=2^ceil(log2(n));               the default value of n is n=2^12;   MIN, MAX  - defines the interval
+               [MIN,MAX] on which the density estimate is constructed;               the default values of MIN and MAX are:             
+               MIN=min(data)-Range/10 and MAX=max(data)+Range/10, where Range=max(data)-min(data); OUTPUTS:   bandwidth - the optimal bandwidth
+               (Gaussian kernel assumed);     density - column vector of length 'n' with the values of the density               estimate
+               at the grid points;     xmesh   - the grid over which the density estimate is computed;             - If no output is requested,
+               then the code automatically plots a graph of               the density estimate.        cdf  - column vector of length 'n'
+               with the values of the cdf  Reference: Kernel density estimation via diffusion Z. I. Botev, J. F. Grotowski, and D. P. Kroese
+               (2010) Annals of Statistics, Volume 38, Number 5, pages 2916-2957.
+            </p>
+         </div>
+         <h2>Syntax<a name="2"> </a></h2>
+         <p>
+            <div class="syntax" width="100%">
+            <div>
+            <tt>[bandwidth,density,xmesh,cdf]=kde(data,n,MIN,MAX)</tt>
+            </div>
+            </div>
+            
+         </p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

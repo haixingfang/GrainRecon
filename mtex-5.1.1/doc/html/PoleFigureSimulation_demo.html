@@ -1,0 +1,150 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>Simulating Pole Figure data (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: PoleFigureSimulation_demo -->
+      <!-- HEADSTUFF: PoleFigureSimulation_demo -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:PoleFigureSimulation_demo">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div class="myheader">
+         <table border="0" width="100%" cellpadding="10" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="left" style="color:white"><a style="color:white" href="matlab:edit PoleFigureSimulation_demo">Open Matlab File in the Editor</a></td>
+               <td valign="baseline" align="right" style="color:white"><a style="color:white" href="mtex_product_page.html">MTEX</a></td>
+            </tr>
+         </table>
+      </div>
+      <div class="content">
+         <h1 class="refname">Simulating Pole Figure data</h1>
+         <div class="subheading">
+            <p>Simulate arbitrary pole figure data</p>
+         </div>
+         <div>
+            <table class="content">
+               <tr>
+                  <td class="header">On this page ...</td>
+               </tr>
+               <tr>
+                  <td><a href="#3">Introduction</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#5">Simulate Pole Figure Data</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#11">ODF Estimation from Pole Figure Data</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#14">Exploration of the relationship between estimation error and number of single orientations</a></td>
+               </tr>
+            </table>
+         </div>
+         <h2>Introduction<a name="3"> </a></h2>
+         <p>MTEX allows to <i>simulate</i> an arbitrary number of pole figure data from any ODF. This is quite helpful if you want to analyze the pole figure to ODF
+            estimation routine. Let us start with a model ODF given as the superposition of 6 components.
+         </p><pre class="codeinput">cs = crystalSymmetry(<span class="string">'orthorhombic'</span>);
+mod1 = orientation(<span class="string">'axis'</span>,xvector,<span class="string">'angle'</span>,45*degree,cs);
+mod2 = orientation(<span class="string">'axis'</span>,yvector,<span class="string">'angle'</span>,65*degree,cs);
+model_odf = 0.5*uniformODF(cs) + <span class="keyword">...</span>
+  0.05*fibreODF(Miller(1,0,0,cs),xvector,<span class="string">'halfwidth'</span>,10*degree) + <span class="keyword">...</span>
+  0.05*fibreODF(Miller(0,1,0,cs),yvector,<span class="string">'halfwidth'</span>,10*degree) + <span class="keyword">...</span>
+  0.05*fibreODF(Miller(0,0,1,cs),zvector,<span class="string">'halfwidth'</span>,10*degree) + <span class="keyword">...</span>
+  0.05*unimodalODF(mod1,<span class="string">'halfwidth'</span>,15*degree) + <span class="keyword">...</span>
+  0.3*unimodalODF(mod2,<span class="string">'halfwidth'</span>,25*degree);</pre><pre class="codeinput">plot(model_odf,<span class="string">'sections'</span>,6,<span class="string">'silent'</span>,<span class="string">'sigma'</span>)</pre><img src="PoleFigureSimulation_demo_01.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Simulate Pole Figure Data<a name="5"> </a></h2>
+         <p>In order to simulate pole figure data, the following parameters have to be specified</p>
+         <div>
+            <ol>
+               <li>an arbitrary <a href="ODF_index.html">ODF</a></li>
+               <li>a list of <a href="Miller_index.html">Miller indece</a></li>
+               <li>a grid of <a href="S2Grid_index.html">specimen directions</a></li>
+               <li>superposition coefficients (optional)</li>
+               <li>the magnitude of error (optional)</li>
+            </ol>
+         </div>
+         <p>The list of <a href="Miller_index.html">Miller indece</a></p><pre class="codeinput">h = [Miller(1,1,1,cs),Miller(1,1,0,cs),Miller(1,0,1,cs),Miller(0,1,1,cs),<span class="keyword">...</span>
+  Miller(1,0,0,cs),Miller(0,1,0,cs),Miller(0,0,1,cs)];</pre><p>The <a href="S2Grid_index.html">grid</a> of specimen directions
+         </p><pre class="codeinput">r = regularS2Grid(<span class="string">'resolution'</span>,5*degree);</pre><p>Now the pole figures can be simulated using the command <a href="ODF.calcPoleFigure.html">calcPoleFigure</a>.
+         </p><pre class="codeinput">pf = calcPoleFigure(model_odf,h,r)</pre><pre class="codeoutput"> 
+pf = PoleFigure  
+  crystal symmetry : mmm
+  specimen symmetry: 1
+ 
+  h = (111), r = 72 x 37 points
+  h = (110), r = 72 x 37 points
+  h = (101), r = 72 x 37 points
+  h = (011), r = 72 x 37 points
+  h = (100), r = 72 x 37 points
+  h = (010), r = 72 x 37 points
+  h = (001), r = 72 x 37 points
+</pre><p>Add some noise to the data. Here we assume that the mean intensity is 1000.</p><pre class="codeinput">pf = noisepf(pf,1000);</pre><p>Plot the simulated pole figures.</p><pre class="codeinput">plot(pf)</pre><img src="PoleFigureSimulation_demo_02.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>ODF Estimation from Pole Figure Data<a name="11"> </a></h2>
+         <p>From these simulated pole figures we can now estimate an ODF,</p><pre class="codeinput">odf = calcODF(pf)</pre><pre class="codeoutput"> 
+odf = ODF  
+  crystal symmetry : mmm
+  specimen symmetry: 1
+ 
+  Uniform portion:
+    weight: 0.46039
+ 
+  Radially symmetric portion:
+    kernel: de la Vallee Poussin, halfwidth 5&deg;
+    center: 29757 orientations, resolution: 5&deg;
+    weight: 0.53961
+ 
+</pre><p>which can be plotted,</p><pre class="codeinput">plot(odf,<span class="string">'sections'</span>,6,<span class="string">'silent'</span>,<span class="string">'sigma'</span>)</pre><pre class="codeoutput">progress: 100%
+</pre><img src="PoleFigureSimulation_demo_03.png"> <p>and compared to the original model ODF.</p><pre class="codeinput">calcError(odf,model_odf,<span class="string">'resolution'</span>,5*degree)</pre><pre class="codeoutput">progress: 100%
+ans =
+    0.0813
+</pre><p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Exploration of the relationship between estimation error and number of single orientations<a name="14"> </a></h2>
+         <p>For a more systematic analysis of the estimation error, we vary the number of pole figures used for ODF estimation from 1
+            to 7 and calculate for any number of pole figures the approximation error. Furthermore, we also apply ghost correction and
+            compare the approximation error to the previous reconstructions.
+         </p><pre class="codeinput">e = [];
+<span class="keyword">for</span> i = 1:pf.numPF
+
+  odf = calcODF(pf({1:i}),<span class="string">'silent'</span>,<span class="string">'NoGhostCorrection'</span>);
+  e(i,1) = calcError(odf,model_odf,<span class="string">'resolution'</span>,2.5*degree);
+  odf = calcODF(pf({1:i}),<span class="string">'silent'</span>);
+  e(i,2) = calcError(odf,model_odf,<span class="string">'resolution'</span>,2.5*degree);
+
+<span class="keyword">end</span></pre><pre class="codeoutput">progress: 100%
+progress: 100%
+progress: 100%
+progress: 100%
+progress: 100%
+progress: 100%
+progress: 100%
+progress: 100%
+progress: 100%
+progress: 100%
+progress: 100%
+progress: 100%
+progress: 100%
+progress: 100%
+</pre><p>Plot the error in dependency of the number of single orientations.</p><pre class="codeinput">close <span class="string">all</span>;
+plot(1:pf.numPF,e)
+ylim([0.07 0.32])
+xlabel(<span class="string">'Number of Pole Figures'</span>);
+ylabel(<span class="string">'Reconstruction Error'</span>);
+legend({<span class="string">'Without Ghost Correction'</span>,<span class="string">'With Ghost Correction'</span>});</pre><img src="PoleFigureSimulation_demo_04.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

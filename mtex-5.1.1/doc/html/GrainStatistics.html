@@ -1,0 +1,305 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>Working with Grains (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: GrainStatistics -->
+      <!-- HEADSTUFF: GrainStatistics -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:GrainStatistics">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div class="myheader">
+         <table border="0" width="100%" cellpadding="10" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="left" style="color:white"><a style="color:white" href="matlab:edit GrainStatistics">Open Matlab File in the Editor</a></td>
+               <td valign="baseline" align="right" style="color:white"><a style="color:white" href="mtex_product_page.html">MTEX</a></td>
+            </tr>
+         </table>
+      </div>
+      <div class="content">
+         <h1 class="refname">Working with Grains</h1>
+         <div class="subheading">
+            <p>How to index grains and access shape properties.</p>
+         </div>
+         <div>
+            <table class="content">
+               <tr>
+                  <td class="header">On this page ...</td>
+               </tr>
+               <tr>
+                  <td><a href="#5">Accessing individual grains</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#11">Indexing by a Condition</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#16">Indexing by orientation or position</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#18">Grain-size Analysis</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#25">Spatial Dependencies</a></td>
+               </tr>
+            </table>
+         </div>
+         <p>Grains have several intrinsic properties, which can be used for statistical, shape as well as for spatial analysis</p>
+         <p>Let us first import some EBSD data and reconstruct grains</p><pre class="codeinput">plotx2east
+mtexdata <span class="string">forsterite</span>
+ebsd = ebsd(inpolygon(ebsd,[5 2 10 5]*10^3));
+grains = calcGrains(ebsd)
+
+plot(ebsd)
+hold <span class="string">on</span>
+plot(grains.boundary,<span class="string">'linewidth'</span>,2)
+hold <span class="string">off</span></pre><pre class="codeoutput"> 
+grains = grain2d  
+ 
+ Phase  Grains  Pixels     Mineral  Symmetry  Crystal reference frame
+     0    1139    4052  notIndexed                                   
+     1     242   14093  Forsterite       mmm                         
+     2     177    1397   Enstatite       mmm                         
+     3     104     759    Diopside     12/m1       X||a*, Y||b*, Z||c
+ 
+ boundary segments: 10420
+ triple points: 903
+ 
+ Properties: GOS, meanRotation
+ 
+</pre><img src="GrainStatistics_01.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Accessing individual grains<a name="5"> </a></h2>
+         <p>The variable <tt>grains</tt> is essentially a large vector of grains. Thus when applying a function like <a href="Grain2d.area.html">area</a> to this variable we obtain a vector of the same lenght with numbers representing the area of each grain
+         </p><pre class="codeinput">grain_area = grains.area;</pre><p>As a first rather simple application we could colorize the grains according to their area, i.e., according to the numbers
+            stored in <tt>grain_area</tt></p><pre class="codeinput">plot(grains,grain_area)</pre><img src="GrainStatistics_02.png"> <p>As a second application, we can ask for the largest grain within our data set. The maximum value and its position within a
+            vector are found by the Matlab command <tt>max</tt>.
+         </p><pre class="codeinput">[max_area,max_id] = max(grain_area)</pre><pre class="codeoutput">max_area =
+   3.8945e+06
+max_id =
+        1617
+</pre><p>The number <tt>max_id</tt> is the position of the grain with a maximum area within the variable <tt>grains</tt>. We can access this specific grain by direct indexing
+         </p><pre class="codeinput">grains(max_id)</pre><pre class="codeoutput"> 
+ans = grain2d  
+ 
+ Phase  Grains  Pixels     Mineral  Symmetry  Crystal reference frame
+     1       1    1548  Forsterite       mmm                         
+ 
+ boundary segments: 424
+ triple points: 70
+ 
+   Id   Phase   Pixels         GOS   phi1   Phi   phi2
+ 1617       1     1548   0.0129383    167    81    251
+ 
+</pre><p>and so we can plot it</p><pre class="codeinput">hold <span class="string">on</span>
+plot(grains(max_id).boundary,<span class="string">'linecolor'</span>,<span class="string">'red'</span>,<span class="string">'linewidth'</span>,1.5)
+hold <span class="string">off</span></pre><img src="GrainStatistics_03.png"> <p>Note that this way of addressing individual grains can be generalized to many grains. E.g. assume we are interested in the
+            largest 5 grains. Then we can sort the vector <tt>grain_area</tt> and take the indices of the 5 largest grains.
+         </p><pre class="codeinput">[sorted_area,sorted_id] = sort(grain_area,<span class="string">'descend'</span>);
+
+large_grain_id = sorted_id(1:5);
+
+hold <span class="string">on</span>
+plot(grains(large_grain_id).boundary,<span class="string">'linecolor'</span>,<span class="string">'green'</span>,<span class="string">'linewidth'</span>,1.5)
+hold <span class="string">off</span></pre><img src="GrainStatistics_04.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Indexing by a Condition<a name="11"> </a></h2>
+         <p>By the same syntax as above we can also single out grains that satisfy a certain condition. I.e., to access are grains that
+            are at least half as large as the largest grain we can do
+         </p><pre class="codeinput">condition = grain_area &gt; max_area/2;
+
+hold <span class="string">on</span>
+plot(grains(condition).boundary,<span class="string">'linecolor'</span>,<span class="string">'red'</span>,<span class="string">'linewidth'</span>,1.5)
+hold <span class="string">off</span></pre><img src="GrainStatistics_05.png"> <p>This is a very powerful way of accessing grains as the condition can be build up using any grain property. As an example let
+            us consider the phase. The phase of the first five grains we get by
+         </p><pre class="codeinput">grains(1:5).phase</pre><pre class="codeoutput">ans =
+     0
+     0
+     0
+     0
+     2
+</pre><p>Now we can access or grains of the first phase Forsterite by the condition</p><pre class="codeinput">condition = grains.phase == 1;
+plot(grains(condition))</pre><img src="GrainStatistics_06.png"> <p>To make the above more directly you can use the mineral name for indexing</p><pre class="codeinput">grains(<span class="string">'forsterite'</span>)</pre><pre class="codeoutput"> 
+ans = grain2d  
+ 
+ Phase  Grains  Pixels     Mineral  Symmetry  Crystal reference frame
+     1     242   14093  Forsterite       mmm                         
+ 
+ boundary segments: 7670
+ triple points: 795
+ 
+ Properties: GOS, meanRotation
+ 
+</pre><p>Logical indexing allows also for more complex queries, e.g. selecting all grains perimeter larger than 6000 and at least 600
+            measurements within
+         </p><pre class="codeinput">condition = grains.perimeter&gt;6000 &amp; grains.grainSize &gt;= 600;
+
+selected_grains = grains(condition)
+
+plot(selected_grains)</pre><pre class="codeoutput"> 
+selected_grains = grain2d  
+ 
+ Phase  Grains  Pixels     Mineral  Symmetry  Crystal reference frame
+     1       5    5784  Forsterite       mmm                         
+ 
+ boundary segments: 1893
+ triple points: 244
+ 
+   Id   Phase   Pixels          GOS   phi1   Phi   phi2
+  798       1     1447     0.013232    166   127    259
+  876       1     1075   0.00805971    153    68    237
+  999       1     1044   0.00753116     89    99    224
+ 1617       1     1548    0.0129383    167    81    251
+ 1620       1      670    0.0870135    143    78    274
+ 
+</pre><img src="GrainStatistics_07.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Indexing by orientation or position<a name="16"> </a></h2>
+         <p>One can also select a grain by its spatial coordinates using the syntax <tt>grains(x,y)</tt></p><pre class="codeinput">x = 12000; y = 4000;
+
+plot(grains);
+
+hold <span class="string">on</span>
+
+plot(grains(x,y).boundary,<span class="string">'linewidth'</span>,2,<span class="string">'linecolor'</span>,<span class="string">'r'</span>)
+
+plot(x,y,<span class="string">'marker'</span>,<span class="string">'s'</span>,<span class="string">'markerfacecolor'</span>,<span class="string">'k'</span>,<span class="keyword">...</span>
+  <span class="string">'markersize'</span>,10,<span class="string">'markeredgecolor'</span>,<span class="string">'w'</span>)
+hold <span class="string">off</span></pre><img src="GrainStatistics_08.png"> <p>In order to select all grains with a certain orientation one can do</p><pre class="codeinput"><span class="comment">% restrict first to Forsterite phase</span>
+grains_fo = grains(<span class="string">'fo'</span>)
+
+<span class="comment">% the reference orientation</span>
+ori = orientation(<span class="string">'Euler'</span>,350*degree,50*degree,100*degree,grains(<span class="string">'fo'</span>).CS)
+
+<span class="comment">% select all grain with misorientation angle to ori less then 20 degree</span>
+grains_selected = grains_fo(angle(grains_fo.meanOrientation,ori)&lt;20*degree)
+
+plot(grains_selected)</pre><pre class="codeoutput"> 
+grains_fo = grain2d  
+ 
+ Phase  Grains  Pixels     Mineral  Symmetry  Crystal reference frame
+     1     242   14093  Forsterite       mmm                         
+ 
+ boundary segments: 7670
+ triple points: 795
+ 
+ Properties: GOS, meanRotation
+ 
+ 
+ori = orientation  
+  size: 1 x 1
+  crystal symmetry : Forsterite (mmm)
+  specimen symmetry: 1
+ 
+  Bunge Euler angles in degree
+  phi1  Phi phi2 Inv.
+   350   50  100    0
+ 
+ 
+grains_selected = grain2d  
+ 
+ Phase  Grains  Pixels     Mineral  Symmetry  Crystal reference frame
+     1      12    2979  Forsterite       mmm                         
+ 
+ boundary segments: 1603
+ triple points: 173
+ 
+   Id   Phase   Pixels          GOS   phi1   Phi   phi2
+  359       1       63    0.0129176    177   140    250
+  389       1        1            0    167   128    260
+  622       1      352   0.00896432    153   122    252
+  636       1      305    0.0156453    164   115    268
+  680       1      331    0.0198713    152   143    247
+  798       1     1447     0.013232    166   127    259
+ 1297       1      289    0.0315393    166   147    260
+ 1549       1        1            0      1    47    279
+ 1609       1       48    0.0169152    158   139    259
+ 1629       1       10    0.0193004    172   125    261
+ 1660       1      129   0.00814837      1    47    279
+ 1662       1        3   0.00475795      1    47    279
+ 
+</pre><img src="GrainStatistics_09.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Grain-size Analysis<a name="18"> </a></h2>
+         <p>Let's go back to the grain size and analyze its distribution. To this end, we consider the complete data set.</p><pre class="codeinput">mtexdata <span class="string">forsterite</span>
+<span class="comment">% consider only indexed data for grain segmentation</span>
+ebsd = ebsd(<span class="string">'indexed'</span>);
+<span class="comment">% perform grain segmentation</span>
+[grains,ebsd.grainId] = calcGrains(ebsd)</pre><pre class="codeoutput"> 
+grains = grain2d  
+ 
+ Phase  Grains  Pixels     Mineral  Symmetry  Crystal reference frame
+     1    1080  152345  Forsterite       mmm                         
+     2     515   26058   Enstatite       mmm                         
+     3    1496    9064    Diopside     12/m1       X||a*, Y||b*, Z||c
+ 
+ boundary segments: 43912
+ triple points: 3417
+ 
+ Properties: GOS, meanRotation
+ 
+ 
+ebsd = EBSD  
+ 
+ Phase  Orientations     Mineral        Color  Symmetry  Crystal reference frame
+     1  152345 (81%)  Forsterite   light blue       mmm                         
+     2   26058 (14%)   Enstatite  light green       mmm                         
+     3   9064 (4.8%)    Diopside    light red     12/m1       X||a*, Y||b*, Z||c
+ 
+ Properties: bands, bc, bs, error, mad, x, y, grainId
+ Scan unit : um
+ 
+</pre><p>Then the following command gives you a nice overview over the grain size distributions of the grains</p><pre class="codeinput">hist(grains)</pre><img src="GrainStatistics_10.png"> <p>Sometimes it is desirable to remove all boundary grains as they might distort grain statistics. To do so one should remember
+            that each grain boundary has a property <tt>grainId</tt> which stores the ids of the neigbouring grains. In the case of an outer grain boundary, one of the neighbouring grains has
+            the id zero. We can filter out all these boundary segments by
+         </p><pre class="codeinput"><span class="comment">% ids of the outer boundary segment</span>
+outerBoundary_id = any(grains.boundary.grainId==0,2);
+
+plot(grains)
+hold <span class="string">on</span>
+plot(grains.boundary(outerBoundary_id),<span class="string">'linecolor'</span>,<span class="string">'red'</span>,<span class="string">'linewidth'</span>,2)
+hold <span class="string">off</span></pre><img src="GrainStatistics_11.png"> <p>Now <tt>grains.boundary(outerBoundary_id).grainId</tt> is a list of grain ids where the first column is zero, indicating the outer boundary, and the second column contains the
+            id of the boundary grain. Hence, it remains to remove all grains with these ids.
+         </p><pre class="codeinput"><span class="comment">% next we compute the corresponding grain_id</span>
+grain_id = grains.boundary(outerBoundary_id).grainId;
+
+<span class="comment">% remove all zeros</span>
+grain_id(grain_id==0) = [];
+
+<span class="comment">% and plot the boundary grains</span>
+plot(grains(grain_id))</pre><img src="GrainStatistics_12.png"> <p>finally, we can remove the boundary grains by</p><pre class="codeinput">grains(grain_id) = []
+
+plot(grains)</pre><pre class="codeoutput"> 
+grains = grain2d  
+ 
+ Phase  Grains  Pixels     Mineral  Symmetry  Crystal reference frame
+     1     968  116882  Forsterite       mmm                         
+     2     480   23877   Enstatite       mmm                         
+     3    1467    8871    Diopside     12/m1       X||a*, Y||b*, Z||c
+ 
+ boundary segments: 40105
+ triple points: 3383
+ 
+ Properties: GOS, meanRotation
+ 
+</pre><img src="GrainStatistics_13.png"> <p>Beside the area, there are various other geometric properties that can be computed for grains, e.g., the <a href="grain2d.perimeter.html">perimeter</a>, the <a href="grain2d.diameter.html">diameter</a>, the <a href="grain2d.equivalentRadius.html">equivalentRadius</a>, the <a href="grain2d.equivalentPerimeter.html">equivalentPerimeter</a>, the <a href="grain2d.aspectRatio.html">aspectRatio</a>, and the <a href="grain2d.shapeFactor.html">shapeFactor</a>. The following is a simple scatter plot of shape factor against aspect ratio to check for correlation.
+         </p><pre class="codeinput"><span class="comment">% the size of the dots corresponds to the area of the grains</span>
+close <span class="string">all</span>
+scatter(grains.shapeFactor, grains.aspectRatio, 70*grains.area./max(grains.area))</pre><img src="GrainStatistics_14.png"> <pre class="codeinput">plot(grains,log(grains.aspectRatio))</pre><img src="GrainStatistics_15.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Spatial Dependencies<a name="25"> </a></h2>
+         <p>One interesting question would be, whether a polyphase system has dependence in the spatial arrangement or not, therefore,
+            we can count the transitions to a neighbour grain
+         </p><pre class="codeinput"><span class="comment">%[J, T, p ] = joinCount(grains,grains.phase)</span></pre><p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

@@ -1,0 +1,172 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>Visualizing ODFs (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: ODFPlot -->
+      <!-- HEADSTUFF: ODFPlot -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:ODFPlot">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div class="myheader">
+         <table border="0" width="100%" cellpadding="10" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="left" style="color:white"><a style="color:white" href="matlab:edit ODFPlot">Open Matlab File in the Editor</a></td>
+               <td valign="baseline" align="right" style="color:white"><a style="color:white" href="mtex_product_page.html">MTEX</a></td>
+            </tr>
+         </table>
+      </div>
+      <div class="content">
+         <h1 class="refname">Visualizing ODFs</h1>
+         <div class="subheading">
+            <p>Explains all possibilities to visualize ODfs, i.e. pole figure plots, inverse pole figure plots, ODF sections, fibre sections.</p>
+         </div>
+         <div>
+            <table class="content">
+               <tr>
+                  <td class="header">On this page ...</td>
+               </tr>
+               <tr>
+                  <td><a href="#5">Pole Figures</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#8">Inverse Pole Figures</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#12">ODF Sections</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#18">Plotting the ODF along a fibre</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#19">Fourier Coefficients</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#20">Axis / Angle Distribution</a></td>
+               </tr>
+            </table>
+         </div>
+         <p>Let us first define some model ODFs to be plotted later on.</p><pre class="codeinput">cs = crystalSymmetry(<span class="string">'32'</span>);
+mod1 = orientation(<span class="string">'euler'</span>,90*degree,40*degree,110*degree,<span class="string">'ZYZ'</span>,cs);
+mod2 = orientation(<span class="string">'euler'</span>,50*degree,30*degree,-30*degree,<span class="string">'ZYZ'</span>,cs);
+
+odf = 0.2*unimodalODF(mod1) <span class="keyword">...</span>
+  + 0.3*unimodalODF(mod2) <span class="keyword">...</span>
+  + 0.5*fibreODF(Miller(0,0,1,cs),vector3d(1,0,0),<span class="string">'halfwidth'</span>,10*degree)
+
+<span class="comment">%odf = 0.2*unimodalODF(mod2)</span></pre><pre class="codeoutput"> 
+odf = ODF  
+  crystal symmetry : 321, X||a*, Y||b, Z||c*
+  specimen symmetry: 1
+ 
+  Radially symmetric portion:
+    kernel: de la Vallee Poussin, halfwidth 10&deg;
+    center: (180&deg;,40&deg;,20&deg;)
+    weight: 0.2
+ 
+  Radially symmetric portion:
+    kernel: de la Vallee Poussin, halfwidth 10&deg;
+    center: (140&deg;,30&deg;,240&deg;)
+    weight: 0.3
+ 
+  Fibre symmetric portion:
+    kernel: de la Vallee Poussin, halfwidth 10&deg;
+    fibre: (0001) - 1,0,0
+    weight: 0.5
+ 
+</pre><p>and lets switch to the LaboTex colormap</p><pre class="codeinput">setMTEXpref(<span class="string">'defaultColorMap'</span>,LaboTeXColorMap);</pre><p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Pole Figures<a name="5"> </a></h2>
+         <p>Plotting some pole figures of an <a href="ODF_index.html">ODF</a> is straight forward using the <a href="ODF.plotPDF.html">plotPDF</a> command. The only mandatory arguments are the ODF to be plotted and the <a href="Miller_index.html">Miller indice</a> of the crystal directions you want to have pole figures for.
+         </p><pre class="codeinput">plotPDF(odf,Miller({1,0,-1,0},{0,0,0,1},{1,1,-2,1},cs))</pre><img src="ODFPlot_01.png"> <p>While the first two  pole figures are plotted on the upper hemisphere only the (11-21) has been plotted for the upper and
+            lower hemisphere. The reason for this behaviour is that MTEX automatically detects that the first two pole figures coincide
+            on the upper and lower hemisphere while the (11-21) pole figure does not. In order to plot all pole figures with upper and
+            lower hemisphere we can do
+         </p><pre class="codeinput">plotPDF(odf,Miller({1,0,-1,0},{0,0,0,1},{1,1,-2,1},cs),<span class="string">'complete'</span>)</pre><img src="ODFPlot_02.png"> <p>We see that in general upper and lower hemisphere of the pole figure do not coincide. This is only the case if one one following
+            reason is satisfied
+         </p>
+         <div>
+            <ul type="square">
+               <li>the crystal direction h is symmetrically equivalent to -h, in the present example this is true for the c-axis h = (0001)</li>
+               <li>the symmetry group contains the inversion, i.e., it is a Laue group</li>
+               <li>we consider experimental pole figures where we have antipodal symmetry, due to Friedel's law.</li>
+            </ul>
+         </div>
+         <p>In MTEX antipodal symmetry can be enforced by the use the option <b>antipodal</b>.
+         </p><pre class="codeinput">plotPDF(odf,Miller(1,1,-2,1,cs),<span class="string">'antipodal'</span>,<span class="string">'complete'</span>)</pre><img src="ODFPlot_03.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Inverse Pole Figures<a name="8"> </a></h2>
+         <p>Plotting inverse pole figures is analogously to plotting pole figures with the only difference that you have to use the command
+            <a href="ODF.plotIPDF.html">plotIPDF</a> and you to specify specimen directions and not crystal directions.
+         </p><pre class="codeinput">plotIPDF(odf,[xvector,zvector])</pre><img src="ODFPlot_04.png"> <p>Imposing antipodal symmetry to the inverse pole figures halfes the fundamental region</p><pre class="codeinput">plotIPDF(odf,[xvector,zvector],<span class="string">'antipodal'</span>)</pre><img src="ODFPlot_05.png"> <p>By default MTEX always plots only the fundamental region with respect to the crystal symmetry. In order to plot the complete
+            inverse pole figure you have to use the option <b>complete</b>.
+         </p><pre class="codeinput">plotIPDF(odf,[xvector,zvector],<span class="string">'complete'</span>,<span class="string">'upper'</span>)</pre><img src="ODFPlot_06.png"> <p>This illustrates also more clearly the effect of the antipodal symmetry</p><pre class="codeinput">plotIPDF(odf,[xvector,zvector],<span class="string">'complete'</span>,<span class="string">'antipodal'</span>,<span class="string">'upper'</span>)</pre><img src="ODFPlot_07.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>ODF Sections<a name="12"> </a></h2>
+         <p>Plotting an ODF in two dimensional sections through the orientation space is done using the command <a href="ODF.plotSection.html">plot</a>. By default the sections are at constant angles phi2. The number of sections can be specified by the option <tt>sections</tt></p><pre class="codeinput">plot(odf,<span class="string">'sections'</span>,6,<span class="string">'silent'</span>)</pre><img src="ODFPlot_08.png"> <p>One can also specify the phi2 angles of the sections explicitly</p><pre class="codeinput">plot(odf,<span class="string">'phi2'</span>,[25 30 35 40]*degree,<span class="string">'contourf'</span>,<span class="string">'silent'</span>)</pre><img src="ODFPlot_09.png"> <p>Beside the standard phi2 sections MTEX supports also sections according to all other Euler angles.</p>
+         <div>
+            <ul type="square">
+               <li>phi2 (default)</li>
+               <li>phi1</li>
+               <li>alpha (Matthies Euler angles)</li>
+               <li>gamma (Matthies Euler angles)</li>
+               <li>sigma (alpha+gamma)</li>
+            </ul>
+         </div>
+         <p>In this context the authors of MTEX recommend the sigma sections as they provide a much less distorted representation of the
+            orientation space. They can be seen as the (001) pole figure splitted according to rotations about the (001) axis. Lets have
+            a look at the 001 pole figure
+         </p><pre class="codeinput">plotPDF(odf,Miller(0,0,0,1,cs))</pre><img src="ODFPlot_10.png"> <p>We observe three spots. Two in the center and one at 100. When splitting the pole figure, i.e. plotting the odf as sigma sections</p><pre class="codeinput">plot(odf,<span class="string">'sections'</span>,6,<span class="string">'silent'</span>,<span class="string">'sigma'</span>)</pre><img src="ODFPlot_11.png"> <p>we can clearly distinguish the two spots in the middle indicating two radial symmetric portions. On the other hand the spots
+            at 001 appear in every section indicating a fibre at position [001](100). Knowing that sigma sections are nothing else then
+            the splitted 001 pole figure they are much more simple to interpret then usual phi2 sections.
+         </p>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Plotting the ODF along a fibre<a name="18"> </a></h2>
+         <p>For plotting the ODF along a certain fibre we have the command</p><pre class="codeinput">close <span class="string">all</span>
+f = fibre(Miller(1,2,-3,2,cs),vector3d(2,1,1));
+plot(odf,f,<span class="string">'LineWidth'</span>,2);</pre><img src="ODFPlot_12.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Fourier Coefficients<a name="19"> </a></h2>
+         <p>A last way to visualize an ODF is to plot its Fourier coefficients</p><pre class="codeinput">close <span class="string">all</span>;
+fodf = FourierODF(odf,32)
+plotFourier(fodf)</pre><pre class="codeoutput"> 
+fodf = ODF  
+  crystal symmetry : 321, X||a*, Y||b, Z||c*
+  specimen symmetry: 1
+ 
+  Harmonic portion:
+    degree: 28
+    weight: 1
+ 
+</pre><img src="ODFPlot_13.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Axis / Angle Distribution<a name="20"> </a></h2>
+         <p>Let us consider the uncorrelated missorientation ODF corresponding to our model ODF.</p><pre class="codeinput">mdf = calcMDF(odf)</pre><pre class="codeoutput"> 
+mdf = MDF  
+  crystal symmetry : 321, X||a*, Y||b, Z||c*
+  crystal symmetry : 321, X||a*, Y||b, Z||c*
+  antipodal:         true
+ 
+  Harmonic portion:
+    degree: 23
+    weight: 1
+ 
+</pre><p>Then we can plot the distribution of the rotation axes of this missorientation ODF</p><pre class="codeinput">plotAxisDistribution(mdf)</pre><img src="ODFPlot_14.png"> <p>and the distribution of the missorientation angles and compare them to a uniform ODF</p><pre class="codeinput">close <span class="string">all</span>
+plotAngleDistribution(mdf)
+hold <span class="string">all</span>
+plotAngleDistribution(cs,cs)
+hold <span class="string">off</span>
+legend(<span class="string">'model ODF'</span>,<span class="string">'uniform ODF'</span>)</pre><img src="ODFPlot_15.png"> <p>Finally, lets set back the default colormap.</p><pre class="codeinput">setMTEXpref(<span class="string">'defaultColorMap'</span>,WhiteJetColorMap);</pre><p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

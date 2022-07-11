@@ -1,0 +1,15 @@
+	
+ics_version	1.0
+filename	rotating_points
+layout	parameters	4
+layout	order	bits	x	y	z
+layout	sizes	32	128	128	60
+layout	coordinates	video
+layout	significant_bits	32
+representation	format	real
+representation	sign	signed
+representation	compression	gzip
+representation	byte_order	1	2	3	4
+parameter	origin	0.000000	0.000000	0.000000	0.000000
+parameter	labels	intensity	x-position	y-position	z-position
+history	software	DIPlib with dipIO

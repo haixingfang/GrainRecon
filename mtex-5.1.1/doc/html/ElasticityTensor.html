@@ -1,0 +1,293 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>The Elasticity Tensor (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: ElasticityTensor -->
+      <!-- HEADSTUFF: ElasticityTensor -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:ElasticityTensor">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div class="myheader">
+         <table border="0" width="100%" cellpadding="10" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="left" style="color:white"><a style="color:white" href="matlab:edit ElasticityTensor">Open Matlab File in the Editor</a></td>
+               <td valign="baseline" align="right" style="color:white"><a style="color:white" href="mtex_product_page.html">MTEX</a></td>
+            </tr>
+         </table>
+      </div>
+      <div class="content">
+         <h1 class="refname">The Elasticity Tensor</h1>
+         <div class="subheading">
+            <p>how to calculate and plot the elasticity properties</p>
+         </div>
+         <p>MTEX offers a very simple way to compute elasticity properties of materials. This includes Young's modulus, linear compressibility,
+            Christoffel tensor, and elastic wave velocities.
+         </p>
+         <div>
+            <table class="content">
+               <tr>
+                  <td class="header">On this page ...</td>
+               </tr>
+               <tr>
+                  <td><a href="#4">Import an Elasticity Tensor</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#5">Young's Modulus</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#7">Linear Compressibility</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#8">Christoffel Tensor</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#9">Elastic Wave Velocity</a></td>
+               </tr>
+            </table>
+         </div>
+         <h2>Import an Elasticity Tensor<a name="4"> </a></h2>
+         <p>Let us start by importing the elastic stiffness tensor of an Olivine crystal in reference orientation from a file.</p><pre class="codeinput">fname = fullfile(mtexDataPath,<span class="string">'tensor'</span>,<span class="string">'Olivine1997PC.GPa'</span>);
+
+cs = crystalSymmetry(<span class="string">'mmm'</span>,[4.7646 10.2296 5.9942],<span class="string">'mineral'</span>,<span class="string">'Olivin'</span>);
+
+C = stiffnessTensor.load(fname,cs)</pre><pre class="codeoutput"> 
+C = stiffnessTensor  
+  unit   : GPa              
+  rank   : 4 (3 x 3 x 3 x 3)
+  mineral: Olivin (mmm)     
+ 
+  tensor in Voigt matrix representation:
+ 320.5  68.2  71.6     0     0     0
+  68.2 196.5  76.8     0     0     0
+  71.6  76.8 233.5     0     0     0
+     0     0     0    64     0     0
+     0     0     0     0    77     0
+     0     0     0     0     0  78.7
+</pre><p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Young's Modulus<a name="5"> </a></h2>
+         <p>Young's modulus is also known as the tensile modulus and measures the stiffness of elastic materials. It is computed for a
+            specific direction d by the command <a href="stiffnessTensor.YoungsModulus.html">YoungsModulus</a>.
+         </p><pre class="codeinput">d = vector3d.X
+E = C.YoungsModulus(vector3d.X)</pre><pre class="codeoutput"> 
+d = vector3d  
+ size: 1 x 1
+  x y z
+  1 0 0
+E =
+  286.9284
+</pre><p>If the direction is ommited Youngs modulus is returned as a <a href="S2FunHarmonic_index.html">spherical function</a>.
+         </p><pre class="codeinput"><span class="comment">% compute Young's modulus as a directional dependend function</span>
+E = C.YoungsModulus
+
+<span class="comment">% which can be evaluated at any direction</span>
+E.eval(d)
+
+<span class="comment">% or plot it</span>
+setMTEXpref(<span class="string">'defaultColorMap'</span>,blue2redColorMap);
+plot(C.YoungsModulus,<span class="string">'complete'</span>,<span class="string">'upper'</span>)</pre><pre class="codeoutput"> 
+E = S2FunHarmonic  
+ mineral: Olivin (mmm)
+ bandwidth: 8
+ans =
+  286.1748
+</pre><img src="ElasticityTensor_01.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Linear Compressibility<a name="7"> </a></h2>
+         <p>The linear compressibility is the deformation of an arbitrarily shaped specimen caused by an increase in hydrostatic pressure
+            and can be described by a second rank tensor. Similarly as the Youngs modulus it can be computed by the command <a href="stiffnessTensor.linearCompressibility.html">linearCompressibility</a> for specific directions <tt>d</tt> or as a spherical function
+         </p><pre class="codeinput"><span class="comment">% compute as a spherical function</span>
+beta = linearCompressibility(C)
+
+<span class="comment">% plot it</span>
+plot(beta,<span class="string">'complete'</span>,<span class="string">'upper'</span>)
+
+<span class="comment">% evaluate the function at a specific direction</span>
+beta.eval(d)</pre><pre class="codeoutput"> 
+beta = S2FunHarmonic  
+ mineral: Olivin (mmm)
+ bandwidth: 2
+ antipodal: true
+ans =
+    0.0018
+</pre><img src="ElasticityTensor_02.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Christoffel Tensor<a name="8"> </a></h2>
+         <p>The Christoffel Tensor is symmetric because of the symmetry of the elastic constants. The eigenvalues of the 3x3 Christoffel
+            tensor are three positive values of the wave moduli which corresponds to \rho Vp^2 , \rho Vs1^2 and \rho Vs2^2 of the plane
+            waves propagating in the direction n. The three eigenvectors of this tensor are then the polarization directions of the three
+            waves. Because the Christoffel tensor is symmetric, the polarization vectors are perpendicular to each other.
+         </p><pre class="codeinput"><span class="comment">% It is computed for a specific direction x by the</span>
+<span class="comment">% command &lt;tensor.ChristoffelTensor.html ChristoffelTensor&gt;.</span>
+
+T = ChristoffelTensor(C,vector3d.X)</pre><pre class="codeoutput"> 
+T = ChristoffelTensor  
+  rank   : 2 (3 x 3)   
+  mineral: Olivin (mmm)
+ 
+ 320.5     0     0
+     0  78.7     0
+     0     0    77
+</pre><p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Elastic Wave Velocity<a name="9"> </a></h2>
+         <p>The Christoffel tensor is the basis for computing the direction dependent wave velocities of the p, s1, and s2 wave, as well
+            as of the polarization directions. Therefore, we need also the density of the material, e.g.,
+         </p><pre class="codeinput">rho = 3.355</pre><pre class="codeoutput">rho =
+    3.3550
+</pre><p>which we can write directly into the ellastic stiffness tensor</p><pre class="codeinput">C = addOption(C,<span class="string">'density'</span>,rho)</pre><pre class="codeoutput"> 
+C = stiffnessTensor  
+  unit   : GPa              
+  density: 3.355            
+  rank   : 4 (3 x 3 x 3 x 3)
+  mineral: Olivin (mmm)     
+ 
+  tensor in Voigt matrix representation:
+ 320.5  68.2  71.6     0     0     0
+  68.2 196.5  76.8     0     0     0
+  71.6  76.8 233.5     0     0     0
+     0     0     0    64     0     0
+     0     0     0     0    77     0
+     0     0     0     0     0  78.7
+</pre><p>Then the velocities are computed by the command <a href="tensor.velocity.html">velocity</a></p><pre class="codeinput">[vp,vs1,vs2,pp,ps1,ps2] = velocity(C)</pre><pre class="codeoutput"> 
+vp = S2FunTri  
+ 
+ vertices: 1 x 18338
+ values:   1 x 18338
+ 
+vs1 = S2FunTri  
+ 
+ vertices: 1 x 18338
+ values:   1 x 18338
+ 
+vs2 = S2FunTri  
+ 
+ vertices: 1 x 18338
+ values:   1 x 18338
+pp = 
+  S2AxisFieldTri with properties:
+
+          tri: [1&times;1 S2Triangulation]
+       values: [1&times;18338 vector3d]
+     vertices: [1&times;18338 S2Grid]
+    antipodal: 0
+ps1 = 
+  S2AxisFieldTri with properties:
+
+          tri: [1&times;1 S2Triangulation]
+       values: [1&times;18338 vector3d]
+     vertices: [1&times;18338 S2Grid]
+    antipodal: 0
+ps2 = 
+  S2AxisFieldTri with properties:
+
+          tri: [1&times;1 S2Triangulation]
+       values: [1&times;18338 vector3d]
+     vertices: [1&times;18338 S2Grid]
+    antipodal: 0
+</pre><p>In order to visualize these quantities, there are several possibilities. Let us first plot the direction dependent wave speed
+            of the p-wave
+         </p><pre class="codeinput">plot(vp,<span class="string">'complete'</span>,<span class="string">'upper'</span>)</pre><pre class="codeoutput">ans = 
+  Contour with properties:
+
+    LineColor: [0 0 0]
+    LineStyle: '-'
+    LineWidth: 0.5000
+         Fill: 'on'
+    LevelList: [1&times;10 double]
+        XData: [91&times;361 double]
+        YData: [91&times;361 double]
+        ZData: [91&times;361 double]
+
+  Use GET to show all properties
+</pre><img src="ElasticityTensor_03.png"> <p>Next, we plot on the top of this plot the p-wave polarization direction.</p><pre class="codeinput">hold <span class="string">on</span>
+plot(pp)
+hold <span class="string">off</span></pre><img src="ElasticityTensor_04.png"> <p>We may even compute with these spherical functions as width ordinary values. E.g. to visualize the speed difference between
+            the s1 and s2 waves we do.
+         </p><pre class="codeinput">plot(vs1-vs2,<span class="string">'complete'</span>,<span class="string">'upper'</span>)
+
+hold <span class="string">on</span>
+plot(ps1)
+hold <span class="string">off</span></pre><pre class="codeoutput">ans = 
+  Contour with properties:
+
+    LineColor: [0 0 0]
+    LineStyle: '-'
+    LineWidth: 0.5000
+         Fill: 'on'
+    LevelList: [1&times;10 double]
+        XData: [91&times;361 double]
+        YData: [91&times;361 double]
+        ZData: [91&times;361 double]
+
+  Use GET to show all properties
+</pre><img src="ElasticityTensor_05.png"> <p>When projected to a plane the different wave speeds</p><pre class="codeinput">planeNormal = vector3d.X;
+
+<span class="comment">% options for sections</span>
+optSec = {<span class="string">'color'</span>,<span class="string">'interp'</span>,<span class="string">'linewidth'</span>,6,<span class="string">'doNotDraw'</span>};
+
+<span class="comment">% options for quiver</span>
+optQuiver = {<span class="string">'linewidth'</span>,2,<span class="string">'autoScaleFactor'</span>,0.35,<span class="string">'doNotDraw'</span>};
+optQuiverProp = {<span class="string">'color'</span>,<span class="string">'k'</span>,<span class="string">'linewidth'</span>,2,<span class="string">'autoScaleFactor'</span>,0.25,<span class="string">'doNotDraw'</span>};
+prop = S2VectorFieldHarmonic.normal; <span class="comment">% the propagation direction</span>
+
+<span class="comment">% wave velocyties</span>
+close <span class="string">all</span>
+plotSection(vp,planeNormal,optSec{:},<span class="string">'DisplayName'</span>,<span class="string">'Vp'</span>)
+hold <span class="string">on</span>
+plotSection(vs1,planeNormal,optSec{:},<span class="string">'DisplayName'</span>,<span class="string">'Vs1'</span>)
+plotSection(vs2,planeNormal,optSec{:},<span class="string">'DisplayName'</span>,<span class="string">'Vs2'</span>)
+
+<span class="comment">% polarisation directions</span>
+quiverSection(vp,pp,planeNormal,<span class="string">'color'</span>,<span class="string">'c'</span>,optQuiver{:},<span class="string">'DisplayName'</span>,<span class="string">'pp'</span>)
+quiverSection(vs1,ps1,planeNormal,<span class="string">'color'</span>,<span class="string">'g'</span>,optQuiver{:},<span class="string">'DisplayName'</span>,<span class="string">'ps1'</span>)
+quiverSection(vs2,ps2,planeNormal,<span class="string">'color'</span>,<span class="string">'m'</span>,optQuiver{:},<span class="string">'DisplayName'</span>,<span class="string">'ps2'</span>)
+
+<span class="comment">% plot propagation directions as reference</span>
+quiverSection(vp,prop,planeNormal,optQuiverProp{:},<span class="string">'DisplayName'</span>,<span class="string">'x'</span>)
+quiverSection(vs1,prop,planeNormal,optQuiverProp{:})
+quiverSection(vs2,prop,planeNormal,optQuiverProp{:})
+hold <span class="string">off</span>
+
+axis <span class="string">off</span> <span class="string">tight</span>
+legend(<span class="string">'Vp'</span>,<span class="string">'Vs1'</span>,<span class="string">'Vs2'</span>,<span class="string">'pp'</span>,<span class="string">'ps1'</span>,<span class="string">'ps2'</span>,<span class="string">'x'</span>,<span class="string">'Location'</span>,<span class="string">'eastOutSide'</span>)
+mtexTitle(<span class="string">'Phase velocity surface (km/s)'</span>)
+
+mtexColorMap <span class="string">blue2red</span>
+mtexColorbar(<span class="string">'Title'</span>,<span class="string">'(km/s)'</span>,<span class="string">'location'</span>,<span class="string">'southOutSide'</span>)</pre><img src="ElasticityTensor_06.png"> <p>Similarly, we can visualize the slowness surfaces (s/km)</p><pre class="codeinput"><span class="comment">% plot slowness surfaces</span>
+plotSection(1./vp,planeNormal,optSec{:},<span class="string">'DisplayName'</span>,<span class="string">'Vp'</span>)
+hold <span class="string">on</span>
+plotSection(1./vs1,planeNormal,optSec{:},<span class="string">'DisplayName'</span>,<span class="string">'Vs1'</span>)
+plotSection(1./vs2,planeNormal,optSec{:},<span class="string">'DisplayName'</span>,<span class="string">'Vs2'</span>)
+
+<span class="comment">% polarisation directions</span>
+quiverSection(1./vp,pp,planeNormal,<span class="string">'color'</span>,<span class="string">'c'</span>,optQuiver{:},<span class="string">'DisplayName'</span>,<span class="string">'pp'</span>)
+quiverSection(1./vs1,ps1,planeNormal,<span class="string">'color'</span>,<span class="string">'g'</span>,optQuiver{:},<span class="string">'DisplayName'</span>,<span class="string">'ps1'</span>)
+quiverSection(1./vs2,ps2,planeNormal,<span class="string">'color'</span>,<span class="string">'m'</span>,optQuiver{:},<span class="string">'DisplayName'</span>,<span class="string">'ps2'</span>)
+
+<span class="comment">% plot propagation directions as reference</span>
+quiverSection(1./vp,prop,planeNormal,optQuiverProp{:},<span class="string">'DisplayName'</span>,<span class="string">'x'</span>)
+quiverSection(1./vs1,prop,planeNormal,optQuiverProp{:})
+quiverSection(1./vs2,prop,planeNormal,optQuiverProp{:})
+hold <span class="string">off</span>
+axis <span class="string">off</span> <span class="string">tight</span>
+legend(<span class="string">'Vp'</span>,<span class="string">'Vs1'</span>,<span class="string">'Vs2'</span>,<span class="string">'pp'</span>,<span class="string">'ps1'</span>,<span class="string">'ps2'</span>,<span class="string">'x'</span>,<span class="string">'Location'</span>,<span class="string">'eastOutSide'</span>)
+mtexTitle(<span class="string">'Slowness surface (km/s)'</span>)
+
+mtexColorMap <span class="string">blue2red</span>
+mtexColorbar(<span class="string">'Title'</span>,<span class="string">'(s/km)'</span>,<span class="string">'location'</span>,<span class="string">'southOutSide'</span>)</pre><img src="ElasticityTensor_07.png"> <p>set back default colormap</p><pre class="codeinput">setMTEXpref(<span class="string">'defaultColorMap'</span>,WhiteJetColorMap)</pre><p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

@@ -1,0 +1,260 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>Model ODFs (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: ModelODFs -->
+      <!-- HEADSTUFF: ModelODFs -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:ModelODFs">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div class="myheader">
+         <table border="0" width="100%" cellpadding="10" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="left" style="color:white"><a style="color:white" href="matlab:edit ModelODFs">Open Matlab File in the Editor</a></td>
+               <td valign="baseline" align="right" style="color:white"><a style="color:white" href="mtex_product_page.html">MTEX</a></td>
+            </tr>
+         </table>
+      </div>
+      <div class="content">
+         <h1 class="refname">Model ODFs</h1>
+         <div class="subheading">
+            <p>Describes how to define model ODFs in MTEX, i.e., uniform ODFs, unimodal ODFs, fibre ODFs, Bingham ODFs and ODFs defined by
+               its Fourier coefficients.
+            </p>
+         </div>
+         <div>
+            <table class="content">
+               <tr>
+                  <td class="header">On this page ...</td>
+               </tr>
+               <tr>
+                  <td><a href="#3">Introduction</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#4">The Uniform ODF</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#5">Unimodal ODFs</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#7">Fibre ODFs</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#8">ODFs given by Fourier coefficients</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#10">Bingham ODFs</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#14">Combining model ODFs</a></td>
+               </tr>
+            </table>
+         </div>
+         <h2>Introduction<a name="3"> </a></h2>
+         <p>MTEX provides a very simple way to define model ODFs. Generally, there are five types to describe an ODF in MTEX:</p>
+         <div>
+            <ul type="square">
+               <li>uniform ODF</li>
+               <li>unimodal ODF</li>
+               <li>fibre ODF</li>
+               <li>Bingham ODF</li>
+               <li>Fourier ODF</li>
+            </ul>
+         </div>
+         <p>The central idea is that MTEX allows you to calculate mixture models, by adding and subtracting arbitrary ODFs. Model ODFs
+            may be used as references for ODFs estimated from pole figure data or EBSD data and are instrumental for <a href="PoleFigureSimulation_demo.html">pole figure simulations</a> and <a href="EBSDSimulation_demo.html">single orientation simulations</a>.
+         </p>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>The Uniform ODF<a name="4"> </a></h2>
+         <p>The most simplest case of a model ODF is the uniform ODF</p>
+         <p><img src="ModelODFs_eq15409799391995383922.png"> </p>
+         <p>which is everywhere identical to one. In order to define a uniform ODF one needs only to specify its crystal and specimen
+            symmetry and to use the command <a href="uniformODF.html">uniformODF</a>.
+         </p><pre class="codeinput">cs = crystalSymmetry(<span class="string">'cubic'</span>);
+ss = specimenSymmetry(<span class="string">'orthorhombic'</span>);
+odf = uniformODF(cs,ss)</pre><pre class="codeoutput"> 
+odf = ODF  
+  crystal symmetry : m-3m
+  specimen symmetry: mmm
+ 
+  Uniform portion:
+    weight: 1
+ 
+</pre><p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Unimodal ODFs<a name="5"> </a></h2>
+         <p>An unimodal ODF</p>
+         <p><img src="ModelODFs_eq12314694240900239207.png"> </p>
+         <p>is specified by a <a href="kernel_index.html">radially symmetrial function</a> <img src="ModelODFs_eq01982406464486259838.png">  centered at a modal <a href="orientation_index.html">orientation</a>, <img src="ModelODFs_eq17901138739901064211.png">  and. In order to define a unimodal ODF one needs
+         </p>
+         <div>
+            <ul type="square">
+               <li>a preferred <a href="orientation_index.html">orientation</a> mod1
+               </li>
+               <li>a <a href="kernel_index.html">kernel</a> function <tt>psi</tt> defining the shape
+               </li>
+               <li>the crystal and specimen <a href="symmetry_index.html">symmetry</a></li>
+            </ul>
+         </div><pre class="codeinput">ori = orientation(<span class="string">'Miller'</span>,[1,2,2],[2,2,1],cs,ss);
+psi = vonMisesFisherKernel(<span class="string">'HALFWIDTH'</span>,10*degree);
+odf = unimodalODF(ori,psi)
+
+plotPDF(odf,[Miller(1,0,0,cs),Miller(1,1,0,cs)],<span class="string">'antipodal'</span>)</pre><pre class="codeoutput"> 
+odf = ODF  
+  crystal symmetry : m-3m
+  specimen symmetry: mmm
+ 
+  Radially symmetric portion:
+    kernel: van Mises Fisher, halfwidth 10&deg;
+    center: (297&deg;,48&deg;,27&deg;)
+    weight: 1
+ 
+</pre><img src="ModelODFs_01.png"> <p>For simplicity one can also omit the kernel function. In this case the default de la Vallee Poussin kernel is chosen with
+            half width of 10 degree.
+         </p>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Fibre ODFs<a name="7"> </a></h2>
+         <p>A fibre is represented in MTEX by a variable of type <a href="fibre_index.html">fibre</a>.
+         </p><pre class="codeinput"><span class="comment">% define the fibre to be the beta fibre</span>
+f = fibre.beta(cs)
+
+<span class="comment">% define a fibre ODF</span>
+odf = fibreODF(f,ss,psi)
+
+<span class="comment">% plot the odf in 3d</span>
+plot3d(odf)</pre><pre class="codeoutput"> 
+f = fibre  
+ size: 1 x 1
+ crystal symmetry:  m-3m
+ o1: (180&deg;,35&deg;,45&deg;)
+ o2: (270&deg;,63&deg;,45&deg;)
+ 
+odf = ODF  
+  crystal symmetry : m-3m
+  specimen symmetry: 1
+ 
+  Fibre symmetric portion:
+    kernel: van Mises Fisher, halfwidth 10&deg;
+    fibre: (---) - -0.23141,-0.23141,0.94494
+    weight: 1
+ 
+</pre><img src="ModelODFs_02.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>ODFs given by Fourier coefficients<a name="8"> </a></h2>
+         <p>In order to define a ODF by it <b>Fourier coefficients</b> the Fourier coefficients <b>C</b> has to be given as a literally ordered, complex valued vector of the form
+         </p>
+         <p><img src="ModelODFs_eq03059004171824837318.png"> </p>
+         <p>where <img src="ModelODFs_eq07539466353696451391.png">  denotes the order of the Fourier coefficients.
+         </p><pre class="codeinput">cs   = crystalSymmetry(<span class="string">'1'</span>);    <span class="comment">% crystal symmetry</span>
+C = [1;reshape(eye(3),[],1);reshape(eye(5),[],1)]; <span class="comment">% Fourier coefficients</span>
+odf = FourierODF(C,cs)
+
+plot(odf,<span class="string">'sections'</span>,6,<span class="string">'silent'</span>,<span class="string">'sigma'</span>)
+mtexColorMap <span class="string">LaboTeX</span></pre><pre class="codeoutput"> 
+odf = ODF  
+  crystal symmetry : 1, X||a, Y||b*, Z||c*
+  specimen symmetry: 1
+  antipodal:         true
+ 
+  Harmonic portion:
+    degree: 2
+    weight: 1
+ 
+</pre><img src="ModelODFs_03.png"> <pre class="codeinput">plotPDF(odf,[Miller(1,0,0,cs),Miller(1,1,0,cs)],<span class="string">'antipodal'</span>)</pre><img src="ModelODFs_04.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Bingham ODFs<a name="10"> </a></h2>
+         <p>The Bingham quaternion distribution</p>
+         <p><img src="ModelODFs_eq11455625306311351361.png"> </p>
+         <p>has a (4x4)-orthogonal matrix <img src="ModelODFs_eq02619125812656254059.png">  and shape parameters <img src="ModelODFs_eq03845174387838694102.png">  as argument. The (4x4) matrix can be interpreted as 4 orthogonal <a href="quaternion_index.html">quaternions</a> <img src="ModelODFs_eq16982490052868600911.png"> , where the <img src="ModelODFs_eq15602978728784385692.png">  allow different shapes, e.g.
+         </p>
+         <div>
+            <ul type="square">
+               <li>unimodal ODFs</li>
+               <li>fibre ODF</li>
+               <li>spherical ODFs</li>
+            </ul>
+         </div>
+         <p>A Bingham distribution is characterized by</p>
+         <div>
+            <ul type="square">
+               <li>four <a href="orientation_index.html">orientations</a></li>
+               <li>four values lambda</li>
+            </ul>
+         </div><pre class="codeinput">cs = crystalSymmetry(<span class="string">'-3m'</span>);</pre><p><b>Bingham unimodal ODF</b></p><pre class="codeinput"><span class="comment">% a modal orientation</span>
+mod = orientation(<span class="string">'Euler'</span>,45*degree,0*degree,0*degree);
+
+<span class="comment">% the corresponding Bingham ODF</span>
+odf = BinghamODF(20,mod,cs)
+
+plot(odf,<span class="string">'sections'</span>,6,<span class="string">'silent'</span>,<span class="string">'contourf'</span>,<span class="string">'sigma'</span>)</pre><pre class="codeoutput"> 
+odf = ODF  
+  crystal symmetry : -3m1, X||a*, Y||b, Z||c*
+  specimen symmetry: 1
+ 
+  Bingham portion:
+     kappa: 20 0 0 0
+    weight: 1
+ 
+</pre><img src="ModelODFs_05.png"> <p><b>Bingham fibre ODF</b></p><pre class="codeinput">odf = BinghamODF([-10,-10,10,10],quaternion(eye(4)),cs)
+
+plot(odf,<span class="string">'sections'</span>,6,<span class="string">'silent'</span>,<span class="string">'sigma'</span>)</pre><pre class="codeoutput"> 
+odf = ODF  
+  crystal symmetry : -3m1, X||a*, Y||b, Z||c*
+  specimen symmetry: 1
+ 
+  Bingham portion:
+     kappa: -10 -10 10 10
+    weight: 1
+ 
+</pre><img src="ModelODFs_06.png"> <p><b>Bingham spherical ODF</b></p><pre class="codeinput">odf = BinghamODF([-10,10,10,10],quaternion(eye(4)),cs)
+
+plot(odf,<span class="string">'sections'</span>,6,<span class="string">'silent'</span>,<span class="string">'sigma'</span>);</pre><pre class="codeoutput"> 
+odf = ODF  
+  crystal symmetry : -3m1, X||a*, Y||b, Z||c*
+  specimen symmetry: 1
+ 
+  Bingham portion:
+     kappa: -10 10 10 10
+    weight: 1
+ 
+</pre><img src="ModelODFs_07.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Combining model ODFs<a name="14"> </a></h2>
+         <p>All the above can be arbitrarily rotated and combined. For instance, the classical Santafe example can be defined by commands</p><pre class="codeinput">cs = crystalSymmetry(<span class="string">'cubic'</span>);
+ss = specimenSymmetry(<span class="string">'orthorhombic'</span>);
+
+psi = vonMisesFisherKernel(<span class="string">'halfwidth'</span>,10*degree);
+mod1 = orientation(<span class="string">'Miller'</span>,[1,2,2],[2,2,1],cs,ss);
+
+odf =  0.73 * uniformODF(cs,ss) + 0.27 * unimodalODF(mod1,psi)
+
+close <span class="string">all</span>
+plotPDF(odf,[Miller(1,0,0,cs),Miller(1,1,0,cs)],<span class="string">'antipodal'</span>)</pre><pre class="codeoutput"> 
+odf = ODF  
+  crystal symmetry : m-3m
+  specimen symmetry: mmm
+ 
+  Uniform portion:
+    weight: 0.73
+ 
+  Radially symmetric portion:
+    kernel: van Mises Fisher, halfwidth 10&deg;
+    center: (297&deg;,48&deg;,27&deg;)
+    weight: 0.27
+ 
+</pre><img src="ModelODFs_08.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

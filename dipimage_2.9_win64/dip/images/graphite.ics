@@ -1,0 +1,10 @@
+	
+ics_version	1.0
+filename	hopg5
+layout	parameters	3
+layout	order	bits	x	y
+layout	sizes	8	512	512
+layout	coordinates	video
+layout	significant_bits	8
+representation	format	integer
+representation	sign	unsigned

@@ -1,0 +1,128 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>Spherical Projections (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: SphericalProjection_demo -->
+      <!-- HEADSTUFF: SphericalProjection_demo -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:SphericalProjection_demo">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div class="myheader">
+         <table border="0" width="100%" cellpadding="10" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="left" style="color:white"><a style="color:white" href="matlab:edit SphericalProjection_demo">Open Matlab File in the Editor</a></td>
+               <td valign="baseline" align="right" style="color:white"><a style="color:white" href="mtex_product_page.html">MTEX</a></td>
+            </tr>
+         </table>
+      </div>
+      <div class="content">
+         <h1 class="refname">Spherical Projections</h1>
+         <div class="subheading">
+            <p>Explains the spherical projections MTEX offers for plotting crystal and specimen directions, pole figures and ODF.</p>
+         </div>
+         <div>
+            <table class="content">
+               <tr>
+                  <td class="header">On this page ...</td>
+               </tr>
+               <tr>
+                  <td><a href="#3">Introduction</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#4">Alignment of the Hemispheres</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#7">Alignment of the Coordinate Axes</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#9">Equal Area Projection (Schmidt Projection)</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#10">Equal Distance Projection</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#11">Stereographic Projection (Equal Angle Projection)</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#12">Plain Projection</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#13">Three-dimensional Plots</a></td>
+               </tr>
+            </table>
+         </div>
+         <h2>Introduction<a name="3"> </a></h2>
+         <p>MTEX supports four types of spherical projection which are available for all spherical plot, e.g. <a href="ODF.plotPDF.html">polefigure plots</a>, <a href="ODF.plotIPDF.html">inverse polefigure plots</a> or <a href="ODF.plotSection.html">ODF plots</a>. These are the equal area projection (Schmidt projection), the equal distance projection, the stereographic projection (equal
+            angle projection), the three-dimensional projection and the flat projection.
+         </p>
+         <p>In order to demonstrate the different projections we start by defining a model ODF.</p><pre class="codeinput">cs = crystalSymmetry(<span class="string">'321'</span>);
+odf = fibreODF(Miller(1,1,0,cs),zvector)</pre><pre class="codeoutput"> 
+odf = ODF  
+  crystal symmetry : 321, X||a*, Y||b, Z||c*
+  specimen symmetry: 1
+ 
+  Fibre symmetric portion:
+    kernel: de la Vallee Poussin, halfwidth 10&deg;
+    fibre: (11-20) - 0,0,1
+    weight: 1
+ 
+</pre><p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Alignment of the Hemispheres<a name="4"> </a></h2>
+         <p><b>Partial Spherical Plots</b></p>
+         <p>If an ODF has triclinic specimen symmetry its pole figures differs in general on the upper hemisphere and the lower hemisphere.
+            By default MTEX plots, in this case, both hemispheres. The upper on the left-hand side and the lower on the right-hand side.
+            TODO: this is currently missing
+         </p><pre class="codeinput">plotPDF(odf,Miller(1,1,0,cs),<span class="string">'minmax'</span>)</pre><img src="SphericalProjection_demo_01.png"> <p>MTEX allows also to plot only the upper or the lower hemisphere by passing the options <tt>upper</tt> or <tt>lower</tt>.
+         </p><pre class="codeinput">plotPDF(odf,Miller(1,1,0,cs),<span class="string">'lower'</span>,<span class="string">'minmax'</span>)</pre><img src="SphericalProjection_demo_02.png"> <p>Due to Friedel's law measured pole figures are a superposition of the upper and the lower hemisphere (since antipodal directions
+            are associated). In order to plot pole figures as a superposition of the upper and lower hemisphere one has to enforce <a href="AxialDirectional.html">antipodal symmetry</a>. This is done by the option <b>antipodal</b>.
+         </p><pre class="codeinput">plotPDF(odf,Miller(1,1,0,cs),<span class="string">'antipodal'</span>,<span class="string">'minmax'</span>)</pre><img src="SphericalProjection_demo_03.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Alignment of the Coordinate Axes<a name="7"> </a></h2>
+         <p><b>Rotate and Flip Plots</b></p>
+         <p>Sometimes it is more convenient to have the coordinate system rotated or flipped in some way. For this reason, all plot commands
+            in MTEX allows for the options <b>rotate</b>, <b>flipud</b> and <b>fliplr</b>. A more direct way for changing the orientation of the plot is to specify the direction of the x-axis by the commands <a href="plotx2east.html">plotx2east</a>, <a href="plotx2north.html">plotx2north</a>, <a href="plotx2west.html">plotx2west</a>, <a href="plotx2south.html">plotx2south</a>.
+         </p><pre class="codeinput">plotx2north
+
+plotPDF(odf,Miller(1,0,0,cs),<span class="string">'antipodal'</span>)</pre><img src="SphericalProjection_demo_04.png"> <pre class="codeinput">plotx2east
+
+plotPDF(odf,Miller(1,0,0,cs),<span class="string">'antipodal'</span>)</pre><img src="SphericalProjection_demo_05.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Equal Area Projection (Schmidt Projection)<a name="9"> </a></h2>
+         <p>Equal area projection is defined by the characteristic that it preserves the spherical area. Since pole figures are defined
+            as relative frequency by area equal area projection is the default projection in MTEX. In can be set explicitly by the flags
+            <b>earea</b> or <b>schmidt</b>.
+         </p><pre class="codeinput">plotPDF(odf,Miller(1,0,0,cs),<span class="string">'antipodal'</span>)</pre><img src="SphericalProjection_demo_06.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Equal Distance Projection<a name="10"> </a></h2>
+         <p>The equal distance projection differs from the equal area projection by the characteristic that it preserves the distances
+            of points to the origin. Hence it might be a more intuitive projection if you look at crystal directions.
+         </p><pre class="codeinput">cs = crystalSymmetry(<span class="string">'m-3m'</span>);
+plotHKL(cs,<span class="string">'projection'</span>,<span class="string">'edist'</span>,<span class="string">'upper'</span>,<span class="string">'grid_res'</span>,15*degree,<span class="string">'BackGroundColor'</span>,<span class="string">'w'</span>)</pre><img src="SphericalProjection_demo_07.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Stereographic Projection (Equal Angle Projection)<a name="11"> </a></h2>
+         <p>Another famous spherical projection is the stereographic projection which preserves the angle between arbitrary great circles.
+            It can be chosen by setting the option <b>stereo</b> or <b>eangle</b>.
+         </p><pre class="codeinput">plotHKL(cs,<span class="string">'projection'</span>,<span class="string">'eangle'</span>,<span class="string">'upper'</span>,<span class="string">'grid_res'</span>,15*degree,<span class="string">'BackGroundColor'</span>,<span class="string">'w'</span>)</pre><img src="SphericalProjection_demo_08.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Plain Projection<a name="12"> </a></h2>
+         <p><b>Plain</b> means that the polar angles theta / rho are plotted in a simple rectangular plot. This projection is often chosen for ODF
+            plots, e.g.
+         </p><pre class="codeinput">plot(SantaFe,<span class="string">'alpha'</span>,<span class="string">'sections'</span>,18,<span class="string">'resolution'</span>,5*degree,<span class="keyword">...</span>
+  <span class="string">'projection'</span>,<span class="string">'plain'</span>,<span class="string">'contourf'</span>,<span class="string">'FontSize'</span>,10,<span class="string">'silent'</span>)
+mtexColorMap <span class="string">white2black</span></pre><img src="SphericalProjection_demo_09.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Three-dimensional Plots<a name="13"> </a></h2>
+         <p>MTEX also offers a three-dimensional plot of pole figures which even might be rotated freely in space</p><pre class="codeinput">plotPDF(odf,Miller(1,1,0,odf.CS),<span class="string">'3d'</span>)</pre><img src="SphericalProjection_demo_10.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

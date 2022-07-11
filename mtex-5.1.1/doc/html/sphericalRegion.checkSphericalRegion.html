@@ -1,0 +1,58 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title> (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: sphericalRegion.checkSphericalRegion -->
+      <!-- HEADSTUFF: sphericalRegion.checkSphericalRegion -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:sphericalRegion.checkSphericalRegion">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div>
+         <table class="nav" summary="Navigation aid" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline"><b>MTEX</b> - A MATLAB Toolbox for Quantitative Texture Analysis</td>
+            </tr>
+         </table>
+         <p style="font-size:1px;"></p>
+      </div>
+      <div class="content"><pre class="codeinput"><span class="comment">%N = [-zvector,yvector,vector3d('polar',pi/2,-pi/4),...</span>
+<span class="comment">%  vector3d('polar',pi/2,pi/2+pi/4)];</span>
+
+N = [zvector,xvector,yvector,vector3d(<span class="string">'polar'</span>,pi/2,-pi/4),vector3d(-1,-1,1)]
+
+N = [vector3d(1,-1,0),vector3d(-1,0,1),yvector,zvector];
+<span class="comment">%N = [vector3d(1,-1,0),vector3d(0,-1,1),yvector,zvector];</span>
+<span class="comment">%N = [vector3d(0,-1,1),vector3d(-1,0,1),xvector,yvector,zvector];</span>
+
+sR = sphericalRegion(N./norm(N),zeros(size(N)));
+
+<span class="comment">%plot(zvector,'grid','on','upper')</span>
+
+plot(sR,<span class="string">'Color'</span>,<span class="string">'b'</span>,<span class="string">'linewidth'</span>,2,<span class="string">'complete'</span>)</pre><pre class="codeoutput"> 
+N = vector3d  
+ size: 1 x 5
+         x         y         z
+         0         0         1
+         1         0         0
+         0         1         0
+  0.707107 -0.707107         0
+        -1        -1         1
+</pre><img src="sphericalRegion.checkSphericalRegion_01.png"> <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

@@ -1,0 +1,80 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>MTEX - Grain Analysis of EBSD Data (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: GrainTutorial -->
+      <!-- HEADSTUFF: GrainTutorial -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:GrainTutorial">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div class="myheader">
+         <table border="0" width="100%" cellpadding="10" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="left" style="color:white"><a style="color:white" href="matlab:edit GrainTutorial">Open Matlab File in the Editor</a></td>
+               <td valign="baseline" align="right" style="color:white"><a style="color:white" href="mtex_product_page.html">MTEX</a></td>
+            </tr>
+         </table>
+      </div>
+      <div class="content">
+         <h1 class="refname">MTEX - Grain Analysis of EBSD Data</h1>
+         <div class="subheading">
+            <p>Analysis of single orientation measurement.</p>
+         </div>
+         <h2>Specify Crystal and Specimen Symmetry<a name="2"> </a></h2><pre class="codeinput"><span class="comment">% specify crystal and specimen symmetry</span>
+CS = {<span class="keyword">...</span>
+  <span class="string">'not Indexed'</span>,<span class="keyword">...</span>
+  crystalSymmetry(<span class="string">'m-3m'</span>,<span class="string">'mineral'</span>,<span class="string">'Fe'</span>),<span class="keyword">...</span><span class="comment"> % crystal symmetry phase 1</span>
+  crystalSymmetry(<span class="string">'m-3m'</span>,<span class="string">'mineral'</span>,<span class="string">'Mg'</span>)};   <span class="comment">% crystal symmetry phase 2</span></pre><h2>Import ebsd data<a name="3"> </a></h2><pre class="codeinput">fname = fullfile(mtexDataPath,<span class="string">'EBSD'</span>,<span class="string">'85_829grad_07_09_06.txt'</span>);
+
+ebsd = loadEBSD(fname,<span class="string">'CS'</span>,CS,<span class="string">'interface'</span>,<span class="string">'generic'</span>,<span class="keyword">...</span>
+  <span class="string">'ColumnNames'</span>, { <span class="string">'Phase'</span> <span class="string">'x'</span> <span class="string">'y'</span> <span class="string">'Euler 1'</span> <span class="string">'Euler 2'</span> <span class="string">'Euler 3'</span> <span class="string">'MAD'</span> <span class="string">'BC'</span>},<span class="keyword">...</span>
+  <span class="string">'Columns'</span>, [2 3 4 5 6 7 8 9],<span class="string">'Bunge'</span>,<span class="string">'IgnorePhase'</span>,0);
+
+plotx2east</pre><h2>Plot Spatial Data<a name="4"> </a></h2><pre class="codeinput">plot(ebsd(<span class="string">'Fe'</span>))</pre><img src="GrainTutorial_01.png"> <h2>Segmentation<a name="5"> </a></h2><pre class="codeinput">grains = calcGrains(ebsd,<span class="string">'angle'</span>,10*degree)</pre><pre class="codeoutput"> 
+grains = grain2d  
+ 
+ Phase  Grains  Pixels  Mineral  Symmetry  Crystal reference frame
+     1     946   48184       Fe      m-3m                         
+     2     466    1180       Mg      m-3m                         
+ 
+ boundary segments: 20718
+ triple points: 2198
+ 
+ Properties: GOS, meanRotation
+ 
+</pre><p>The reconstructed grains strongly depend on the specified threshold angle. These angles can be specified seperatly for different
+            phases.
+         </p><pre class="codeinput">grains = calcGrains(ebsd,<span class="string">'angle'</span>,[0 10 5]*degree)</pre><pre class="codeoutput"> 
+grains = grain2d  
+ 
+ Phase  Grains  Pixels  Mineral  Symmetry  Crystal reference frame
+     1     946   48184       Fe      m-3m                         
+     2     470    1180       Mg      m-3m                         
+ 
+ boundary segments: 20726
+ triple points: 2204
+ 
+ Properties: GOS, meanRotation
+ 
+</pre><p>Plot grain-boundaries</p><pre class="codeinput">plot(grains.boundary,<span class="string">'color'</span>,[0.25 0.1 0.5])
+<span class="comment">%TODO: internal grain boundaries</span>
+hold <span class="string">on</span>, plot(grains.boundary,<span class="string">'linecolor'</span>,<span class="string">'red'</span>,<span class="string">'linewidth'</span>,2)</pre><img src="GrainTutorial_02.png"> <p>on application of this would be to take a look on the grainsize distribution</p><pre class="codeinput">hist(grains)</pre><img src="GrainTutorial_03.png"> <h2>Accessing geometric properties<a name="9"> </a></h2><pre class="codeinput">area(grains); perimeter(grains);
+shapeFactor(grains);</pre><p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

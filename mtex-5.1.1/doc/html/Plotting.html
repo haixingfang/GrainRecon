@@ -1,0 +1,395 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>Plotting (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: Plotting -->
+      <!-- HEADSTUFF: Plotting -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:Plotting">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div>
+         <table class="nav" summary="Navigation aid" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline"><b>MTEX</b> - A MATLAB Toolbox for Quantitative Texture Analysis</td>
+            </tr>
+         </table>
+         <p style="font-size:1px;"></p>
+      </div>
+      <div class="content">
+         <h1 class="refname">Plotting</h1>
+         <div class="subheading">
+            <p>Explains different plot types and how to customize them, inlcuding annotations, spherical projections, color coding.</p>
+         </div>
+         <p>
+            <table class="ref" width="90%">
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('PlottingIntro_block','PlottingIntro_expandable_text');" valign="top" width="15">
+            <img id="PlottingIntro_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="PlottingIntro.html">Plotting Overview<td valign="top" width="75%">Overview over the plotting facilities of MTEX,
+            including annotations, plot types, color coding, combined plots and export of plots.</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="PlottingIntro_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="PlottingIntro.html#3">Plotting in MTEX</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="PlottingIntro.html#4">Plot Types</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="PlottingIntro.html#5">Spherical Projections</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="PlottingIntro.html#6">Color Coding</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="PlottingIntro.html#7">Plot Annotations</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="PlottingIntro.html#8">Combined Plots</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="PlottingIntro.html#9">Exporting Plots</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('Annotations_demo_block','Annotations_demo_expandable_text');" valign="top" width="15">
+            <img id="Annotations_demo_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="Annotations_demo.html">Annotations<td valign="top" width="75%">Explains how to add annotations to plots. This includes
+            colorbars, legends, specimen directions and crystal directions.</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="Annotations_demo_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="Annotations_demo.html#3">Colorbars</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="Annotations_demo.html#6">Annotating Directions, Orientations, Fibres</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="Annotations_demo.html#11">Legends</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('CombinedPlots_demo_block','CombinedPlots_demo_expandable_text');" valign="top"
+            width="15">
+            <img id="CombinedPlots_demo_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="CombinedPlots_demo.html">Combined Plots<td valign="top" width="75%">Explains how to combine several plots, e.g. plotting
+            on the top of an inverse pole figure some important crystal directions.</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="CombinedPlots_demo_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="CombinedPlots_demo.html#3">General Principle</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="CombinedPlots_demo.html#4">Combine Different EBSD Data</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="CombinedPlots_demo.html#8">Combine countoured pole figures (smooth ODF plots) with EBSD Data Scatter Plots</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="CombinedPlots_demo.html#10">Add Miller Indices to an Inverse Pole Figure Plot</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="CombinedPlots_demo.html#11">Combining different plots in one figure</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('PlotTypes_demo_block','PlotTypes_demo_expandable_text');" valign="top" width="15">
+            <img id="PlotTypes_demo_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="PlotTypes_demo.html">Plot Types<td valign="top" width="75%">Explains the different plot types, i.e., scatter plots,
+            contour plots, and line plots.</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="PlotTypes_demo_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="PlotTypes_demo.html#3">A Sample ODFs</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="PlotTypes_demo.html#5">Scatter Plots</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="PlotTypes_demo.html#10">Contour Plots</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="PlotTypes_demo.html#11"> Filled Contour Plots</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="PlotTypes_demo.html#12">Smooth Interpolated Plots</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="PlotTypes_demo.html#13">Line Plots</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('SphericalProjection_demo_block','SphericalProjection_demo_expandable_text');"
+            valign="top" width="15">
+            <img id="SphericalProjection_demo_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="SphericalProjection_demo.html">Spherical Projections<td valign="top" width="75%">Explains the spherical projections
+            MTEX offers for plotting crystal and specimen directions, pole figures and ODF.</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="SphericalProjection_demo_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="SphericalProjection_demo.html#3">Introduction</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="SphericalProjection_demo.html#4">Alignment of the Hemispheres</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="SphericalProjection_demo.html#7">Alignment of the Coordinate Axes</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="SphericalProjection_demo.html#9">Equal Area Projection (Schmidt Projection)</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="SphericalProjection_demo.html#10">Equal Distance Projection</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="SphericalProjection_demo.html#11">Stereographic Projection (Equal Angle Projection)</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="SphericalProjection_demo.html#12">Plain Projection</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="SphericalProjection_demo.html#13">Three-dimensional Plots</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('ColorCoding_demo_block','ColorCoding_demo_expandable_text');" valign="top" width="15">
+            <img id="ColorCoding_demo_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="ColorCoding_demo.html">Pole Figure Color Coding<td valign="top" width="75%">Explains how to control color coding
+            across multiple plots.</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="ColorCoding_demo_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="ColorCoding_demo.html#4">A sample ODFs and Simulated Pole Figure Data</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ColorCoding_demo.html#5">Setting a Colormap</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ColorCoding_demo.html#9">Tight Colorcoding</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ColorCoding_demo.html#10">Equal Colorcoding</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ColorCoding_demo.html#11">Setting an Explicit Colorrange</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ColorCoding_demo.html#12">Setting the Contour Levels</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ColorCoding_demo.html#13">Modifying the Color range After Plotting</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ColorCoding_demo.html#14">Logarithmic Plots</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('ColorCodingEBSD_demo_block','ColorCodingEBSD_demo_expandable_text');" valign="top"
+            width="15">
+            <img id="ColorCodingEBSD_demo_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="ColorCodingEBSD_demo.html">EBSD Color Coding<td valign="top" width="75%">Explains EBSD color coding.</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="ColorCodingEBSD_demo_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="ColorCodingEBSD_demo.html#4">Colorcoding of orientations</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ColorCodingEBSD_demo.html#5">Assigning the Euler angles to the RGB values</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ColorCodingEBSD_demo.html#10">Colorcoding according to inverse pole figure </a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            </table>
+            
+         </p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

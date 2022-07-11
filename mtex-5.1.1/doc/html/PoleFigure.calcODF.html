@@ -1,0 +1,200 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>calcODF (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: PoleFigure.calcODF -->
+      <!-- HEADSTUFF: PoleFigure.calcODF -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:PoleFigure.calcODF">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div>
+         <table class="nav" summary="Navigation aid" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline"><b>MTEX</b> - A MATLAB Toolbox for Quantitative Texture Analysis</td>
+               <td valign="baseline" align="right"><a href="matlab:edit PoleFigure/calcODF">
+                     View Code</a></td>
+            </tr>
+         </table>
+         <p style="font-size:1px;"></p>
+      </div>
+      <div class="content">
+         <h1 class="refname">calcODF</h1>
+         <div class="subheading">
+            <p>(method of <a href="PoleFigure_index.html">PoleFigure</a>)
+            </p>
+         </div>
+         <p>PDF to ODF inversion</p>
+         <p><b>calcODF</b> is one of the main function of the MTEX toolbox. It estimates an ODF from given Polefigure intensities by <a href="PoleFigure2odf.html">fitting an ODF that consists of a large number of unimodal ODFs to the data</a>. It does so by minimizing a least squares functional. The command <b>calcODF</b> supports <a href="ghost_demo.html">automatic ghost correction</a> and <a href="dubna_demo.html">the zero range method</a>. The function <b>calcODF</b> has several options to control convergence, resolution, smoothing, etc. See below for a complete description.
+         </p>
+         <h2>Syntax<a name="3"> </a></h2><pre class="codeinput">odf = calcODF(pf)
+odf = calcODF(pf,<span class="string">'halfwidth'</span>,5*degree)
+odf = calcODF(pf,<span class="string">'zeroRange'</span>)
+odf = calcODF(pf,<span class="string">'resolution'</span>,2.5*degree)</pre><h2>Input<a name="4"> </a></h2>
+         <p>
+            <table cellpadding="4" cellspacing="0" class="funcref" width="100%">
+            <tr>
+            <td width="100px">
+            <tt>pf</tt>
+            </td>
+            <td>
+            <p><a href="PoleFigure_index.html">PoleFigure</a></p>
+            </td>
+            </tr>
+            <tr>
+            <td width="100px">
+            <tt>param,val</tt>
+            </td>
+            <td>Parameters and values that control calcODF<table cellpadding="4" cellspacing="0" class="paramval" width="100%">
+            <tr>
+            <td class="header" width="100px">Parameter</td>
+            <td class="header">Description</td>
+            </tr>
+            <tr>
+            <td width="150px">
+            <tt>'kernel'</tt>
+            </td>
+            <td>
+            <p>the ansatz functions (default = de la Vallee Poussin)</p>
+            </td>
+            </tr>
+            <tr>
+            <td width="150px">
+            <tt>'halfwidth'</tt>
+            </td>
+            <td>
+            <p>halfwidth of the ansatz functions (default = 2/3 * resolution)</p>
+            </td>
+            </tr>
+            <tr>
+            <td width="150px">
+            <tt>'resolution'</tt>
+            </td>
+            <td>
+            <p>localization grid for the ansatz fucntions (default = 3/2 resolution(pf))</p>
+            </td>
+            </tr>
+            <tr>
+            <td width="150px">
+            <tt>'iter_max'</tt>
+            </td>
+            <td>
+            <p>maximum number of iterations (default = 11)</p>
+            </td>
+            </tr>
+            <tr>
+            <td width="150px">
+            <tt>'iter_min'</tt>
+            </td>
+            <td>
+            <p>minimum number of iterations (default = 5)</p>
+            </td>
+            </tr>
+            <tr>
+            <td width="150px">
+            <tt>'c0'</tt>
+            </td>
+            <td>
+            <p>initial guess (default = [1 1 1 1 ... 1])</p>
+            </td>
+            </tr>
+            </table>
+            </td>
+            </tr>
+            <tr>
+            <td width="100px">
+            <tt>param</tt>
+            </td>
+            <td>Options that control the calcODF behavior<table cellpadding="4" cellspacing="0" class="paramval" width="100%">
+            <tr>
+            <td class="header" width="100px">Parameter</td>
+            <td class="header">Description</td>
+            </tr>
+            <tr>
+            <td width="150px">
+            <tt>'zeroRange'</tt>
+            </td>
+            <td>
+            <p>apply zero range method (default = )</p>
+            </td>
+            </tr>
+            <tr>
+            <td width="150px">
+            <tt>'noGhostCorrection'</tt>
+            </td>
+            <td>
+            <p>omit ghost correction</p>
+            </td>
+            </tr>
+            <tr>
+            <td width="150px">
+            <tt>'ensure_descent'</tt>
+            </td>
+            <td>
+            <p>stop iteration whenever no procress if observed</p>
+            </td>
+            </tr>
+            <tr>
+            <td width="150px">
+            <tt>'force_iter_max'</tt>
+            </td>
+            <td>
+            <p>allway go until ITER_MAX</p>
+            </td>
+            </tr>
+            <tr>
+            <td width="150px">
+            <tt>'silent'</tt>
+            </td>
+            <td>
+            <p>no output</p>
+            </td>
+            </tr>
+            </table>
+            </td>
+            </tr>
+            </table>
+            
+         </p>
+         <h2>Output<a name="5"> </a></h2>
+         <p>
+            <table cellpadding="4" cellspacing="0" class="funcref" width="100%">
+            <tr>
+            <td width="100px">
+            <tt>odf</tt>
+            </td>
+            <td>
+            <p>reconstructed <a href="ODF_index.html">ODF</a></p>
+            </td>
+            </tr>
+            <tr>
+            <td width="100px">
+            <tt>alpha</tt>
+            </td>
+            <td>
+            <p>scaling factors, calculated during reconstruction</p>
+            </td>
+            </tr>
+            </table>
+            
+         </p>
+         <h3 class="seealso">See also</h3>
+         <p><a href="PoleFigure2odf.html">PoleFigure2odf</a>, <a href="ODF_demo.html">ODF_demo</a>, <a href="PoleFigureSimulation_demo.html">PoleFigureSimulation_demo</a>, <a href="loadPoleFigure.html">loadPoleFigure</a>, <a href="ImportPoleFigureData.html">ImportPoleFigureData</a>, <a href="examples_index.html">examples_index</a></p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

@@ -1,0 +1,86 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>Short EBSD Analysis Tutorial (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: EBSDTutorial -->
+      <!-- HEADSTUFF: EBSDTutorial -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:EBSDTutorial">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div class="myheader">
+         <table border="0" width="100%" cellpadding="10" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="left" style="color:white"><a style="color:white" href="matlab:edit EBSDTutorial">Open Matlab File in the Editor</a></td>
+               <td valign="baseline" align="right" style="color:white"><a style="color:white" href="mtex_product_page.html">MTEX</a></td>
+            </tr>
+         </table>
+      </div>
+      <div class="content">
+         <h1 class="refname">Short EBSD Analysis Tutorial</h1>
+         <div class="subheading">
+            <p>How to detect grains in EBSD data and estimate an ODF.</p>
+         </div>
+         <h2>Data import<a name="2"> </a></h2>
+         <p>EBSD data may be imported by the import_wizard by typing</p><pre class="codeinput">import_wizard</pre><img src="EBSDTutorial_01.png"> <p>or by the command</p><pre class="codeinput">fileName = [mtexDataPath filesep <span class="string">'EBSD'</span> filesep <span class="string">'Forsterite.ctf'</span>];
+ebsd = loadEBSD(fileName)</pre><pre class="codeoutput">Warning: .ctf files have usualy inconsistent
+conventions for spatial coordinates and Euler angles.
+You may want to use one of the options
+'convertSpatial2EulerReferenceFrame' or
+'convertEuler2SpatialReferenceFrame' to correct for
+this 
+ 
+ebsd = EBSD  
+ 
+ Phase  Orientations     Mineral        Color  Symmetry  Crystal reference frame
+     0   58485 (24%)  notIndexed                                                
+     1  152345 (62%)  Forsterite   light blue       mmm                         
+     2   26058 (11%)   Enstatite  light green       mmm                         
+     3   9064 (3.7%)    Diopside    light red     12/m1       X||a*, Y||b*, Z||c
+ 
+ Properties: bands, bc, bs, error, mad, x, y
+ Scan unit : um
+ 
+</pre><p>A quick overview of the phases within your data set gives the plot</p><pre class="codeinput">plot(ebsd)</pre><img src="EBSDTutorial_02.png"> <p>MTEX supports a wide variety of EBSD file formats. Recommended are text- base file formats like <tt>.ang</tt> and <tt>.ctf</tt> over binary file formats like <tt>.osc</tt>. Special attention has to be paid to the alignment of sample reference frame X Y Z. Different vendors use different conventions.
+            Even the reference frame for the Euler angles and for the spatial coordinates do not need to coincide. How to deal with this
+            is discussed in a separate <a href="ImportEBSDData.html">section</a>.
+         </p>
+         <h2>Visualize EBSD data<a name="6"> </a></h2>
+         <p>The alignment of the Euler reference frame can be verified by plotting pole figures and comparing them with the pole figures
+            of the vendors system.
+         </p><pre class="codeinput"><span class="comment">% we first need to extract the crystal symmetry of Forsterite</span>
+csForsterite = ebsd(<span class="string">'Forsterite'</span>).CS
+
+<span class="comment">% this plots the (001) pole figure of the Forsterite phase</span>
+plotPDF(ebsd(<span class="string">'Forsterite'</span>).orientations,Miller(0,0,1,csForsterite))
+
+<span class="comment">% display Euler angle reference frame X, Y, Z</span>
+text([vector3d.X,vector3d.Y,vector3d.Z],{<span class="string">'X'</span>,<span class="string">'Y'</span>,<span class="string">'Z'</span>},<span class="string">'backgroundColor'</span>,<span class="string">'w'</span>)</pre><pre class="codeoutput"> 
+csForsterite = crystalSymmetry  
+ 
+  mineral : Forsterite
+  color   : light blue
+  symmetry: mmm       
+  a, b, c : 4.8, 10, 6
+ 
+  I'm plotting 1250 random orientations out of 152345 given orientations
+  You can specify the the number points by the option "points".
+  The option "all" ensures that all data are plotted
+</pre><img src="EBSDTutorial_03.png"> <pre class="codeinput">plot(ebsd(<span class="string">'Forsterite'</span>),ebsd(<span class="string">'Forsterite'</span>).orientations,<span class="string">'coordinates'</span>,<span class="string">'on'</span>)</pre><img src="EBSDTutorial_04.png"> <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

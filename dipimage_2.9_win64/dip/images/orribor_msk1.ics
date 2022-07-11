@@ -1,0 +1,11 @@
+	
+ics_version	1.0
+filename	orribor_msk1
+layout	parameters	3
+layout	order	bits	x	y
+layout	sizes	1	256	256
+layout	coordinates	video
+layout	significant_bits	1
+representation	format	integer
+representation	sign	unsigned
+representation	SCIL_TYPE	b2d

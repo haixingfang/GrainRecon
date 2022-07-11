@@ -1,0 +1,112 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>Installation Guide (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: installation -->
+      <!-- HEADSTUFF: installation -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:installation">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div>
+         <table class="nav" summary="Navigation aid" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline"><b>MTEX</b> - A MATLAB Toolbox for Quantitative Texture Analysis</td>
+            </tr>
+         </table>
+         <p style="font-size:1px;"></p>
+      </div>
+      <div class="content">
+         <h1 class="refname">Installation Guide</h1>
+         <div class="subheading">
+            <p>How to install MTEX on you computer.</p>
+         </div>
+         <h2>Download<a name="1"> </a></h2>
+         <p>The MTEX toolbox is available for Windows, Linux, and MAC-OSX at <a href="http://mtex-toolbox.github.io/">http://mtex-toolbox.github.io/</a></p>
+         <h2>MATLAB<a name="2"> </a></h2>
+         <p>Since MTEX is a MATLAB toolbox <a href="http://www.mathworks.com">MATLAB</a> has to be installed in order to use MTEX. It works fine with the student version and does not require any additional toolboxes,
+            addons or packages. Check the table below to see whether MTEX will run on your Matlab version.
+         </p>
+         <p>
+            <table border=0 align="center">
+            <tr><td>Matlab</td>
+            <td>2015b</td>
+            <td>2015a</td>
+            <td>2014b</td>
+            <td>2014a</td>
+            <td>2013b</td>
+            <td>2013a</td>
+            <td>2012b</td>
+            <td>2012a</td>
+            <td>2011b</td>
+            <td>2011a</td>
+            <td>2010b</td>
+            <td>2010a</td>
+            </tr>
+            <tr>
+            <td>MTEX 4.1</td>
+            <td>&#10004;</td><td>&#10004;</td><td>&#10004;</td>
+            <td>&#10004;</td><td>&#10004;</td><td>&#10004;</td>
+            <td>&#10004;</td><td>(&#10004;)</td><td>(&#10004;)</td>
+            <td>(&#10004;)</td><td>(&#10004;)</td><td>(&#10004;)</td>
+            </tr>
+            <tr>
+            <td>MTEX 4.0</td>
+            <td>-</td><td>&#10004;</td><td>&#10004;</td>
+            <td>&#10004;</td><td>&#10004;</td><td>&#10004;</td>
+            <td>&#10004;</td><td>(&#10004;)</td><td>(&#10004;)</td>
+            <td>(&#10004;)</td><td>(&#10004;)</td><td>(&#10004;)</td>
+            </tr>
+            <tr>
+            <td>MTEX 3.5</td>
+            <td>-</td><td>-</td><td>-</td>
+            <td>&#10004;</td><td>&#10004;</td><td>&#10004;</td>
+            <td>&#10004;</td><td>&#10004;</td><td>&#10004;</td>
+            <td>&#10004;</td><td>&#10004;</td><td>&#10004;</td>
+            </tr>
+            <tr>
+            <td>MTEX 3.3</td>
+            <td>-</td><td>-</td><td>-</td>
+            <td>&#10004;</td><td>&#10004;</td><td>&#10004;</td>
+            <td>&#10004;</td><td>&#10004;</td><td>&#10004;</td>
+            <td>&#10004;</td><td>&#10004;</td><td>&#10004;</td>
+            </tr>
+            </table>
+            
+         </p>
+         <h2>Installation<a name="3"> </a></h2>
+         <p>In order to install, MTEX proceeds as follows</p>
+         <div>
+            <ol>
+               <li>extract MTEX to an arbitrary folder</li>
+               <li>start MATLAB</li>
+               <li>type into the Matlab command window</li>
+            </ol>
+         </div><pre class="codeinput">addpath <span class="string">your_MTEX_path</span>
+startup_mtex</pre><h2>Configuration and Troubleshooting<a name="4"> </a></h2>
+         <p>You can <a href="configuration.html">configure</a> your MTEX installation by editing the file <a href="matlab:edit('mtex_settings.m')">mtex_settings.m</a>. This includes also some workarounds for known problems.
+         </p>
+         <p>Don't hesitate to contact the <a href="mtex_about.html">MTEX authors</a> if you have any problems.
+         </p>
+         <h2>Compiling MTEX<a name="5"> </a></h2>
+         <p>Compiling MTEX is only necessary if the provided binaries do not run on your system or if you want to optimize them for your
+            specific system. Compiling instructions can be found <a href="compilation.html">here</a>.
+         </p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

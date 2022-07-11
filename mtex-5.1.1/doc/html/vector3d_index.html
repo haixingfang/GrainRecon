@@ -1,0 +1,179 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>Specimen Directions (The Class vector3d) (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: vector3d_index -->
+      <!-- HEADSTUFF: vector3d_index -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:vector3d_index">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div class="myheader">
+         <table border="0" width="100%" cellpadding="10" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="left" style="color:white"><a style="color:white" href="matlab:edit vector3d_index">Open Matlab File in the Editor</a></td>
+               <td valign="baseline" align="right" style="color:white"><a style="color:white" href="mtex_product_page.html">MTEX</a></td>
+            </tr>
+         </table>
+      </div>
+      <div class="content">
+         <h1 class="refname">Specimen Directions (The Class <a href="vector3d_index.html">vector3d</a>)
+         </h1>
+         <div class="subheading">
+            <p>This section describes the class <b>vector3d</b> and gives an overview how to deal with specimen directions in MTEX.
+            </p>
+         </div>
+         <div>
+            <table class="content">
+               <tr>
+                  <td class="header">On this page ...</td>
+               </tr>
+               <tr>
+                  <td><a href="#3">Class Description</a></td>
+               </tr>
+               <tr>
+                  <td><span class="subsection"><a href="#4"> Defining Specimen Directions</a></span></td>
+               </tr>
+               <tr>
+                  <td><span class="subsection"><a href="#7"> Calculating with Specimen Directions</a></span></td>
+               </tr>
+               <tr>
+                  <td><span class="subsection"><a href="#11"> Plotting three dimensionl vectors</a></span></td>
+               </tr>
+               <tr>
+                  <td><a href="#12">Complete Function list</a></td>
+               </tr>
+            </table>
+         </div>
+         <h2>Class Description<a name="3"> </a></h2>
+         <p>Specimen directions are three-dimensional vectors in the Euclidean space represented by coordinates with respect to an outer
+            specimen coordinate system x, y, z. In MTEX Specimen directions are represented by variables of the class <b>vector3d</b>.
+         </p>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h3> Defining Specimen Directions<a name="4"> </a></h3>
+         <p>The standard way to define a specimen directions is by its coordinates.</p><pre class="codeinput">v = vector3d(1,1,0);</pre><p>This gives a single vector with coordinates (1,1,0) with respect to the x, y , z coordinate system. A second way to define
+            a specimen directions is by its spherical coordinates, i.e. by its polar angle and its azimuth angle. This is done by the
+            option <b>polar</b>.
+         </p><pre class="codeinput">polar_angle = 60*degree;
+azimuth_angle = 45*degree;
+v = vector3d(<span class="string">'polar'</span>,polar_angle,azimuth_angle);</pre><p>Finally, one can also define a vector as a linear combination of the predefined vectors <a href="xvector.html">xvector</a>, <a href="yvector.html">yvector</a>, and <a href="zvector.html">zvector</a></p><pre class="codeinput">v = xvector + 2*yvector;</pre><p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h3> Calculating with Specimen Directions<a name="7"> </a></h3>
+         <p>As we have seen in the last example. One can calculate with specimen directions as with ordinary number. Moreover, all basic
+            vector operation as <a href="vector3d.plus.html">"+"</a>, <a href="vector3d.minus.html">"-"</a>, <a href="vector3d.times.html">"*"</a>, <a href="vector3d.dot.html">inner product</a>, <a href="vector3d.cross.html">cross product</a> are implemented.
+         </p><pre class="codeinput">u = dot(v,xvector) * yvector + 2 * cross(v,zvector);</pre><p>Using the brackets <tt>v = [v1,v2]</tt> two specimen directions can be concatened. Now each single vector is accesable via <tt>v(1)</tt> and <tt>v(2)</tt>.
+         </p><pre class="codeinput">w = [v,u];
+w(1)
+w(2)</pre><pre class="codeoutput"> 
+ans = vector3d  
+ size: 1 x 1
+  x y z
+  1 2 0
+ 
+ans = vector3d  
+ size: 1 x 1
+  x  y  z
+  4 -1  0
+</pre><p>When calculating with concatenated specimen directions all operations are performed componentwise for each specimen direction.</p><pre class="codeinput">w = w + v;</pre><p>Besides the standard linear algebra operations, there are also the following functions available in MTEX.</p><pre><a href="vector3d.angle.html&#34;&gt;angle(v1">v2)</a> % angle between two specimen  directions
+<a href="vector3d.dot.html">dot(v1,v2)</a>   % inner product
+<a href="vector3d.cross.html">cross(v1,v2)</a> % cross product
+<a href="vector3d.norm.html">norm(v)</a>      % length of the specimen directions
+<a href="vector3d.sum.html">sum(v)</a>       % sum over all specimen directions in v
+<a href="vector3d.mean.html">mean(v)</a>      % mean over all specimen directions in v
+<a href="vector3d.polar.html">polar(v)</a>     % conversion to spherical coordinates</pre><pre class="codeinput"><span class="comment">% A simple example for applying the norm function is to normalize a set of</span>
+<span class="comment">% specimen directions</span>
+
+w = w ./ norm(w)</pre><pre class="codeoutput"> 
+w = vector3d  
+ size: 1 x 2
+         x        y        z
+  0.447214 0.894427        0
+  0.980581 0.196116        0
+</pre><p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h3> Plotting three dimensionl vectors<a name="11"> </a></h3>
+         <p>The <a href="vector3d.plot.html">plot</a> function allows you to visualize an arbitrary number of specimen directions in a spherical projection
+         </p><pre class="codeinput">plot([zvector,xvector+yvector+zvector],<span class="string">'labeled'</span>)</pre><img src="vector3d_index_01.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Complete Function list<a name="12"> </a></h2>
+         <p><table width="90%"><tr><td width="200px"><a href="vector3d.abs.html"><tt>abs</tt></a></td><td>length of vector </td></tr><tr><td
+            width="200px"><a href="vector3d.accumarray.html"><tt>accumarray</tt></a></td><td>for vector3d</td></tr><tr><td width="200px"><a
+            href="vector3d.angle.html"><tt>angle</tt></a></td><td>between two vectors</td></tr><tr><td width="200px"><a href="vector3d.angle_outer.html"><tt>angle_outer</tt></a></td><td>angle
+            between two vectors</td></tr><tr><td width="200px"><a href="vector3d.arrow3d.html"><tt>arrow3d</tt></a></td><td>plot three
+            dimensional arrows</td></tr><tr><td width="200px"><a href="vector3d.calcDelaunay.html"><tt>calcDelaunay</tt></a></td><td>compute
+            the Delaynay triangulation for a spherical grid</td></tr><tr><td width="200px"><a href="vector3d.calcDensity.html"><tt>calcDensity</tt></a></td><td>calculate
+            a density function out of (weighted) unit vectors</td></tr><tr><td width="200px"><a href="vector3d.calcQuadratureWeights.html"><tt>calcQuadratureWeights</tt></a></td><td>compute
+            the area of the Voronoi decomposition</td></tr><tr><td width="200px"><a href="vector3d.calcVoronoi.html"><tt>calcVoronoi</tt></a></td><td>compute
+            the area of the Voronoi decomposition</td></tr><tr><td width="200px"><a href="vector3d.calcVoronoiArea.html"><tt>calcVoronoiArea</tt></a></td><td>compute
+            the spherical area of the Voronoi decomposition</td></tr><tr><td width="200px"><a href="vector3d.char.html"><tt>char</tt></a></td><td>convert
+            to char</td></tr><tr><td width="200px"><a href="vector3d.circle.html"><tt>circle</tt></a></td><td>annotated a circle</td></tr><tr><td
+            width="200px"><a href="vector3d.contour.html"><tt>contour</tt></a></td><td>spherical contour plot</td></tr><tr><td width="200px"><a
+            href="vector3d.contourf.html"><tt>contourf</tt></a></td><td>spherical filled contour plot</td></tr><tr><td width="200px"><a
+            href="vector3d.cross.html"><tt>cross</tt></a></td><td>pointwise cross product of two vector3d</td></tr><tr><td width="200px"><a
+            href="vector3d.cross_outer.html"><tt>cross_outer</tt></a></td><td>pointwise cross product of two vector3d</td></tr><tr><td
+            width="200px"><a href="vector3d.ctranspose.html"><tt>ctranspose</tt></a></td><td>transpose vector</td></tr><tr><td width="200px"><a
+            href="vector3d.det.html"><tt>det</tt></a></td><td>pointwise determinant or triple product of three vector3d</td></tr><tr><td
+            width="200px"><a href="vector3d.display.html"><tt>display</tt></a></td><td>standard output</td></tr><tr><td width="200px"><a
+            href="vector3d.dot.html"><tt>dot</tt></a></td><td>pointwise inner product</td></tr><tr><td width="200px"><a href="vector3d.dot_outer.html"><tt>dot_outer</tt></a></td><td>outer
+            dot product</td></tr><tr><td width="200px"><a href="vector3d.double.html"><tt>double</tt></a></td><td>converts vector3d to
+            double</td></tr><tr><td width="200px"><a href="vector3d.dyad.html"><tt>dyad</tt></a></td><td>ic tensor product </td></tr><tr><td
+            width="200px"><a href="vector3d.end.html"><tt>end</tt></a></td><td>overloaded end function</td></tr><tr><td width="200px"><a
+            href="vector3d.eq.html"><tt>eq</tt></a></td><td>? v1 == v2</td></tr><tr><td width="200px"><a href="vector3d.export.html"><tt>export</tt></a></td><td>quaternions
+            to a ascii file</td></tr><tr><td width="200px"><a href="vector3d.find.html"><tt>find</tt></a></td><td>return index of all
+            points in a epsilon neighborhood of a vector</td></tr><tr><td width="200px"><a href="vector3d.horzcat.html"><tt>horzcat</tt></a></td><td>overloads
+            [v1,v2,v3..]</td></tr><tr><td width="200px"><a href="vector3d.interp.html"><tt>interp</tt></a></td><td>spherical interpolation
+            including some smoothing</td></tr><tr><td width="200px"><a href="vector3d.isPerp.html"><tt>isPerp</tt></a></td><td>check whether
+            v1 and v2 are orthogonal</td></tr><tr><td width="200px"><a href="vector3d.isempty.html"><tt>isempty</tt></a></td><td>overloads
+            isempty</td></tr><tr><td width="200px"><a href="vector3d.length.html"><tt>length</tt></a></td><td>overloads length</td></tr><tr><td
+            width="200px"><a href="vector3d.line.html"><tt>line</tt></a></td><td>Syntax</td></tr><tr><td width="200px"><a href="vector3d.mean.html"><tt>mean</tt></a></td><td>computes
+            the mean vector </td></tr><tr><td width="200px"><a href="vector3d.minus.html"><tt>minus</tt></a></td><td>overload minus</td></tr><tr><td
+            width="200px"><a href="vector3d.mpower.html"><tt>mpower</tt></a></td><td>nth dyadic product</td></tr><tr><td width="200px"><a
+            href="vector3d.mtimes.html"><tt>mtimes</tt></a></td><td>scalar multiplication</td></tr><tr><td width="200px"><a href="vector3d.ne.html"><tt>ne</tt></a></td><td>?
+            v1 == v2</td></tr><tr><td width="200px"><a href="vector3d.norm.html"><tt>norm</tt></a></td><td>vector norm</td></tr><tr><td
+            width="200px"><a href="vector3d.normalize.html"><tt>normalize</tt></a></td><td>a vector</td></tr><tr><td width="200px"><a
+            href="vector3d.orth.html"><tt>orth</tt></a></td><td>an arbitrary orthogonal vector</td></tr><tr><td width="200px"><a href="vector3d.pcolor.html"><tt>pcolor</tt></a></td><td>spherical
+            contour plot</td></tr><tr><td width="200px"><a href="vector3d.perp.html"><tt>perp</tt></a></td><td>conmpute an vector best
+            orthogonal to a list of directions</td></tr><tr><td width="200px"><a href="vector3d.planeIntersect.html"><tt>planeIntersect</tt></a></td><td>pointwise
+            determinant or triple product of three vector3d</td></tr><tr><td width="200px"><a href="vector3d.plot.html"><tt>plot</tt></a></td><td>vectors
+            as two dimensional projections on the sphere</td></tr><tr><td width="200px"><a href="vector3d.plot3d.html"><tt>plot3d</tt></a></td><td>plot
+            spherical data</td></tr><tr><td width="200px"><a href="vector3d.plotCustom.html"><tt>plotCustom</tt></a></td><td>Syntax</td></tr><tr><td
+            width="200px"><a href="vector3d.plus.html"><tt>plus</tt></a></td><td>poitwise addition</td></tr><tr><td width="200px"><a href="vector3d.polar.html"><tt>polar</tt></a></td><td>cartesian
+            to spherical coordinates</td></tr><tr><td width="200px"><a href="vector3d.polyArea.html"><tt>polyArea</tt></a></td><td>area
+            of a flat polygon given by vertices v1, v2, ..., v_n1</td></tr><tr><td width="200px"><a href="vector3d.project2FundamentalRegion.html"><tt>project2FundamentalRegion</tt></a></td><td>projects
+            vectors to the fundamental sector of the inverse pole figure</td></tr><tr><td width="200px"><a href="vector3d.quiver.html"><tt>quiver</tt></a></td><td>Syntax</td></tr><tr><td
+            width="200px"><a href="vector3d.quiver3.html"><tt>quiver3</tt></a></td><td>Syntax</td></tr><tr><td width="200px"><a href="vector3d.rank.html"><tt>rank</tt></a></td><td>=
+            1</td></tr><tr><td width="200px"><a href="vector3d.rdivide.html"><tt>rdivide</tt></a></td><td>scalar division v ./ s</td></tr><tr><td
+            width="200px"><a href="vector3d.refine.html"><tt>refine</tt></a></td><td>vectors</td></tr><tr><td width="200px"><a href="vector3d.repmat.html"><tt>repmat</tt></a></td><td>overloads
+            repmat</td></tr><tr><td width="200px"><a href="vector3d.reshape.html"><tt>reshape</tt></a></td><td>overloads reshape</td></tr><tr><td
+            width="200px"><a href="vector3d.rotate.html"><tt>rotate</tt></a></td><td>vector3d by rotation or orientation</td></tr><tr><td
+            width="200px"><a href="vector3d.rotate_outer.html"><tt>rotate_outer</tt></a></td><td>rotate vector3d by quaternion</td></tr><tr><td
+            width="200px"><a href="vector3d.scatter.html"><tt>scatter</tt></a></td><td>Syntax</td></tr><tr><td width="200px"><a href="vector3d.scatter3d.html"><tt>scatter3d</tt></a></td><td>plot
+            spherical data</td></tr><tr><td width="200px"><a href="vector3d.size.html"><tt>size</tt></a></td><td>overloads size</td></tr><tr><td
+            width="200px"><a href="vector3d.smooth.html"><tt>smooth</tt></a></td><td>Syntax</td></tr><tr><td width="200px"><a href="vector3d.subSet.html"><tt>subSet</tt></a></td><td>subindex
+            vector3d</td></tr><tr><td width="200px"><a href="vector3d.subsasgn.html"><tt>subsasgn</tt></a></td><td>overloads subsasgn</td></tr><tr><td
+            width="200px"><a href="vector3d.subsref.html"><tt>subsref</tt></a></td><td>overloads subsref</td></tr><tr><td width="200px"><a
+            href="vector3d.sum.html"><tt>sum</tt></a></td><td>of vectors</td></tr><tr><td width="200px"><a href="vector3d.surf.html"><tt>surf</tt></a></td><td>Syntax</td></tr><tr><td
+            width="200px"><a href="vector3d.symmetrise.html"><tt>symmetrise</tt></a></td><td>symmetrcially equivalent directions and its
+            multiple</td></tr><tr><td width="200px"><a href="vector3d.text.html"><tt>text</tt></a></td><td>display a text in a spherical
+            plot</td></tr><tr><td width="200px"><a href="vector3d.text3.html"><tt>text3</tt></a></td><td>plot three dimensional arrows</td></tr><tr><td
+            width="200px"><a href="vector3d.times.html"><tt>times</tt></a></td><td>.*  componenwtise multiplication</td></tr><tr><td width="200px"><a
+            href="vector3d.transpose.html"><tt>transpose</tt></a></td><td>vector</td></tr><tr><td width="200px"><a href="vector3d.uminus.html"><tt>uminus</tt></a></td><td>overloads
+            unitary minus</td></tr><tr><td width="200px"><a href="vector3d.unique.html"><tt>unique</tt></a></td><td>disjoint list of vectors</td></tr><tr><td
+            width="200px"><a href="vector3d.vertcat.html"><tt>vertcat</tt></a></td><td>overloads [v1,v2,v3..]</td></tr></table>
+         </p>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

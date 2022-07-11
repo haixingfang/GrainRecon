@@ -1,0 +1,108 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>findByLocation (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: EBSD.findByLocation -->
+      <!-- HEADSTUFF: EBSD.findByLocation -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:EBSD.findByLocation">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div>
+         <table class="nav" summary="Navigation aid" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline"><b>MTEX</b> - A MATLAB Toolbox for Quantitative Texture Analysis</td>
+               <td valign="baseline" align="right"><a href="matlab:edit EBSD/findByLocation">
+                     View Code</a></td>
+            </tr>
+         </table>
+         <p style="font-size:1px;"></p>
+      </div>
+      <div class="content">
+         <h1 class="refname">findByLocation</h1>
+         <div class="subheading">
+            <p>(method of <a href="EBSD_index.html">EBSD</a>)
+            </p>
+         </div>
+         <p>select EBSD data by spatial coordinates</p>
+         <h2>Syntax<a name="3"> </a></h2>
+         <p>
+            <div class="syntax" width="100%">
+            <div>
+            <tt>map = findByLocation( ebsd, xy )</tt>
+            </div>
+            </div>
+            
+         </p>
+         <h2>Input<a name="4"> </a></h2>
+         <p>
+            <table cellpadding="4" cellspacing="0" class="funcref" width="100%">
+            <tr>
+            <td width="100px">
+            <tt>ebsd</tt>
+            </td>
+            <td>
+            <p><a href="EBSD_index.html">EBSD</a></p>
+            </td>
+            </tr>
+            <tr>
+            <td width="100px">
+            <tt>xy</tt>
+            </td>
+            <td>
+            <p>list of [x(:) y(:)] coordinates, respectively [x(:) y(:) z(:)]</p>
+            </td>
+            </tr>
+            </table>
+            
+         </p>
+         <h2>Output<a name="5"> </a></h2>
+         <p>
+            <table cellpadding="4" cellspacing="0" class="funcref" width="100%">
+            <tr>
+            <td width="100px">
+            <tt>ebsd</tt>
+            </td>
+            <td>
+            <p><a href="EBSD_index.html">EBSD</a> subset</p>
+            </td>
+            </tr>
+            </table>
+            
+         </p>
+         <h2>Example<a name="6"> </a></h2><pre class="codeinput">mtexdata <span class="string">fo</span>
+plotx2east
+plot(ebsd)
+p = [10000 5000] <span class="comment">%ginput(1)</span>
+g = findByLocation(ebsd,p)</pre><pre class="codeoutput">Warning: P-file
+/opt/matlab-2018a/toolbox/matlab/scribe/legend.p is
+older than MATLAB file
+/opt/matlab-2018a/toolbox/matlab/scribe/legend.m.
+/opt/matlab-2018a/toolbox/matlab/scribe/legend.p may be
+obsolete and may need to be regenerated.
+Type "help pcode" for information about generating
+P-files. 
+p =
+       10000        5000
+g =
+       73401
+</pre><img src="EBSD.findByLocation_01.png"> <h3 class="seealso">See also</h3>
+         <p><a href="EBSD.findByLocation.html">EBSD/findByLocation</a>, <a href="grain2d.findByOrientation.html">grain2d/findByOrientation</a></p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

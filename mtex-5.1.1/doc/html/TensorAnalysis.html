@@ -1,0 +1,560 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>Tensors (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: TensorAnalysis -->
+      <!-- HEADSTUFF: TensorAnalysis -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:TensorAnalysis">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div>
+         <table class="nav" summary="Navigation aid" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline"><b>MTEX</b> - A MATLAB Toolbox for Quantitative Texture Analysis</td>
+            </tr>
+         </table>
+         <p style="font-size:1px;"></p>
+      </div>
+      <div class="content">
+         <h1 class="refname">Tensors</h1>
+         <div class="subheading">
+            <p>Explains how to work with material tensors in MTEX, i.e. how to compute mean material tensors according to an ODF or to EBSD
+               data, how to compute rotate and visualize tensors and how to calculate with elasticity tensors.
+            </p>
+         </div>
+         <p>
+            <table class="ref" width="90%">
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('TensorArithmetics_block','TensorArithmetics_expandable_text');" valign="top" width="15">
+            <img id="TensorArithmetics_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="TensorArithmetics.html">Tensor Arithmetics<td valign="top" width="75%">how to calculate with tensors in MTEX</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="TensorArithmetics_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="TensorArithmetics.html#4">Defining a Tensor</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="TensorArithmetics.html#7">Importing a Tensor from a File</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="TensorArithmetics.html#8">Visualization</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="TensorArithmetics.html#10">Rotating a Tensor</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="TensorArithmetics.html#13">The Inverse Tensor</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="TensorArithmetics.html#14">Tensor Products</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('MeanTensors_block','MeanTensors_expandable_text');" valign="top" width="15">
+            <img id="MeanTensors_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="MeanTensors.html">Average Material Tensors<td valign="top" width="75%">how to calculate average material tensors
+            from ODF and EBSD data</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="MeanTensors_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="MeanTensors.html#5">Import EBSD Data</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="MeanTensors.html#7">Data Correction</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="MeanTensors.html#8">Define Elastic Stiffness Tensors for Glaucophane and Epidote</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="MeanTensors.html#10">The Average Tensor from EBSD Data</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="MeanTensors.html#12">ODF Estimation</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="MeanTensors.html#13">The Average Tensor from an ODF</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('ElasticityTensor_block','ElasticityTensor_expandable_text');" valign="top" width="15">
+            <img id="ElasticityTensor_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="ElasticityTensor.html">The Elasticity Tensor<td valign="top" width="75%">how to calculate and plot the elasticity
+            properties</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="ElasticityTensor_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="ElasticityTensor.html#4">Import an Elasticity Tensor</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ElasticityTensor.html#5">Young's Modulus</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ElasticityTensor.html#7">Linear Compressibility</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ElasticityTensor.html#8">Christoffel Tensor</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ElasticityTensor.html#9">Elastic Wave Velocity</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('PlasticDeformation_block','PlasticDeformation_expandable_text');" valign="top"
+            width="15">
+            <img id="PlasticDeformation_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="PlasticDeformation.html">Schmid Factor Analysis<td valign="top" width="75%">This script describes how to analyze
+            Schmid factors.</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="PlasticDeformation_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="PlasticDeformation.html#3">Geometric Definition</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="PlasticDeformation.html#11">Stress Tensor</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="PlasticDeformation.html#13">Active Slip System</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="PlasticDeformation.html#20">The Schmid factor for EBSD data</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="PlasticDeformation.html#28">Strain based analysis on the same data set</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('PiezoElectricity_block','PiezoElectricity_expandable_text');" valign="top" width="15">
+            <img id="PiezoElectricity_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="PiezoElectricity.html">The Piezoelectricity Tensor<td valign="top" width="75%">how to work with piezoelectricity</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="PiezoElectricity_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="PiezoElectricity.html#5">Plotting the magnitude surface</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="PiezoElectricity.html#11">Mean Tensor Calculation </a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('SeismicsMultiplot_block','SeismicsMultiplot_expandable_text');" valign="top" width="15">
+            <img id="SeismicsMultiplot_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="SeismicsMultiplot.html">Seismic velocities and anisotropy<td valign="top" width="75%">Calculalating and plotting
+            elastic velocities from elastic stiffness Cijkl tensor and density (by David Mainprice).</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="SeismicsMultiplot_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="SeismicsMultiplot.html#3">Crystal Symmetry and definition of the elastic stiffness tensor</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="SeismicsMultiplot.html#6">Plotting section</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="SeismicsMultiplot.html#8">AVS : Plot S-wave anisotropy percentage for each proppagation direction</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="SeismicsMultiplot.html#9">S1 Polarization: Plot fastest S-wave (Vs1) polarization directions</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="SeismicsMultiplot.html#10">Vs1 : Plot Vs1 velocities (km/s)</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="SeismicsMultiplot.html#11">Vs2 : Plot Vs2 velocities (km/s)</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="SeismicsMultiplot.html#12">dVs : Plot Velocity difference Vs1-Vs2 (km/s) plus Vs1 polarizations</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="SeismicsMultiplot.html#13">Vp/Vs1 : Plot Vp/Vs1 ratio (no units)</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="SeismicsMultiplot.html#14">Vp/Vs2 : Plot Vp/Vs2 ratio (no units)</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('SlipSystems_block','SlipSystems_expandable_text');" valign="top" width="15">
+            <img id="SlipSystems_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="SlipSystems.html">Slip Systems<td valign="top" width="75%">How to analyze slip transmission at grain boundaries</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="SlipSystems_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="SlipSystems.html#4">Burgers vector and normal directions</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="SlipSystems.html#11">Rotating slip systems</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('SlipTransmition_block','SlipTransmition_expandable_text');" valign="top" width="15">
+            <img id="SlipTransmition_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="SlipTransmition.html">Slip Transmission<td valign="top" width="75%">How to analyze slip transmission at grain boundaries</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="SlipTransmition_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="SlipTransmition.html#4">Import Titanium data</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="SlipTransmition.html#5">Schmid Factor</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="SlipTransmition.html#9">Resolved shear stress</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="SlipTransmition.html#10">Compatibility of slip systems</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="SlipTransmition.html#11">Plot m' in misorientation space</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('StrainAnalysis_block','StrainAnalysis_expandable_text');" valign="top" width="15">
+            <img id="StrainAnalysis_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="StrainAnalysis.html">Slip Transmition<td valign="top" width="75%">How to analyse slip transmission at grain boundaries</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="StrainAnalysis_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="StrainAnalysis.html#3">Import Titanium data</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="StrainAnalysis.html#4">Taylor model</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('TaylorModel_block','TaylorModel_expandable_text');" valign="top" width="15">
+            <img id="TaylorModel_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="TaylorModel.html">Taylor Model<td valign="top" width="75%"/></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="TaylorModel_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="TaylorModel.html#5">Set up </a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="TaylorModel.html#6">The orientation dependence of the Taylor factor</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="TaylorModel.html#7">The orientation dependence of the rotation value </a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="TaylorModel.html#9">Most active slip direction</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="TaylorModel.html#13">Texture evolution during rolling</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="TaylorModel.html#15">restore MTEX preferences</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="TaylorModel.html#16">Inverse Taylor</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('GND_demo_block','GND_demo_expandable_text');" valign="top" width="15">
+            <img id="GND_demo_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="GND_demo.html">Dislocation Density Estimation<td valign="top" width="75%">This example sheet describes how to estimate
+            dislocation densities in MTEX following the reference paper Pantleon, Resolving the geometrically necessary dislocation content
+            by conventional electron backscattering diffraction, Scripta Materialia, 2008</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="GND_demo_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="GND_demo.html#1">Data import and grain reconstruction</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="GND_demo.html#3">Data cleaning</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="GND_demo.html#5">The incomplete curvature tensor</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="GND_demo.html#6">The components of the curvature tensor</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="GND_demo.html#8">The incomplete dislocation density tensor</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="GND_demo.html#10">Fitting Dislocations to the incomplete dislocation density tensor</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="GND_demo.html#15">Soving the fitting problem</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="GND_demo.html#19">The total dislocation energy </a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            </table>
+            
+         </p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

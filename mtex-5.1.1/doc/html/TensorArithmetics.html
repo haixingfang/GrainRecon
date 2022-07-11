@@ -1,0 +1,198 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>Tensor Arithmetics (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: TensorArithmetics -->
+      <!-- HEADSTUFF: TensorArithmetics -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:TensorArithmetics">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div class="myheader">
+         <table border="0" width="100%" cellpadding="10" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="left" style="color:white"><a style="color:white" href="matlab:edit TensorArithmetics">Open Matlab File in the Editor</a></td>
+               <td valign="baseline" align="right" style="color:white"><a style="color:white" href="mtex_product_page.html">MTEX</a></td>
+            </tr>
+         </table>
+      </div>
+      <div class="content">
+         <h1 class="refname">Tensor Arithmetics</h1>
+         <div class="subheading">
+            <p>how to calculate with tensors in MTEX</p>
+         </div>
+         <p>MTEX offers some basic functionality to calculate with tensors as they occur in material sciense. It allows defining tensors
+            of arbitrary rank, e.g., stress, strain, elasticity or piezoelectric tensors, to visualize them and to perform various transformations.
+         </p>
+         <div>
+            <table class="content">
+               <tr>
+                  <td class="header">On this page ...</td>
+               </tr>
+               <tr>
+                  <td><a href="#4">Defining a Tensor</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#7">Importing a Tensor from a File</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#8">Visualization</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#10">Rotating a Tensor</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#13">The Inverse Tensor</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#14">Tensor Products</a></td>
+               </tr>
+            </table>
+         </div>
+         <h2>Defining a Tensor<a name="4"> </a></h2>
+         <p>A tensor is defined by its entries and a crystal symmetry. Let us consider a simple example. First, we define some crystal
+            symmetry
+         </p><pre class="codeinput">cs = crystalSymmetry(<span class="string">'1'</span>);</pre><p>Next, we define a two rank tensor by its matrix</p><pre class="codeinput">M = [[10 3 0];[3 1 0];[0 0 1]];
+T = tensor(M,cs)</pre><pre class="codeoutput"> 
+T = tensor  
+  rank   : 2 (3 x 3)            
+  mineral: 1, X||a, Y||b*, Z||c*
+ 
+ 10  3  0
+  3  1  0
+  0  0  1
+</pre><p>In case the two rank tensor is diagonal the syntax simplifies to</p><pre class="codeinput">T = tensor(diag([10 3 1]),cs)</pre><pre class="codeoutput"> 
+T = tensor  
+  rank   : 2 (3 x 3)            
+  mineral: 1, X||a, Y||b*, Z||c*
+ 
+ 10  0  0
+  0  3  0
+  0  0  1
+</pre><p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Importing a Tensor from a File<a name="7"> </a></h2>
+         <p>Especially for higher order tensors, it is more convenient to import the tensor entries from a file. As an example, we load
+            the following elastic stiffness tensor
+         </p><pre class="codeinput">fname = fullfile(mtexDataPath,<span class="string">'tensor'</span>,<span class="string">'Olivine1997PC.GPa'</span>);
+
+cs = crystalSymmetry(<span class="string">'mmm'</span>,[4.7646 10.2296 5.9942],<span class="string">'mineral'</span>,<span class="string">'olivine'</span>);
+
+C = stiffnessTensor.load(fname,cs)</pre><pre class="codeoutput"> 
+C = stiffnessTensor  
+  unit   : GPa              
+  rank   : 4 (3 x 3 x 3 x 3)
+  mineral: olivine (mmm)    
+ 
+  tensor in Voigt matrix representation:
+ 320.5  68.2  71.6     0     0     0
+  68.2 196.5  76.8     0     0     0
+  71.6  76.8 233.5     0     0     0
+     0     0     0    64     0     0
+     0     0     0     0    77     0
+     0     0     0     0     0  78.7
+</pre><p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Visualization<a name="8"> </a></h2>
+         <p>The default plot for each tensor is its directional magnitude, i.e. for each direction x it is plotted Q(x) = T_ijkl x_i x_j
+            x_k x_l
+         </p><pre class="codeinput">setMTEXpref(<span class="string">'defaultColorMap'</span>,blue2redColorMap);
+plot(C,<span class="string">'complete'</span>,<span class="string">'upper'</span>)</pre><img src="TensorArithmetics_01.png"> <p>There are more specialized visualization possibilities for specific tensors, e.g., for the elasticity tensor. See section
+            <a href="ElasticityTensor.html">Elasticity Tensor</a>.
+         </p>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Rotating a Tensor<a name="10"> </a></h2>
+         <p>Rotation a tensor is done by the command <a href="tensor.rotate.html">rotate</a>. Let's define a rotation
+         </p><pre class="codeinput">r = rotation(<span class="string">'Euler'</span>,45*degree,0*degree,0*degree)</pre><pre class="codeoutput"> 
+r = rotation  
+  size: 1 x 1
+ 
+  Bunge Euler angles in degree
+  phi1  Phi phi2 Inv.
+    45    0    0    0
+ 
+</pre><p>Then the rotated tensor is given by</p><pre class="codeinput">Trot = rotate(T,r)
+plot(Trot)</pre><pre class="codeoutput"> 
+Trot = tensor  
+  rank   : 2 (3 x 3)            
+  mineral: 1, X||a, Y||b*, Z||c*
+ 
+ 6.5 3.5   0
+ 3.5 6.5   0
+   0   0   1
+</pre><img src="TensorArithmetics_02.png"> <p>Here is another example from Nye (Physical Properties of Crystals, p.120-121) for a third-rank tensor</p><pre class="codeinput">P = [ 0 0 0 .17 0   0;
+      0 0 0 0   .17 0;
+      0 0 0 0   0   5.17]*10^-11;
+
+T = tensor(P,<span class="string">'rank'</span>,3,<span class="string">'propertyname'</span>,<span class="string">'piezoelectric modulus'</span>)
+
+r = rotation(<span class="string">'axis'</span>,zvector,<span class="string">'angle'</span>,-45*degree);
+T = rotate(T,r)</pre><pre class="codeoutput"> 
+T = tensor  
+  propertyname: piezoelectric modulus
+  rank        : 3 (3 x 3 x 3)        
+ 
+  tensor in compact matrix form: *10^-12
+    0    0    0  1.7    0    0
+    0    0    0    0  1.7    0
+    0    0    0    0    0 51.7
+ 
+T = tensor  
+  propertyname: piezoelectric modulus
+  rank        : 3 (3 x 3 x 3)        
+ 
+  tensor in compact matrix form: *10^-12
+     0     0     0     0   1.7     0
+     0     0     0  -1.7     0     0
+  51.7 -51.7     0     0     0     0
+</pre><p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>The Inverse Tensor<a name="13"> </a></h2>
+         <p>The inverse of a 2 rank tensor or a 4 rank elasticity tensor is computed by the command <a href="tensor.inv.html">inv</a></p><pre class="codeinput">S = inv(C)</pre><pre class="codeoutput"> 
+S = complianceTensor  
+  unit            : 1/GPa            
+  rank            : 4 (3 x 3 x 3 x 3)
+  doubleConvention: true             
+  mineral         : olivine (mmm)    
+ 
+  tensor in Voigt matrix representation: *10^-4
+  34.85  -9.08   -7.7      0      0      0
+  -9.08  60.76  -17.2      0      0      0
+   -7.7  -17.2  50.85      0      0      0
+      0      0      0 156.25      0      0
+      0      0      0      0 129.87      0
+      0      0      0      0      0 127.06
+</pre><p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Tensor Products<a name="14"> </a></h2>
+         <p>In MTEX tensor products are specifies according to Einsteins summation convention, i.e. a tensor product of the form T_ij
+            = E_ijkl S_kl has to be interpreted as a sum over the indices k and l. In MTEX this sum can be computed using the command
+            <a href="tensor.EinsteinSum.html">EinsteinSum</a></p><pre class="codeinput">S = EinsteinSum(C,[-1 -2 1 2],T,[-1 -2])</pre><pre class="codeoutput"> 
+S = tensor  
+  size   : 3 x 1        
+  rank   : 2 (3 x 3)    
+  mineral: olivine (mmm)
+</pre><p>here the negative numbers indicate the indices which are summed up. Each pair of equal negative numbers corresponds to one
+            sum. The positive numbers indicate the order of the dimensions of the resulting tensor.
+         </p>
+         <p>Let us consider the second example. The linear compressibility in a certain direction v of a specimen can be computed from
+            it mean elasticity tensor E by the formula, c = S_ijkk v_i v_j where S is the compliance, i.e. the inverse of the elasticity
+            tensor
+         </p><pre class="codeinput">v = xvector;
+c = EinsteinSum(C,[-1 -2 -3 -3],v,-1,v,-2)</pre><pre class="codeoutput">c =
+  460.2500
+</pre><p>set back the default color map.</p><pre class="codeinput">setMTEXpref(<span class="string">'defaultColorMap'</span>,WhiteJetColorMap)</pre><p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

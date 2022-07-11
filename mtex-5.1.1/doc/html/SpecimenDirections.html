@@ -1,0 +1,153 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>Specimen Directions (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: SpecimenDirections -->
+      <!-- HEADSTUFF: SpecimenDirections -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:SpecimenDirections">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div class="myheader">
+         <table border="0" width="100%" cellpadding="10" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="left" style="color:white"><a style="color:white" href="matlab:edit SpecimenDirections">Open Matlab File in the Editor</a></td>
+               <td valign="baseline" align="right" style="color:white"><a style="color:white" href="mtex_product_page.html">MTEX</a></td>
+            </tr>
+         </table>
+      </div>
+      <div class="content">
+         <h1 class="refname">Specimen Directions</h1>
+         <div class="subheading">
+            <p>How to represent directions with respect to the sample or specimen reference system.</p>
+         </div>
+         <div>
+            <table class="content">
+               <tr>
+                  <td class="header">On this page ...</td>
+               </tr>
+               <tr>
+                  <td><a href="#4">Cartesian Coordinates</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#9">Polar Coordinates</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#11">Calculating with Specimen Directions</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#14">Lists of vectors</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#19">Indexing lists of vectors</a></td>
+               </tr>
+            </table>
+         </div>
+         <p>Specimen directions are three dimensional vectors in the Euclidean space represented by coordinates with respect to an external
+            specimen coordinate system X, Y, Z. In MTEX, specimen directions are represented by variables of the class <a href="vector3d_index.html"><b>vector3d</b></a>.
+         </p>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Cartesian Coordinates<a name="4"> </a></h2>
+         <p>The standard way to define specimen directions is by its coordinates.</p><pre class="codeinput">v = vector3d(1,2,3)</pre><pre class="codeoutput"> 
+v = vector3d  
+ size: 1 x 1
+  x y z
+  1 2 3
+</pre><p>This gives a single vector with coordinates (1,1,0) with respect to the X, Y, Z coordinate system. Lets visualize this vector</p><pre class="codeinput">plot(v)
+annotate([vector3d.X,vector3d.Y,vector3d.Z],<span class="string">'label'</span>,{<span class="string">'X'</span>,<span class="string">'Y'</span>,<span class="string">'Z'</span>},<span class="string">'backgroundcolor'</span>,<span class="string">'w'</span>)</pre><img src="SpecimenDirections_01.png"> <p>Note that the alignment of the X, Y, Z axes is only a plotting convention, which can be easily changed without changing the
+            coordinates, e.g., by setting
+         </p><pre class="codeinput">plotx2north
+plot(v,<span class="string">'grid'</span>)
+annotate([vector3d.X,vector3d.Y,vector3d.Z],<span class="string">'label'</span>,{<span class="string">'X'</span>,<span class="string">'Y'</span>,<span class="string">'Z'</span>},<span class="string">'backgroundcolor'</span>,<span class="string">'w'</span>)</pre><img src="SpecimenDirections_02.png"> <p>One can easily access the coordinates of any vector by</p><pre class="codeinput">v.x</pre><pre class="codeoutput">ans =
+     1
+</pre><p>or change it by</p><pre class="codeinput">v.x = 0</pre><pre class="codeoutput"> 
+v = vector3d  
+ size: 1 x 1
+  x y z
+  0 2 3
+</pre><p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Polar Coordinates<a name="9"> </a></h2>
+         <p>A second way to define specimen directions is by polar coordinates, i.e. by its polar angle and its azimuth angle. This is
+            done by the option <b>polar</b>.
+         </p><pre class="codeinput">polar_angle = 60*degree;
+azimuth_angle = 45*degree;
+v = vector3d(<span class="string">'polar'</span>,polar_angle,azimuth_angle)
+
+plotx2east
+plot(v,<span class="string">'grid'</span>)
+annotate([vector3d.X,vector3d.Y,vector3d.Z],<span class="string">'label'</span>,{<span class="string">'X'</span>,<span class="string">'Y'</span>,<span class="string">'Z'</span>},<span class="string">'backgroundcolor'</span>,<span class="string">'w'</span>)</pre><pre class="codeoutput"> 
+v = vector3d  
+ size: 1 x 1
+         x        y        z
+  0.612372 0.612372      0.5
+</pre><img src="SpecimenDirections_03.png"> <p>Analogously as for the Cartesian coordinates we can access and change polar coordinates directly by</p><pre class="codeinput">v.rho ./ degree   <span class="comment">% the azimuth angle in degree</span>
+v.theta ./ degree <span class="comment">% the polar angle in degree</span></pre><pre class="codeoutput">ans =
+   45.0000
+ans =
+   60.0000
+</pre><p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Calculating with Specimen Directions<a name="11"> </a></h2>
+         <p>In MTEX, one can calculate with specimen directions as with ordinary numbers, i.e. we can use the predefined vectors  <a href="xvector.html">xvector</a>, <a href="yvector.html">yvector</a>, and <a href="zvector.html">zvector</a> and set
+         </p><pre class="codeinput">v = xvector + 2*yvector</pre><pre class="codeoutput"> 
+v = vector3d  
+ size: 1 x 1
+  x y z
+  1 2 0
+</pre><p>Moreover, all basic vector operations as <a href="vector3d.plus.html">"+"</a>, <a href="vector3d.minus.html">"-"</a>, <a href="vector3d.times.html">"*"</a>, <a href="vector3d.dot.html">inner product</a>, <a href="vector3d.cross.html,cross">product</a> are implemented in MTEX.
+         </p><pre class="codeinput">u = dot(v,xvector) * yvector + 2 * cross(v,zvector)</pre><pre class="codeoutput"> 
+u = vector3d  
+ size: 1 x 1
+  x  y  z
+  4 -1  0
+</pre><p>Beside the standard linear algebra operations there are also the following functions available in MTEX.</p><pre><a href="vector3d.angle.html">angle(v1,v2)</a> % angle between two specimen  directions
+<a href="vector3d.dot.html">dot(v1,v2)</a>   % inner product
+<a href="vector3d.cross.html">cross(v1,v2)</a> % cross product
+<a href="vector3d.norm.html">norm(v)</a>      % length of the specimen directions
+<a href="vector3d.sum.html">sum(v)</a>       % sum over all specimen directions in v
+<a href="vector3d.mean.html">mean(v)</a>      % mean over all specimen directions in v
+<a href="vector3d.polar.html">polar(v)</a>     % conversion to spherical coordinates</pre><p>A simple example to apply the norm function is to normalize specimen directions</p><pre class="codeinput">v ./ norm(v)</pre><pre class="codeoutput"> 
+ans = vector3d  
+ size: 1 x 1
+         x        y        z
+  0.447214 0.894427        0
+</pre><p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Lists of vectors<a name="14"> </a></h2>
+         <p>As any other MTEX variable you can combine several vectors to a list of vectors and all bevor mentioned operators operations
+            will work elementwise on a list of vectors. See < WorkinWithLists.html Working with lists> on how to manipulate lists in Matlab.
+         </p>
+         <p>Large lists of vectors can be imported from a text file by the command</p><pre class="codeinput">fname = fullfile(mtexDataPath,<span class="string">'vector3d'</span>,<span class="string">'vectors.txt'</span>);
+v = loadVector3d(fname,<span class="string">'ColumnNames'</span>,{<span class="string">'polar angle'</span>,<span class="string">'azimuth angle'</span>})</pre><pre class="codeoutput"> 
+v = vector3d  
+ size: 1000 x 1
+</pre><p>and exported by the command</p><pre class="codeinput">export(v,fname,<span class="string">'polar'</span>)</pre><p>In order to visualize large lists of specimen directions scatter plots</p><pre class="codeinput">scatter(v,<span class="string">'upper'</span>)</pre><img src="SpecimenDirections_04.png"> <p>or contour plots may be helpful</p><pre class="codeinput">contourf(v,<span class="string">'upper'</span>)</pre><img src="SpecimenDirections_05.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Indexing lists of vectors<a name="19"> </a></h2>
+         <p>A list of vectors can be indexed directly by specifying the ids of the vectors one is interested in, e.g.</p><pre class="codeinput">v([1:5])</pre><pre class="codeoutput"> 
+ans = vector3d  
+ size: 5 x 1
+           x          y          z
+    0.174067   0.983688  0.0453682
+  0.00905843   0.821965   0.569466
+    0.430105   0.900869  0.0586948
+   -0.447234  0.0186977   0.894221
+   -0.139746   0.555614   0.819612
+</pre><p>gives the first 5 vectors from the list, or by logical indexing. The following command plots all vectors with an polar angle
+            smaller then 60 degree
+         </p><pre class="codeinput">scatter(v(v.theta&lt;60*degree),<span class="string">'grid'</span>,<span class="string">'on'</span>)</pre><img src="SpecimenDirections_06.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

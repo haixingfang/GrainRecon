@@ -1,0 +1,296 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>Seismic velocities and anisotropy (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: SeismicsMultiplot -->
+      <!-- HEADSTUFF: SeismicsMultiplot -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:SeismicsMultiplot">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div class="myheader">
+         <table border="0" width="100%" cellpadding="10" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="left" style="color:white"><a style="color:white" href="matlab:edit SeismicsMultiplot">Open Matlab File in the Editor</a></td>
+               <td valign="baseline" align="right" style="color:white"><a style="color:white" href="mtex_product_page.html">MTEX</a></td>
+            </tr>
+         </table>
+      </div>
+      <div class="content">
+         <h1 class="refname">Seismic velocities and anisotropy</h1>
+         <div class="subheading">
+            <p>Calculalating and plotting elastic velocities from elastic stiffness Cijkl tensor and density (by David Mainprice).</p>
+         </div>
+         <div>
+            <table class="content">
+               <tr>
+                  <td class="header">On this page ...</td>
+               </tr>
+               <tr>
+                  <td><a href="#3">Crystal Symmetry and definition of the elastic stiffness tensor</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#6">Plotting section</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#8">AVS : Plot S-wave anisotropy percentage for each proppagation direction</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#9">S1 Polarization: Plot fastest S-wave (Vs1) polarization directions</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#10">Vs1 : Plot Vs1 velocities (km/s)</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#11">Vs2 : Plot Vs2 velocities (km/s)</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#12">dVs : Plot Velocity difference Vs1-Vs2 (km/s) plus Vs1 polarizations</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#13">Vp/Vs1 : Plot Vp/Vs1 ratio (no units)</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#14">Vp/Vs2 : Plot Vp/Vs2 ratio (no units)</a></td>
+               </tr>
+            </table>
+         </div>
+         <h2>Crystal Symmetry and definition of the elastic stiffness tensor<a name="3"> </a></h2>
+         <p>crystal symmetry - Orthorhombic mmm Olivine structure (4.7646 10.2296 5.9942 90.00 90.00 90.00)</p><pre class="codeinput">cs_tensor = crystalSymmetry(<span class="string">'mmm'</span>,[4.7646,10.2296,5.9942],<span class="keyword">...</span>
+  <span class="string">'x||a'</span>,<span class="string">'z||c'</span>,<span class="string">'mineral'</span>,<span class="string">'Olivine'</span>);</pre><p><b>Import 4th rank tensor as 6 by 6 matrix</b></p>
+         <p>Olivine elastic stiffness (Cij) tensor in GPa Abramson E.H., Brown J.M., Slutsky L.J., and Zaug J.(1997) The elastic constants
+            of San Carlos olivine to 17 GPa. Journal of Geophysical Research 102: 12253-12263.
+         </p>
+         <p>Enter tensor as 6 by 6 matrix,M line by line.</p><pre class="codeinput">M = [[320.5  68.15  71.6     0     0     0];<span class="keyword">...</span>
+    [ 68.15  196.5  76.8     0     0     0];<span class="keyword">...</span>
+    [  71.6   76.8 233.5     0     0     0];<span class="keyword">...</span>
+    [   0      0      0     64     0     0];<span class="keyword">...</span>
+    [   0      0      0      0    77     0];<span class="keyword">...</span>
+    [   0      0      0      0     0  78.7]];
+
+<span class="comment">% Define density (g/cm3)</span>
+rho=3.355;
+
+<span class="comment">% Define tensor object in MTEX</span>
+<span class="comment">% Cij -&gt; Cijkl - elastic stiffness tensor</span>
+C = stiffnessTensor(M,cs_tensor,<span class="string">'density'</span>,rho)</pre><pre class="codeoutput"> 
+C = stiffnessTensor  
+  density: 3.355            
+  unit   : GPa              
+  rank   : 4 (3 x 3 x 3 x 3)
+  mineral: Olivine (mmm)    
+ 
+  tensor in Voigt matrix representation:
+ 320.5  68.2  71.6     0     0     0
+  68.2 196.5  76.8     0     0     0
+  71.6  76.8 233.5     0     0     0
+     0     0     0    64     0     0
+     0     0     0     0    77     0
+     0     0     0     0     0  78.7
+</pre><p>Compute seismic velocities as functions on the sphere</p><pre class="codeinput">[vp,vs1,vs2,pp,ps1,ps2] = C.velocity(<span class="string">'harmonic'</span>);</pre><p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Plotting section<a name="6"> </a></h2>
+         <p>Here we set preference for a nice plot.</p><pre class="codeinput"><span class="comment">% plotting convention - plot a-axis to east</span>
+plota2east;
+
+<span class="comment">% set colour map to seismic color map : blue2redColorMap</span>
+setMTEXpref(<span class="string">'defaultColorMap'</span>,blue2redColorMap)
+
+<span class="comment">% some options</span>
+blackMarker = {<span class="string">'Marker'</span>,<span class="string">'s'</span>,<span class="string">'MarkerSize'</span>,10,<span class="string">'antipodal'</span>,<span class="keyword">...</span>
+  <span class="string">'MarkerEdgeColor'</span>,<span class="string">'white'</span>,<span class="string">'MarkerFaceColor'</span>,<span class="string">'black'</span>,<span class="string">'doNotDraw'</span>};
+whiteMarker = {<span class="string">'Marker'</span>,<span class="string">'o'</span>,<span class="string">'MarkerSize'</span>,10,<span class="string">'antipodal'</span>,<span class="keyword">...</span>
+  <span class="string">'MarkerEdgeColor'</span>,<span class="string">'black'</span>,<span class="string">'MarkerFaceColor'</span>,<span class="string">'white'</span>,<span class="string">'doNotDraw'</span>};
+
+<span class="comment">% some global options for the titles</span>
+<span class="comment">%titleOpt = {'FontSize',getMTEXpref('FontSize'),'visible','on'}; %{'FontSize',15};</span>
+titleOpt = {<span class="string">'visible'</span>,<span class="string">'on'</span>,<span class="string">'color'</span>,<span class="string">'k'</span>};
+
+<span class="comment">% Setup multiplot</span>
+<span class="comment">% define plot size [origin X,Y,Width,Height]</span>
+mtexFig = mtexFigure(<span class="string">'position'</span>,[0 0 1000 1000]);
+
+<span class="comment">% set up spacing between subplots default is 10 pixel</span>
+<span class="comment">%mtexFig.innerPlotSpacing = 20;</span>
+
+<span class="comment">% Standard Seismic plot with 8 subplots in 3 by 3 matrix</span>
+<span class="comment">%</span>
+<span class="comment">% Plot matrix layout</span>
+<span class="comment">%        1 Vp        2 AVs      3 S1 polarizations</span>
+<span class="comment">%        4 Vs1       5 Vs2      6 dVs</span>
+<span class="comment">%        7 Vp/Vs1    8 Vp/Vs2</span>
+<span class="comment">%</span></pre><img src="SeismicsMultiplot_01.png"> <pre class="codeinput"><span class="comment">%**************************************************************************</span>
+<span class="comment">% Vp : Plot P-wave velocity (km/s)</span>
+<span class="comment">%**************************************************************************</span>
+
+<span class="comment">% Plot P-wave velocity (km/s)</span>
+plot(vp,<span class="string">'contourf'</span>,<span class="string">'complete'</span>,<span class="string">'upper'</span>)
+mtexTitle(<span class="string">'Vp (km/s)'</span>,titleOpt{:})
+
+<span class="comment">% extrema</span>
+[maxVp, maxVpPos] = max(vp);
+[minVp, minVpPos] = min(vp);
+
+<span class="comment">% percentage anisotropy</span>
+AVp = 200*(maxVp-minVp) / (maxVp+minVp);
+
+<span class="comment">% mark maximum with black square and minimum with white circle</span>
+hold <span class="string">on</span>
+plot(maxVpPos.symmetrise,blackMarker{:})
+plot(minVpPos.symmetrise,whiteMarker{:})
+hold <span class="string">off</span>
+
+<span class="comment">% subTitle</span>
+xlabel([<span class="string">'Vp Anisotropy = '</span>,num2str(AVp,<span class="string">'%6.1f'</span>)],titleOpt{:})</pre><img src="SeismicsMultiplot_02.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>AVS : Plot S-wave anisotropy percentage for each proppagation direction<a name="8"> </a></h2>
+         <p>defined as AVs = 200*(Vs1-Vs2)/(Vs1+Vs2)</p><pre class="codeinput"><span class="comment">% create a new axis</span>
+nextAxis
+
+<span class="comment">% Plot S-wave anisotropy (percent)</span>
+AVs = 200*(vs1-vs2)./(vs1+vs2);
+plot(AVs,<span class="string">'contourf'</span>,<span class="string">'complete'</span>,<span class="string">'upper'</span>);
+mtexTitle(<span class="string">'S-wave anisotropy (%)'</span>,titleOpt{:})
+
+<span class="comment">% Max percentage anisotropy</span>
+[maxAVs,maxAVsPos] = max(AVs);
+[minAVs,minAVsPos] = min(AVs);
+
+xlabel([<span class="string">'Max Vs Anisotropy = '</span>,num2str(maxAVs,<span class="string">'%6.1f'</span>)],titleOpt{:})
+
+<span class="comment">% mark maximum with black square and minimum with white circle</span>
+hold <span class="string">on</span>
+plot(maxAVsPos.symmetrise,blackMarker{:})
+plot(minAVsPos.symmetrise,whiteMarker{:})
+hold <span class="string">off</span>
+
+<span class="comment">% mark crystal axes</span>
+text([xvector,yvector,zvector],{<span class="string">'[100] '</span>,<span class="string">'[010] '</span>,<span class="string">'[001]'</span>},<span class="keyword">...</span>
+  <span class="string">'backgroundcolor'</span>,<span class="string">'w'</span>,<span class="string">'doNotDraw'</span>);</pre><img src="SeismicsMultiplot_03.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>S1 Polarization: Plot fastest S-wave (Vs1) polarization directions<a name="9"> </a></h2><pre class="codeinput"><span class="comment">% create a new axis</span>
+nextAxis
+
+plot(AVs,<span class="string">'contourf'</span>,<span class="string">'complete'</span>,<span class="string">'upper'</span>);
+mtexTitle(<span class="string">'Vs1 polarization'</span>,titleOpt{:})
+
+hold <span class="string">on</span>
+plot(ps1,<span class="string">'linewidth'</span>,2,<span class="string">'color'</span>,<span class="string">'black'</span>,<span class="string">'doNotDraw'</span>)
+hold <span class="string">off</span></pre><img src="SeismicsMultiplot_04.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Vs1 : Plot Vs1 velocities (km/s)<a name="10"> </a></h2><pre class="codeinput"><span class="comment">% create a new axis</span>
+nextAxis
+
+plot(vs1,<span class="string">'contourf'</span>,<span class="string">'doNotDraw'</span>,<span class="string">'complete'</span>,<span class="string">'upper'</span>);
+mtexTitle(<span class="string">'Vs1 (km/s)'</span>,titleOpt{:})
+
+<span class="comment">% Percentage anisotropy</span>
+[maxS1,maxS1pos] = max(vs1);
+[minS1,minS1pos] = min(vs1);
+AVs1=200*(maxS1-minS1)./(maxS1+minS1);
+
+xlabel([<span class="string">'Vs1 Anisotropy = '</span>,num2str(AVs1,<span class="string">'%6.1f'</span>)],titleOpt{:})
+
+hold <span class="string">on</span>
+plot(ps1,<span class="string">'linewidth'</span>,2,<span class="string">'color'</span>,<span class="string">'black'</span>)
+
+<span class="comment">% mark maximum with black square and minimum with white circle</span>
+hold <span class="string">on</span>
+plot(maxS1pos.symmetrise,blackMarker{:})
+plot(minS1pos.symmetrise,whiteMarker{:})
+hold <span class="string">off</span></pre><img src="SeismicsMultiplot_05.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Vs2 : Plot Vs2 velocities (km/s)<a name="11"> </a></h2><pre class="codeinput"><span class="comment">% create a new axis</span>
+nextAxis
+
+plot(vs2,<span class="string">'contourf'</span>,<span class="string">'doNotDraw'</span>,<span class="string">'complete'</span>,<span class="string">'upper'</span>);
+mtexTitle(<span class="string">'Vs2 (km/s)'</span>,titleOpt{:})
+
+<span class="comment">% Percentage anisotropy</span>
+[maxS2,maxS2pos] = max(vs2);
+[minS2,minS2pos] = min(vs2);
+AVs2=200*(maxS2-minS2)./(maxS2+minS2);
+xlabel([<span class="string">'Vs2 Anisotropy = '</span>,num2str(AVs2,<span class="string">'%6.1f'</span>)],titleOpt{:})
+
+hold <span class="string">on</span>
+plot(ps2,<span class="string">'linewidth'</span>,2,<span class="string">'color'</span>,<span class="string">'black'</span>)
+
+<span class="comment">% mark maximum with black square and minimum with white circle</span>
+hold <span class="string">on</span>
+plot(maxS2pos.symmetrise,blackMarker{:})
+plot(minS2pos.symmetrise,whiteMarker{:})
+hold <span class="string">off</span></pre><img src="SeismicsMultiplot_06.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>dVs : Plot Velocity difference Vs1-Vs2 (km/s) plus Vs1 polarizations<a name="12"> </a></h2><pre class="codeinput"><span class="comment">% create a new axis</span>
+nextAxis
+
+dVs = vs1-vs2;
+plot(dVs,<span class="string">'contourf'</span>,<span class="string">'complete'</span>,<span class="string">'upper'</span>);
+mtexTitle(<span class="string">'dVs=Vs1-Vs2 (km/s)'</span>,titleOpt{:})
+
+<span class="comment">% Max percentage anisotropy</span>
+[maxdVs,maxdVsPos] = max(dVs);
+[mindVs,mindVsPos] = min(dVs);
+
+xlabel([<span class="string">'Max dVs (km/s) = '</span>,num2str(maxdVs,<span class="string">'%6.2f'</span>)],titleOpt{:})
+
+<span class="comment">% mark maximum with black square and minimum with white circle</span>
+hold <span class="string">on</span>
+plot(maxdVsPos.symmetrise,blackMarker{:})
+plot(mindVsPos.symmetrise,whiteMarker{:})
+hold <span class="string">off</span></pre><img src="SeismicsMultiplot_07.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Vp/Vs1 : Plot Vp/Vs1 ratio (no units)<a name="13"> </a></h2><pre class="codeinput"><span class="comment">% create a new axis</span>
+nextAxis
+
+vpvs1 = vp./vs1;
+plot(vpvs1,<span class="string">'contourf'</span>,<span class="string">'complete'</span>,<span class="string">'upper'</span>);
+mtexTitle(<span class="string">'Vp/Vs1'</span>,titleOpt{:})
+
+<span class="comment">% Percentage anisotropy</span>
+[maxVpVs1,maxVpVs1Pos] = max(vpvs1);
+[minVpVs1,minVpVs1Pos] = min(vpvs1);
+AVpVs1=200*(maxVpVs1-minVpVs1)/(maxVpVs1+minVpVs1);
+
+xlabel([<span class="string">'Vp/Vs1 Anisotropy = '</span>,num2str(AVpVs1,<span class="string">'%6.1f'</span>)],titleOpt{:})
+
+<span class="comment">% mark maximum with black square and minimum with white circle</span>
+hold <span class="string">on</span>
+plot(maxVpVs1Pos.symmetrise,blackMarker{:})
+plot(minVpVs1Pos.symmetrise,whiteMarker{:})
+hold <span class="string">off</span></pre><img src="SeismicsMultiplot_08.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Vp/Vs2 : Plot Vp/Vs2 ratio (no units)<a name="14"> </a></h2><pre class="codeinput"><span class="comment">% create a new axis</span>
+nextAxis
+
+vpvs2 = vp./vs2;
+plot(vpvs2,<span class="string">'contourf'</span>,<span class="string">'complete'</span>,<span class="string">'upper'</span>);
+mtexTitle(<span class="string">'Vp/Vs2'</span>,titleOpt{:})
+
+<span class="comment">% Percentage anisotropy</span>
+[maxVpVs2,maxVpVs2Pos] = max(vpvs2);
+[minVpVs2,minVpVs2Pos] = min(vpvs2);
+AVpVs2=200*(maxVpVs2-minVpVs2)/(maxVpVs2+minVpVs2);
+
+xlabel([<span class="string">'Vp/Vs2 Anisotropy = '</span>,num2str(AVpVs2,<span class="string">'%6.1f'</span>)],titleOpt{:})
+
+<span class="comment">% mark maximum with black square and minimum with white circle</span>
+hold <span class="string">on</span>
+plot(maxVpVs2Pos.symmetrise,blackMarker{:})
+plot(minVpVs2Pos.symmetrise,whiteMarker{:})
+hold <span class="string">off</span></pre><img src="SeismicsMultiplot_09.png"> <pre class="codeinput"><span class="comment">% add colorbars to all plots</span>
+mtexColorbar
+drawNow(gcm,<span class="string">'figSize'</span>,<span class="string">'large'</span>)
+
+<span class="comment">% reset old colormap</span>
+setMTEXpref(<span class="string">'defaultColorMap'</span>,WhiteJetColorMap)</pre><img src="SeismicsMultiplot_10.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

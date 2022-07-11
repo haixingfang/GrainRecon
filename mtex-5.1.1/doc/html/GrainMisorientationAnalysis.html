@@ -1,0 +1,268 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>Misorientation Analysis (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: GrainMisorientationAnalysis -->
+      <!-- HEADSTUFF: GrainMisorientationAnalysis -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:GrainMisorientationAnalysis">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div class="myheader">
+         <table border="0" width="100%" cellpadding="10" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="left" style="color:white"><a style="color:white" href="matlab:edit GrainMisorientationAnalysis">Open Matlab File in the Editor</a></td>
+               <td valign="baseline" align="right" style="color:white"><a style="color:white" href="mtex_product_page.html">MTEX</a></td>
+            </tr>
+         </table>
+      </div>
+      <div class="content">
+         <h1 class="refname">Misorientation Analysis</h1>
+         <div class="subheading">
+            <p>How to analyze misorientations.</p>
+         </div>
+         <div>
+            <table class="content">
+               <tr>
+                  <td class="header">On this page ...</td>
+               </tr>
+               <tr>
+                  <td><a href="#3">Definition</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#4">The sample data set</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#6">Intragranular misorientations</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#15">Boundary misorientations</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#18">The angle distribution</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#22">The axis distribution</a></td>
+               </tr>
+            </table>
+         </div>
+         <h2>Definition<a name="3"> </a></h2>
+         <p>In MTEX the misorientation between two orientations o1, o2 is defined as</p>
+         <p><img src="GrainMisorientationAnalysis_eq10473485919243981333.png"> </p>
+         <p>In the case of EBSD data, intragranular misorientations, misorientations between neighbouring grains, and misorientations
+            between random measurements are of interest.
+         </p>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>The sample data set<a name="4"> </a></h2>
+         <p>Let us first import some EBSD data by a <a href="matlab:edit mtexdata"> script file</a></p><pre class="codeinput">mtexdata <span class="string">forsterite</span>
+plotx2east</pre><p>and <a href="EBSD.calcGrains.html">reconstruct</a> grains by
+         </p><pre class="codeinput"><span class="comment">% perform grain segmentation</span>
+[grains,ebsd.grainId,ebsd.mis2mean] = calcGrains(ebsd(<span class="string">'indexed'</span>),<span class="string">'threshold'</span>,5*degree);
+
+<span class="comment">% remove small grains</span>
+ebsd(grains(grains.grainSize&lt;5)) = [];
+
+<span class="comment">% repeat grain reconstruction</span>
+[grains,ebsd.grainId,ebsd.mis2mean] = calcGrains(ebsd(<span class="string">'indexed'</span>),<span class="string">'threshold'</span>,5*degree);
+
+<span class="comment">% smooth the grain boundaries a bit</span>
+grains = smooth(grains,5);</pre><p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Intragranular misorientations<a name="6"> </a></h2>
+         <p>The intragranular misorientation is automatically computed while reconstructing the grain structure. It is stored as the property
+            <tt>mis2mean</tt> within the ebsd variable and can be accessed by
+         </p><pre class="codeinput"><span class="comment">% get the misorientations to mean</span>
+mori = ebsd(<span class="string">'Fo'</span>).mis2mean
+
+<span class="comment">% plot a histogram of the misorientation angles</span>
+plotAngleDistribution(mori)
+xlabel(<span class="string">'Misorientation angles in degree'</span>)</pre><pre class="codeoutput"> 
+mori = misorientation  
+  size: 151452 x 1
+  crystal symmetry : Forsterite (mmm)
+  crystal symmetry : Forsterite (mmm)
+ 
+</pre><img src="GrainMisorientationAnalysis_01.png"> <p>The visualization of the misorientation angle can be done by</p><pre class="codeinput">close <span class="string">all</span>
+plot(ebsd(<span class="string">'Forsterite'</span>),ebsd(<span class="string">'Forsterite'</span>).mis2mean.angle./degree)
+mtexColorMap <span class="string">hot</span>
+mtexColorbar
+hold <span class="string">on</span>
+plot(grains.boundary,<span class="string">'edgecolor'</span>,<span class="string">'k'</span>,<span class="string">'linewidth'</span>,.5)
+hold <span class="string">off</span></pre><img src="GrainMisorientationAnalysis_02.png"> <p>In order to visualize the misorientation axis we have two choices. We can consider the misorientation axis either with respect
+            to the crystal reference frame or with the specimen reference frame. The misorientation axes with respect to the crystal reference
+            frame can be computed via
+         </p><pre class="codeinput">mori.axis</pre><pre class="codeoutput"> 
+ans = Miller  
+ size: 151452 x 1
+ mineral: Forsterite (222)
+</pre><p>The axes are unique up to crystal symmetry. Accordingly, the corresponding color key needs to colorize only the fundamental
+            sector. This is done by
+         </p><pre class="codeinput"><span class="comment">% define the color key</span>
+oM = axisAngleColorKey(mori);
+
+plot(oM)</pre><img src="GrainMisorientationAnalysis_03.png"> <p>We see that according to the above color key orientation gradients with respect to the (001) axis will be  displayed in red,
+            spins around the (010) will be displayed in green and spins around the (100) axis will be displayed in blue. Pixels with no
+            misorientation will be displayed in gray and as the misorientation angle increases the color gets more saturated.
+         </p><pre class="codeinput">plot(ebsd(<span class="string">'Forsterite'</span>),oM.orientation2color(mori))
+
+hold <span class="string">on</span>
+plot(grains.boundary,<span class="string">'edgecolor'</span>,<span class="string">'k'</span>,<span class="string">'linewidth'</span>,2)
+hold <span class="string">off</span></pre><img src="GrainMisorientationAnalysis_04.png"> <p>The misorientation axis with respect to the specimen coordinate system can unfortunaltely not be computed from the misorientation
+            alone. Therefore, we require the pair consisting of grain mean orientation and the orientation of the pixel.
+         </p>
+         <p>Lets computed first for every pixel the corresponding reference orientation, i.e. the mean orientation of the grain the pixel
+            belongs to.
+         </p><pre class="codeinput">oriRef = grains(ebsd(<span class="string">'Forsterite'</span>).grainId).meanOrientation</pre><pre class="codeoutput"> 
+oriRef = orientation  
+  size: 151452 x 1
+  crystal symmetry : Forsterite (mmm)
+  specimen symmetry: 1
+ 
+</pre><p>Now the misorientation axis with respect to the specimen reference system is computed via</p><pre class="codeinput">v = axis(ebsd(<span class="string">'Forsterite'</span>).orientations,oriRef)</pre><pre class="codeoutput"> 
+v = vector3d  
+ size: 151452 x 1
+</pre><p>With respect to the specimen reference frame the misorientation axes are unique and not symmetry has to be considered. Accordingly,
+            our color key will contain the entire sphere.
+         </p><pre class="codeinput">oM = axisAngleColorKey(ebsd(<span class="string">'Forsterite'</span>));
+plot(oM)
+
+plot(discreteSample(v,1000),<span class="string">'add2all'</span>,<span class="string">'MarkerSize'</span>,2,<span class="string">'MarkerEdgeColor'</span>,<span class="string">'black'</span>)</pre><img src="GrainMisorientationAnalysis_05.png"> <p>With respect to the above color key rotations around the 001 specimen direction will become visible as a black to white gradient
+            while rotations around the 100 directions will show up as a red to magenta gradient.
+         </p><pre class="codeinput">oM.oriRef = oriRef;
+
+color = oM.orientation2color(ebsd(<span class="string">'Forsterite'</span>).orientations);
+plot(ebsd(<span class="string">'Forsterite'</span>),color,<span class="string">'micronbar'</span>,<span class="string">'off'</span>)
+hold <span class="string">on</span>
+plot(grains.boundary,<span class="string">'edgecolor'</span>,<span class="string">'k'</span>,<span class="string">'linewidth'</span>,2)
+hold <span class="string">off</span></pre><img src="GrainMisorientationAnalysis_06.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Boundary misorientations<a name="15"> </a></h2>
+         <p>The misorientation between adjacent grains can be computed by the command <a href="grainBoundary.misorientation.html">grainBoundary.misorientation.html</a></p><pre class="codeinput">plot(grains)
+
+hold <span class="string">on</span>
+
+bnd_FoFo = grains.boundary(<span class="string">'Fo'</span>,<span class="string">'Fo'</span>)
+
+plot(bnd_FoFo,<span class="string">'linecolor'</span>,<span class="string">'r'</span>)
+
+hold <span class="string">off</span>
+
+bnd_FoFo.misorientation</pre><pre class="codeoutput"> 
+bnd_FoFo = grainBoundary  
+ 
+ Segments   mineral 1   mineral 2
+    15676  Forsterite  Forsterite
+ 
+ans = misorientation  
+  size: 15676 x 1
+  crystal symmetry : Forsterite (mmm)
+  crystal symmetry : Forsterite (mmm)
+  antipodal:         true
+ 
+</pre><img src="GrainMisorientationAnalysis_07.png"> <pre class="codeinput">plot(ebsd,<span class="string">'facealpha'</span>,0.5)
+
+hold <span class="string">on</span>
+plot(grains.boundary)
+plot(bnd_FoFo,bnd_FoFo.misorientation.angle./degree,<span class="string">'linewidth'</span>,2)
+mtexColorMap <span class="string">blue2red</span>
+mtexColorbar(<span class="string">'title'</span>,<span class="string">'misorientation angle'</span>)
+hold <span class="string">off</span></pre><img src="GrainMisorientationAnalysis_08.png"> <p>In order to visualize the misorientation between any two adjacent grains, there are two possibilities in MTEX.</p>
+         <div>
+            <ul type="square">
+               <li>plot the angle distribution for all phase combinations</li>
+               <li>plot the axis distribution for all phase combinations</li>
+            </ul>
+         </div>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>The angle distribution<a name="18"> </a></h2>
+         <p>The following commands plot the angle distributions of all phase transitions from Forsterite to any other phase.</p><pre class="codeinput">plotAngleDistribution(grains.boundary(<span class="string">'Fo'</span>,<span class="string">'Fo'</span>).misorientation,<span class="keyword">...</span>
+  <span class="string">'DisplayName'</span>,<span class="string">'Forsterite-Forsterite'</span>)
+hold <span class="string">on</span>
+plotAngleDistribution(grains.boundary(<span class="string">'Fo'</span>,<span class="string">'En'</span>).misorientation,<span class="keyword">...</span>
+  <span class="string">'DisplayName'</span>,<span class="string">'Forsterite-Enstatite'</span>)
+plotAngleDistribution(grains.boundary(<span class="string">'Fo'</span>,<span class="string">'Di'</span>).misorientation,<span class="keyword">...</span>
+  <span class="string">'DisplayName'</span>,<span class="string">'Forsterite-Diopside'</span>)
+hold <span class="string">off</span>
+legend(<span class="string">'show'</span>,<span class="string">'Location'</span>,<span class="string">'northwest'</span>)</pre><img src="GrainMisorientationAnalysis_09.png"> <p>The above angle distributions can be compared with the uncorrelated misorientation angle distributions. This is done by</p><pre class="codeinput"><span class="comment">% compute uncorrelated misorientations</span>
+mori = calcMisorientation(ebsd(<span class="string">'Fo'</span>),ebsd(<span class="string">'Fo'</span>));
+
+<span class="comment">% plot the angle distribution</span>
+plotAngleDistribution(mori,<span class="string">'DisplayName'</span>,<span class="string">'Forsterite-Forsterite'</span>)
+
+hold <span class="string">on</span>
+
+mori = calcMisorientation(ebsd(<span class="string">'Fo'</span>),ebsd(<span class="string">'En'</span>));
+plotAngleDistribution(mori,<span class="string">'DisplayName'</span>,<span class="string">'Forsterite-Enstatite'</span>)
+
+mori = calcMisorientation(ebsd(<span class="string">'Fo'</span>),ebsd(<span class="string">'Di'</span>));
+plotAngleDistribution(mori,<span class="string">'DisplayName'</span>,<span class="string">'Forsterite-Diopside'</span>)
+
+hold <span class="string">off</span>
+legend(<span class="string">'show'</span>,<span class="string">'Location'</span>,<span class="string">'northwest'</span>)</pre><img src="GrainMisorientationAnalysis_10.png"> <p>Another possibility is to compute an uncorrelated angle distribution from EBSD data by taking only into account those pairs
+            of measurements that are sufficiently far from each other (uncorrelated points). The uncorrelated angle distribution is plotted
+            by
+         </p><pre class="codeinput"><span class="comment">% compute the Forsterite ODF</span>
+odf_Fo = calcODF(ebsd(<span class="string">'Fo'</span>).orientations,<span class="string">'Fourier'</span>)
+
+<span class="comment">% compute the uncorrelated Forsterite to Forsterite MDF</span>
+mdf_Fo_Fo = calcMDF(odf_Fo,odf_Fo)
+
+<span class="comment">% plot the uncorrelated angle distribution</span>
+hold <span class="string">on</span>
+plotAngleDistribution(mdf_Fo_Fo,<span class="string">'DisplayName'</span>,<span class="string">'Forsterite-Forsterite'</span>)
+hold <span class="string">off</span>
+
+legend(<span class="string">'-dynamicLegend'</span>,<span class="string">'Location'</span>,<span class="string">'northwest'</span>) <span class="comment">% update legend</span></pre><pre class="codeoutput"> 
+odf_Fo = ODF  
+  crystal symmetry : Forsterite (mmm)
+  specimen symmetry: 1
+ 
+  Harmonic portion:
+    degree: 28
+    weight: 1
+ 
+ 
+mdf_Fo_Fo = MDF  
+  crystal symmetry : Forsterite (mmm)
+  crystal symmetry : Forsterite (mmm)
+  antipodal:         true
+ 
+  Harmonic portion:
+    degree: 20
+    weight: 1
+ 
+</pre><img src="GrainMisorientationAnalysis_11.png"> <p>What we have plotted above is the uncorrelated misorientation angle distribution for the Forsterite ODF. We can compare it
+            to the uncorrelated misorientation angle distribution of the uniform ODF by
+         </p><pre class="codeinput">hold <span class="string">on</span>
+plotAngleDistribution(odf_Fo.CS,odf_Fo.CS,<span class="string">'DisplayName'</span>,<span class="string">'untextured'</span>)
+hold <span class="string">off</span>
+
+legend(<span class="string">'-dynamicLegend'</span>,<span class="string">'Location'</span>,<span class="string">'northwest'</span>) <span class="comment">% update legend</span></pre><img src="GrainMisorientationAnalysis_12.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>The axis distribution<a name="22"> </a></h2>
+         <p>Let's start with the boundary misorientation axis distribution</p><pre class="codeinput">close <span class="string">all</span>
+plotAxisDistribution(bnd_FoFo.misorientation,<span class="string">'smooth'</span>)
+mtexTitle(<span class="string">'boundary axis distribution'</span>)</pre><img src="GrainMisorientationAnalysis_13.png"> <p>Next we plot with the uncorrelated axis distribution, which depends only on the underlying ODFs.</p><pre class="codeinput">nextAxis
+mori = calcMisorientation(ebsd(<span class="string">'Fo'</span>));
+plotAxisDistribution(mori,<span class="string">'smooth'</span>)
+mtexTitle(<span class="string">'uncorrelated axis distribution'</span>)</pre><img src="GrainMisorientationAnalysis_14.png"> <p>and finally the axis misorientation distribution of a random texture</p><pre class="codeinput">nextAxis
+plotAxisDistribution(ebsd(<span class="string">'Fo'</span>).CS,ebsd(<span class="string">'Fo'</span>).CS,<span class="string">'antipodal'</span>)
+mtexTitle(<span class="string">'random texture'</span>)
+mtexColorMap <span class="string">parula</span>
+setColorRange(<span class="string">'equal'</span>)
+mtexColorbar(<span class="string">'multiples of random distribution'</span>)</pre><img src="GrainMisorientationAnalysis_15.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

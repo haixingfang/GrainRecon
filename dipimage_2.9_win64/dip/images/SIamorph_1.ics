@@ -1,0 +1,15 @@
+	
+ics_version	1.0
+filename	SIamorph_2
+layout	parameters	3
+layout	order	bits	x	y
+layout	sizes	8	512	512
+layout	coordinates	video
+layout	significant_bits	8
+representation	format	integer
+representation	sign	unsigned
+representation	compression	gzip
+representation	byte_order	1
+parameter	origin	0.000000	0.000000	0.000000
+parameter	labels	intensity	x-position	y-position
+history	software	DIPlib with dipIO

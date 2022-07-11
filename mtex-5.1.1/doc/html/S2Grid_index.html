@@ -1,0 +1,93 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>Discretisation of 2 - Sphere (The Class S2Grid) (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: S2Grid_index -->
+      <!-- HEADSTUFF: S2Grid_index -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:S2Grid_index">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div>
+         <table class="nav" summary="Navigation aid" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline"><b>MTEX</b> - A MATLAB Toolbox for Quantitative Texture Analysis</td>
+            </tr>
+         </table>
+         <p style="font-size:1px;"></p>
+      </div>
+      <div class="content">
+         <h1 class="refname">Discretisation of 2 - Sphere (The Class <a href="S2Grid_index.html">S2Grid</a>)
+         </h1>
+         <div class="subheading">
+            <p>represents a grid of nodes on the sphere</p>
+         </div>
+         <div>
+            <table class="content">
+               <tr>
+                  <td class="header">On this page ...</td>
+               </tr>
+               <tr>
+                  <td><a href="#2">Class Description</a></td>
+               </tr>
+               <tr>
+                  <td><span class="subsection"><a href="#3"> Defining a S2Grid</a></span></td>
+               </tr>
+               <tr>
+                  <td><span class="subsection"><a href="#4"> Plots</a></span></td>
+               </tr>
+               <tr>
+                  <td><a href="#5">Complete Function list</a></td>
+               </tr>
+            </table>
+         </div>
+         <h2>Class Description<a name="2"> </a></h2>
+         <p>The class <b>S2Grid</b> is used in MTEX to store the set of specimen directions organized in a <a href="PoleFigure_index.html">pole figure</a>. Of central importance is also the plotting method of this class since it is used by almost all other plotting methods in
+            MTEX to perform spherical plots.
+         </p>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h3> Defining a S2Grid<a name="3"> </a></h3>
+         <p>There are various ways to define a S2Grid. Next, you find some examples. For a detailed description of possible specifications
+            look for the documentation of the constructor <a href="S2Grid_index.html">S2Grid</a>.
+         </p><pre class="codeinput"><span class="comment">% equidistributions</span>
+S2G = equispacedS2Grid(<span class="string">'points'</span>,100,<span class="string">'antipodal'</span>);  <span class="comment">% specified by number of points</span>
+S2G = equispacedS2Grid(<span class="string">'RESOLUTION'</span>,5*degree,<span class="string">'antipodal'</span>);  <span class="comment">% specified by resolution</span>
+
+<span class="comment">% regular grids</span>
+S2G = regularS2Grid(<span class="string">'points'</span>,[72,19]); <span class="comment">% specified by number of theta and rho steps</span>
+S2G = regularS2Grid(<span class="string">'theta'</span>,linspace(0,2*pi,72),<span class="keyword">...</span>
+             <span class="string">'rho'</span>,linspace(0,pi/2,19)); <span class="comment">% explicitly determine theta and rho values</span>
+
+<span class="comment">% restrictes grids</span>
+S2G = equispacedS2Grid(<span class="string">'points'</span>,100,<span class="string">'MAXTHETA'</span>,75*degree);  <span class="comment">% specify maximum theta angle</span></pre><p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h3> Plots<a name="4"> </a></h3><pre class="codeinput">plot(equispacedS2Grid(<span class="string">'points'</span>,100,<span class="string">'antipodal'</span>))  <span class="comment">% plot the grid of nodes</span></pre><img src="S2Grid_index_01.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Complete Function list<a name="5"> </a></h2>
+         <p><table width="90%"><tr><td width="200px"><a href="S2Grid.S2Grid.html"><tt>S2Grid</tt></a></td><td>Syntax</td></tr><tr><td
+            width="200px"><a href="S2Grid.copy.html"><tt>copy</tt></a></td><td>certain condition from grid</td></tr><tr><td width="200px"><a
+            href="S2Grid.delete.html"><tt>delete</tt></a></td><td>elilinates points from grid</td></tr><tr><td width="200px"><a href="S2Grid.display.html"><tt>display</tt></a></td><td>standard
+            output</td></tr><tr><td width="200px"><a href="S2Grid.find.html"><tt>find</tt></a></td><td>return index of all points in a
+            epsilon neighborhood of a vector</td></tr><tr><td width="200px"><a href="S2Grid.getdata.html"><tt>getdata</tt></a></td><td>return
+            index of all points in a epsilon neighborhood of a vector</td></tr><tr><td width="200px"><a href="S2Grid.polar.html"><tt>polar</tt></a></td><td>coordinates
+            of S2Grid</td></tr><tr><td width="200px"><a href="S2Grid.refine.html"><tt>refine</tt></a></td><td>S2Grid</td></tr><tr><td
+            width="200px"><a href="S2Grid.subGrid.html"><tt>subGrid</tt></a></td><td/></tr><tr><td width="200px"><a href="S2Grid.subsasgn.html"><tt>subsasgn</tt></a></td><td>overloads
+            subsasgn</td></tr><tr><td width="200px"><a href="S2Grid.subsref.html"><tt>subsref</tt></a></td><td>overloads subsref</td></tr></table>
+         </p>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

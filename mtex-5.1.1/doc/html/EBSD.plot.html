@@ -1,0 +1,128 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>plot (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: EBSD.plot -->
+      <!-- HEADSTUFF: EBSD.plot -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:EBSD.plot">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div>
+         <table class="nav" summary="Navigation aid" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline"><b>MTEX</b> - A MATLAB Toolbox for Quantitative Texture Analysis</td>
+               <td valign="baseline" align="right"><a href="matlab:edit EBSD/plot">
+                     View Code</a></td>
+            </tr>
+         </table>
+         <p style="font-size:1px;"></p>
+      </div>
+      <div class="content">
+         <h1 class="refname">plot</h1>
+         <div class="subheading">
+            <p>(method of <a href="EBSD_index.html">EBSD</a>)
+            </p>
+         </div>
+         <p>spatial EBSD plot</p>
+         <h2>Syntax<a name="3"> </a></h2><pre class="codeinput"><span class="comment">% colorize according to phase</span>
+plot(ebsd)</pre><pre class="codeinput"><span class="comment">% colorize according to arbitrary value - here MAD</span>
+plot(ebsd,ebsd.mad)</pre><pre class="codeinput"><span class="comment">% colorize according to orientation</span>
+plot(ebsd(<span class="string">'phaseName'</span>),ebsd(<span class="string">'phaseName'</span>).orientation)</pre><pre class="codeinput"><span class="comment">% colorize according to custom color</span>
+oM = ipfColorKey(ebsd(<span class="string">'phaseName'</span>))
+color = oM.orientation2color(ebsd(<span class="string">'phaseName'</span>).orientations);
+plot(ebsd(<span class="string">'phaseName'</span>),color)</pre><pre class="codeinput"><span class="comment">% specify the color directly and show in Legend</span>
+badMAD = ebsd.mad > 1;
+plot(ebsd(badMAD),<span class="string">'faceColor'</span>,<span class="string">'black,'</span>DisplayName',<span class="string">'bad values'</span>)</pre><h2>Input<a name="4"> </a></h2>
+         <p>
+            <table cellpadding="4" cellspacing="0" class="funcref" width="100%">
+            <tr>
+            <td width="100px">
+            <tt>ebsd</tt>
+            </td>
+            <td>
+            <p><a href="EBSD_index.html">EBSD</a></p>
+            </td>
+            </tr>
+            <tr>
+            <td width="100px">
+            <tt>color</tt>
+            </td>
+            <td>
+            <p>length(ebsd) x 3 vector of RGB values</p>
+            </td>
+            </tr>
+            <tr>
+            <td width="100px">
+            <tt>param,val</tt>
+            </td>
+            <td>Parameters and values that control plot<table cellpadding="4" cellspacing="0" class="paramval" width="100%">
+            <tr>
+            <td class="header" width="100px">Parameter</td>
+            <td class="header">Description</td>
+            </tr>
+            <tr>
+            <td width="150px">
+            <tt>'micronbar'</tt>
+            </td>
+            <td>
+            <p>'on'/'off'</p>
+            </td>
+            </tr>
+            <tr>
+            <td width="150px">
+            <tt>'DisplayName'</tt>
+            </td>
+            <td>
+            <p>add a legend entry</p>
+            </td>
+            </tr>
+            </table>
+            </td>
+            </tr>
+            <tr>
+            <td width="100px">
+            <tt>param</tt>
+            </td>
+            <td>Options that control the plot behavior<table cellpadding="4" cellspacing="0" class="paramval" width="100%">
+            <tr>
+            <td class="header" width="100px">Parameter</td>
+            <td class="header">Description</td>
+            </tr>
+            <tr>
+            <td width="150px">
+            <tt>'points'</tt>
+            </td>
+            <td>
+            <p>plot dots instead of unitcells</p>
+            </td>
+            </tr>
+            </table>
+            </td>
+            </tr>
+            </table>
+            
+         </p>
+         <h2>Example<a name="5"> </a></h2><pre class="codeinput">mtexdata <span class="string">forsterite</span>
+plot(ebsd)</pre><img src="EBSD.plot_01.png"> <pre class="codeinput"><span class="comment">% colorize accoding to orientations</span>
+plot(ebsd(<span class="string">'Forsterite'</span>),ebsd(<span class="string">'Forsterite'</span>).orientations)</pre><img src="EBSD.plot_02.png"> <pre class="codeinput"><span class="comment">% colorize according to MAD</span>
+plot(ebsd,ebsd.mad,<span class="string">'micronbar'</span>,<span class="string">'off'</span>)</pre><img src="EBSD.plot_03.png"> <h3 class="seealso">See also</h3>
+         <p><a href="EBSDSpatialPlots.html">EBSDSpatialPlots</a></p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

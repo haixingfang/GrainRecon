@@ -1,0 +1,227 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>Orientation Density Functions (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: ODF_demo -->
+      <!-- HEADSTUFF: ODF_demo -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:ODF_demo">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div class="myheader">
+         <table border="0" width="100%" cellpadding="10" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="left" style="color:white"><a style="color:white" href="matlab:edit ODF_demo">Open Matlab File in the Editor</a></td>
+               <td valign="baseline" align="right" style="color:white"><a style="color:white" href="mtex_product_page.html">MTEX</a></td>
+            </tr>
+         </table>
+      </div>
+      <div class="content">
+         <h1 class="refname">Orientation Density Functions</h1>
+         <div class="subheading">
+            <p>This example demonstrates the most important MTEX tools for analysing ODFs.</p>
+         </div>
+         <p>All described commands can be applied to model ODFs constructed via <a href="uniformODF.html">uniformODF</a>, <a href="unimodalODF.html">unimodalODF</a>, or <a href="fibreODF.html">fibreODF</a> and to all estimated ODF calculated from <a href="PoleFigure_calcODF.html">pole figures</a> or <a href="EBSD_calcODF.html">EBSD data</a>.
+         </p>
+         <h2>Defining Model ODFs<a name="3"> </a></h2>
+         <p><b>Unimodal ODFs</b></p><pre class="codeinput">SS  = specimenSymmetry(<span class="string">'orthorhombic'</span>);
+CS  = crystalSymmetry(<span class="string">'cubic'</span>);
+o   = orientation(<span class="string">'brass'</span>,CS,SS);
+psi = vonMisesFisherKernel(<span class="string">'halfwidth'</span>,20*degree);
+
+odf1 = unimodalODF(o,CS,SS,psi)</pre><pre class="codeoutput"> 
+odf1 = ODF  
+  crystal symmetry : m-3m
+  specimen symmetry: mmm
+ 
+  Radially symmetric portion:
+    kernel: de la Vallee Poussin, halfwidth 10&deg;
+    center: Rotations: 0x0
+    weight: 1
+ 
+</pre><p><b>Fibre ODFs</b></p><pre class="codeinput">CS = crystalSymmetry(<span class="string">'hexagonal'</span>);
+h = Miller(1,0,0,CS);
+r = xvector;
+psi = AbelPoissonKernel(<span class="string">'halfwidth'</span>,18*degree);
+
+odf2 = fibreODF(h,r,psi)</pre><pre class="codeoutput"> 
+odf2 = ODF  
+  crystal symmetry : 6/mmm, X||a*, Y||b, Z||c*
+  specimen symmetry: 1
+ 
+  Fibre symmetric portion:
+    kernel: Abel Poisson, halfwidth 18&deg;
+    fibre: (10-10) - 1,0,0
+    weight: 1
+ 
+</pre><p><b>uniform ODFs</b></p><pre class="codeinput">odf3 = uniformODF(CS)</pre><pre class="codeoutput"> 
+odf3 = ODF  
+  crystal symmetry : 6/mmm, X||a*, Y||b, Z||c*
+  specimen symmetry: 1
+ 
+  Uniform portion:
+    weight: 1
+ 
+</pre><p><b>FourierODF</b></p>
+         <p><b>Bingham ODFs</b></p><pre class="codeinput">Lambda = [-10,-10,10,10]
+A = quaternion(eye(4))
+odf = BinghamODF(Lambda,A,CS)
+
+plotIPDF(odf,xvector)
+plotPDF(odf,Miller(1,0,0,CS))</pre><pre class="codeoutput">Lambda =
+   -10   -10    10    10
+ 
+A = Quaternion  
+  size: 1 x 4
+  a b c d
+  1 0 0 0
+  0 1 0 0
+  0 0 1 0
+  0 0 0 1
+ 
+odf = ODF  
+  crystal symmetry : 6/mmm, X||a*, Y||b, Z||c*
+  specimen symmetry: 1
+ 
+  Bingham portion:
+     kappa: -10 -10 10 10
+    weight: 1
+ 
+</pre><img src="ODF_demo_01.png"> <p><b>ODF Arithmetics</b></p><pre class="codeinput">0.3*odf2 + 0.7*odf3
+
+rot = rotation(<span class="string">'axis'</span>,yvector,<span class="string">'angle'</span>,90*degree);
+odf = rotate(odf,rot)
+plotPDF(odf,Miller(1,0,0,CS))</pre><pre class="codeoutput"> 
+ans = ODF  
+  crystal symmetry : 6/mmm, X||a*, Y||b, Z||c*
+  specimen symmetry: 1
+ 
+  Fibre symmetric portion:
+    kernel: Abel Poisson, halfwidth 18&deg;
+    fibre: (10-10) - 1,0,0
+    weight: 0.3
+ 
+  Uniform portion:
+    weight: 0.7
+ 
+ 
+odf = ODF  
+  crystal symmetry : 6/mmm, X||a*, Y||b, Z||c*
+  specimen symmetry: 1
+ 
+  Bingham portion:
+     kappa: -10 -10 10 10
+    weight: 1
+ 
+</pre><img src="ODF_demo_02.png"> <h2>Working with ODFs<a name="9"> </a></h2><pre class="codeinput"><span class="comment">% *Texture Characteristics+</span>
+
+calcError(odf2,odf3,<span class="string">'L1'</span>)      <span class="comment">% difference between ODFs</span>
+
+[maxODF,centerODF] = max(odf)  <span class="comment">% the modal orientation</span>
+mean(odf)                      <span class="comment">% the mean orientation</span>
+max(odf)
+
+volume(odf,centerODF,5*degree) <span class="comment">% the volume of a ball</span>
+fibreVolume(odf2,h,r,5*degree) <span class="comment">% the volume of a fibre</span>
+
+textureindex(odf)              <span class="comment">% the texture index</span>
+entropy(odf)                   <span class="comment">% the entropy</span>
+f_hat = calcFourier(odf2,16);  <span class="comment">% the C-coefficients up to order 16</span></pre><pre class="codeoutput">ans =
+    0.2030
+maxODF =
+    3.3783
+ 
+centerODF = orientation  
+  size: 1 x 1
+  crystal symmetry : 6/mmm, X||a*, Y||b, Z||c*
+  specimen symmetry: 1
+ 
+  Bunge Euler angles in degree
+  phi1  Phi phi2 Inv.
+    90   90  270    0
+ 
+ 
+ans = orientation  
+  size: 1 x 1
+  crystal symmetry : 6/mmm, X||a*, Y||b, Z||c*
+  specimen symmetry: 1
+ 
+  Bunge Euler angles in degree
+     phi1     Phi    phi2    Inv.
+  150.008 4.33442 180.003       0
+ 
+ans =
+    3.3783
+ans =
+    0.0028
+ans =
+    0.0252
+ans =
+    1.9251
+ans =
+   -0.5028
+</pre><h2>Plotting ODFs<a name="10"> </a></h2>
+         <p><b>Plotting (Inverse) Pole Figures</b></p><pre class="codeinput">close <span class="string">all</span>
+plotPDF(odf,Miller(0,1,0,CS),<span class="string">'antipodal'</span>)
+plotIPDF(odf,[xvector,zvector])</pre><img src="ODF_demo_03.png"> <p><b>Plotting an ODF</b></p><pre class="codeinput">close <span class="string">all</span>
+plot(SantaFe,<span class="string">'alpha'</span>,<span class="string">'sections'</span>,6,<span class="string">'projection'</span>,<span class="string">'plain'</span>,<span class="string">'contourf'</span>)
+mtexColorMap <span class="string">white2black</span></pre><img src="ODF_demo_04.png"> <h2>Exercises<a name="12"> </a></h2>
+         <p>2)</p>
+         <p>a) Construct a cubic unimodal ODF with mod at [0 0 1](3 1 0). (Miller indice). What is its modal orientation in Euler angles?</p><pre class="codeinput">CS = crystalSymmetry(<span class="string">'cubic'</span>);
+ori = orientation(<span class="string">'Miller'</span>,[0 0 1],[3 1 0],CS);
+odf = unimodalODF(ori);</pre><p>b) Plot some pole figures. Are there pole figures with and without antipodal symmetry? What about the inverse pole figures?</p><pre class="codeinput">plotPDF(odf,[Miller(1,0,0,CS),Miller(2,3,1,CS)])</pre><img src="ODF_demo_05.png"> <pre class="codeinput">close <span class="string">all</span>;plotPDF(odf,[Miller(1,0,0,CS),Miller(2,3,1,CS)],<span class="string">'antipodal'</span>)</pre><img src="ODF_demo_06.png"> <pre class="codeinput">close <span class="string">all</span>;plotIPDF(odf,vector3d(1,1,3))</pre><img src="ODF_demo_07.png"> <p>c) Plot the ODF in sigma and phi2 - sections. How many mods do you observe?</p><pre class="codeinput">close <span class="string">all</span>; plot(odf,<span class="string">'sections'</span>,6)</pre><img src="ODF_demo_08.png"> <p>d) Compute the volume of the ODF that is within a distance of 10 degree of the mod. Compare to an the uniform ODF.</p><pre class="codeinput">volume(odf,ori,10*degree)
+volume(uniformODF(CS,SS),ori,10*degree)</pre><pre class="codeoutput">ans =
+    0.2939
+ans =
+    0.0269
+</pre><p>e) Construct a trigonal ODF that consists of two fibres at h1 = (0,0,0,1), r1 = (0,1,0), h2 = (1,0,-1,0), r2 = (1,0,0). Do
+            the two fibres intersect?
+         </p><pre class="codeinput">cs = crystalSymmetry(<span class="string">'trigonal'</span>);
+odf = 0.5 * fibreODF(Miller(0,0,0,1,cs),yvector) + <span class="keyword">...</span>
+      0.5 * fibreODF(Miller(1,0,-1,0,cs),xvector)</pre><pre class="codeoutput"> 
+odf = ODF  
+  crystal symmetry : -31m, X||a*, Y||b, Z||c*
+  specimen symmetry: 1
+ 
+  Fibre symmetric portion:
+    kernel: de la Vallee Poussin, halfwidth 10&deg;
+    fibre: (0001) - 0,1,0
+    weight: 0.5
+ 
+  Fibre symmetric portion:
+    kernel: de la Vallee Poussin, halfwidth 10&deg;
+    fibre: (10-10) - 1,0,0
+    weight: 0.5
+ 
+</pre><p>f) What is the modal orientation of the ODF?</p><pre class="codeinput">mod = calcModes(odf)</pre><pre class="codeoutput"> 
+mod = orientation  
+  size: 1 x 1
+  crystal symmetry : -31m, X||a*, Y||b, Z||c*
+  specimen symmetry: 1
+ 
+  Bunge Euler angles in degree
+  phi1  Phi phi2 Inv.
+   180   90   60    0
+ 
+</pre><p>g) Plot the ODF in sigma and phi2 - sections. How many fibre do you observe?</p><pre class="codeinput">close <span class="string">all</span>;plot(odf,<span class="string">'sections'</span>,6)
+mtexColorMap <span class="string">white2black</span>
+annotate(mod,<span class="string">'MarkerColor'</span>,<span class="string">'r'</span>,<span class="string">'Marker'</span>,<span class="string">'s'</span>)</pre><img src="ODF_demo_09.png"> <pre class="codeinput">plot(odf,<span class="string">'phi2'</span>,<span class="string">'sections'</span>,6)</pre><img src="ODF_demo_10.png"> <p>h) Compute the texture index of the ODF.</p><pre class="codeinput">textureindex(odf)</pre><pre class="codeoutput">ans =
+    9.6325
+</pre><p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

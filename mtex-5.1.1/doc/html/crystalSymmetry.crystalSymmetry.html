@@ -1,0 +1,130 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>crystalSymmetry (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: crystalSymmetry.crystalSymmetry -->
+      <!-- HEADSTUFF: crystalSymmetry.crystalSymmetry -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:crystalSymmetry.crystalSymmetry">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div>
+         <table class="nav" summary="Navigation aid" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline"><b>MTEX</b> - A MATLAB Toolbox for Quantitative Texture Analysis</td>
+               <td valign="baseline" align="right"><a href="matlab:edit crystalSymmetry/crystalSymmetry">
+                     View Code</a></td>
+            </tr>
+         </table>
+         <p style="font-size:1px;"></p>
+      </div>
+      <div class="content">
+         <h1 class="refname">crystalSymmetry</h1>
+         <div class="subheading">
+            <p>(method of <a href="crystalSymmetry_index.html">crystalSymmetry</a>)
+            </p>
+         </div>
+         <p>constructor</p>
+         <h2>Description<a name="3"> </a></h2>
+         <p>Supported Symmetries</p><pre>id crystal system  Schoen-  Inter-    Laue     Rotational
+                   flies    national  class    axes
+1  triclinic       C1       1         -1       1
+2  triclinic       Ci       -1        -1       1
+3  monoclinic      C2       2         2/m      2
+4  monoclinic      Cs       m         2/m      2
+5  monoclinic      C2h      2/m       2/m      2
+6  orthorhombic    D2       222       mmm      222
+7  orthorhombic    C2v      mm2       mmm      222
+8  orthorhombic    D2h      mmm       mmm      222
+9  tetragonal      C4       4         4/m      4
+10 tetragonal      S4       -4        4/m      4
+11 tetragonal      C4h      4/m       4/m      4
+12 tetragonal      D4       422       4/mmm    422
+13 tetragonal      C4v      4mm       4/mmm    422
+14 tetragonal      D2d      -42m      4/mmm    422
+15 tetragonal      D4h      4/mmm     4/mmm    422
+16 trigonal        C3       3         -3       3
+17 trigonal        C3i      -3        -3       3
+18 trigonal        D3       32        -3m      32
+19 trigonal        C3v      3m        -3m      32
+20 trigonal        D3d      -3m       -3m      32
+21 hexagonal       C6       6         6/m      6
+22 hexagonal       C3h      -6        6/m      6
+23 hexagonal       C6h      6/m       6/m      6
+24 hexagonal       D6       622       6/mmm    622
+25 hexagonal       C6v      6mm       6/mmm    622
+26 hexagonal       D3h      -6m2      6/mmm    622
+27 hexagonal       D6h      6/mmm     6/mmm    622
+28 cubic           T        23        m-3      23
+29 cubic           Th       m-3       m-3      23
+30 cubic           O        432       m-3m     432
+31 cubic           Td       -43m      m-3m     432
+32 cubic           Oh       m-3m      m-3m     432</pre><h2>Syntax<a name="4"> </a></h2><pre class="codeinput">crystalSymmetry
+crystalSymmetry(<span class="string">'cubic'</span>)
+crystalSymmetry(<span class="string">'2/m'</span>,[8.6 13 7.2],[90 116, 90]*degree,<span class="string">'mineral'</span>,<span class="string">'orthoclase'</span>)
+crystalSymmetry(<span class="string">'O'</span>)
+crystalSymmetry(<span class="string">'LaueId'</span>,9)
+crystalSymmetry(<span class="string">'SpaceId'</span>,153)
+rot = rotation(<span class="string">'map'</span>,vector3d(1,1,1),vector3d.Z,vector3d(0,-1,1),vector3d.X)
+crystalSymmetry(<span class="string">'432'</span>,<span class="string">'rotAxes'</span>,rot)</pre><h2>Input<a name="5"> </a></h2>
+         <p>
+            <table cellpadding="4" cellspacing="0" class="funcref" width="100%">
+            <tr>
+            <td width="100px">
+            <tt>name</tt>
+            </td>
+            <td>
+            <p>Schoenflies or International notation of the Laue group</p>
+            </td>
+            </tr>
+            <tr>
+            <td width="100px">
+            <tt>axes</tt>
+            </td>
+            <td>
+            <p>[a,b,c] ~ length of the crystallographic axes</p>
+            </td>
+            </tr>
+            <tr>
+            <td width="100px">
+            <tt>angle</tt>
+            </td>
+            <td>
+            <p>[alpha,beta,gamma] ~ angle between the axes</p>
+            </td>
+            </tr>
+            </table>
+            
+         </p>
+         <h2>Output<a name="6"> </a></h2>
+         <p>
+            <table cellpadding="4" cellspacing="0" class="funcref" width="100%">
+            <tr>
+            <td width="100px">
+            <tt>s</tt>
+            </td>
+            <td>
+            <p><a href="crystalSymmetry_index.html">crystalSymmetry</a></p>
+            </td>
+            </tr>
+            </table>
+            
+         </p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

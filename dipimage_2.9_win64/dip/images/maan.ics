@@ -1,0 +1,11 @@
+	
+ics_version	1.0
+filename	maan
+layout	parameters	3
+layout	order	bits	x	y
+layout	sizes	8	256	256
+layout	coordinates	video
+layout	significant_bits	8
+representation	format	integer
+representation	sign	unsigned
+representation	SCIL_TYPE	g2d

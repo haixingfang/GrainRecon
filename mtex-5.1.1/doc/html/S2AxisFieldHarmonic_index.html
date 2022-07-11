@@ -1,0 +1,65 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>S2AxisFieldHarmonic (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: S2AxisFieldHarmonic_index -->
+      <!-- HEADSTUFF: S2AxisFieldHarmonic_index -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:S2AxisFieldHarmonic_index">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div>
+         <table class="nav" summary="Navigation aid" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline"><b>MTEX</b> - A MATLAB Toolbox for Quantitative Texture Analysis</td>
+            </tr>
+         </table>
+         <p style="font-size:1px;"></p>
+      </div>
+      <div class="content">
+         <h1 class="refname"><b><tt>S2AxisFieldHarmonic</tt></b></h1>
+         <div class="subheading"></div>
+         <h2>Defining a <tt>S2AxisFieldHarmonic</tt><a name="1"> </a></h2>
+         <p><b>Definition via function values</b></p>
+         <p>At first you need some vertices</p><pre class="codeinput">nodes = equispacedS2Grid(<span class="string">'points'</span>, 1e5);
+nodes = nodes(:);</pre><p>Next you define function values for the vertices</p><pre class="codeinput">y = vector3d(sin(5*nodes.x), 1, nodes.y, <span class="string">'antipodal'</span>);</pre><p>Now the actual command to get <tt>sAF1</tt> of type <tt>S2AxisFieldHarmonic</tt></p><pre class="codeinput">sAF1 = S2AxisFieldHarmonic.approximation(nodes, y)</pre><pre class="codeoutput"> 
+sAF1 = S2AxisFieldHarmonic  
+ bandwidth: 224
+</pre><p><b>Definition via function handle</b></p>
+         <p>If you have a function handle for the function you could create a <tt>S2AxisFieldHarmonic</tt> via quadrature. At first lets define a function handle which takes <a href="vector3d_index.html"><tt>vector3d</tt></a> as an argument and returns antipodal <a href="vector3d_index.html"><tt>vector3d</tt></a>:
+         </p><pre class="codeinput">f = @(v) vector3d(v.x, v.y, 0*v.x, <span class="string">'antipodal'</span>);</pre><p>Now you can call the quadrature command to get <tt>sAF2</tt> of type <tt>S2AxisFieldHarmonic</tt></p><pre class="codeinput">sAF2 = S2AxisFieldHarmonic.quadrature(@(v) f(v))</pre><pre class="codeoutput"> 
+sAF2 = S2AxisFieldHarmonic  
+ bandwidth: 128
+</pre><h2>Visualization<a name="7"> </a></h2>
+         <p>the default <tt>plot</tt>-command
+         </p><pre class="codeinput">plot(sAF1);</pre><img src="S2AxisFieldHarmonic_index_01.png"> <div>
+            <ul type="square">
+               <li>same as quiver(sAF1)</li>
+            </ul>
+         </div>
+         <p>3D plot of a sphere with the axis on itself</p><pre class="codeinput">clf;
+quiver3(sAF2);</pre><img src="S2AxisFieldHarmonic_index_02.png"> <h2>Complete Function list<a name="10"> </a></h2>
+         <p><table width="90%"><tr><td width="200px"><a href="S2AxisFieldHarmonic.S2AxisFieldHarmonic.html"><tt>S2AxisFieldHarmonic</tt></a></td><td>a
+            class represeneting a axis field on the sphere</td></tr><tr><td width="200px"><a href="S2AxisFieldHarmonic.approximation.html"><tt>approximation</tt></a></td><td>Syntax</td></tr><tr><td
+            width="200px"><a href="S2AxisFieldHarmonic.cross.html"><tt>cross</tt></a></td><td>syntax</td></tr><tr><td width="200px"><a
+            href="S2AxisFieldHarmonic.display.html"><tt>display</tt></a></td><td>standard output</td></tr><tr><td width="200px"><a href="S2AxisFieldHarmonic.dot.html"><tt>dot</tt></a></td><td>syntax</td></tr><tr><td
+            width="200px"><a href="S2AxisFieldHarmonic.eval.html"><tt>eval</tt></a></td><td>syntax</td></tr><tr><td width="200px"><a href="S2AxisFieldHarmonic.quadrature.html"><tt>quadrature</tt></a></td><td>Syntax</td></tr></table>
+         </p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

@@ -1,0 +1,151 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>Quaternions (The Class quaternion) (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: quaternion_index -->
+      <!-- HEADSTUFF: quaternion_index -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:quaternion_index">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div>
+         <table class="nav" summary="Navigation aid" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline"><b>MTEX</b> - A MATLAB Toolbox for Quantitative Texture Analysis</td>
+            </tr>
+         </table>
+         <p style="font-size:1px;"></p>
+      </div>
+      <div class="content">
+         <h1 class="refname">Quaternions (The Class <a href="quaternion_index.html">quaternion</a>)
+         </h1>
+         <div class="subheading">
+            <p>class representing orientations</p>
+         </div>
+         <div>
+            <table class="content">
+               <tr>
+                  <td class="header">On this page ...</td>
+               </tr>
+               <tr>
+                  <td><a href="#2">Class Description</a></td>
+               </tr>
+               <tr>
+                  <td><span class="subsection"><a href="#3"> Defining quaternions</a></span></td>
+               </tr>
+               <tr>
+                  <td><span class="subsection"><a href="#4"> Calculating with three dimensional vectors</a></span></td>
+               </tr>
+               <tr>
+                  <td><span class="subsection"><a href="#5"> Conversion</a></span></td>
+               </tr>
+               <tr>
+                  <td><span class="subsection"><a href="#6"> Plotting quaternions</a></span></td>
+               </tr>
+               <tr>
+                  <td><a href="#7">Complete Function list</a></td>
+               </tr>
+            </table>
+         </div>
+         <h2>Class Description<a name="2"> </a></h2>
+         <p>The class quaternion allows working with rotations in MTEX, as they occur e.g. as crystal orientation or symmetries. Quaternions
+            may be multiplied with <a href="vector3d_index.html">three-dimensional vecotors</a> which means rotating the vector or may be multiplied with another quaternion which means to concatenate both rotations.
+         </p>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h3> Defining quaternions<a name="3"> </a></h3>
+         <p>The standard way is to define a quaternion q is to give its coordinates (a,b,c,d). However, making use of one of the following
+            conversion methods is much more human readable.
+         </p><pre>q = <a href="quaternion.quaternion.html">quaternion</a>(a,b,c,d)          % by coordinates
+q = <a href="axis2quat.html">axis2quat</a>(axis,angle);       % by rotational axis and rotational angle
+q = <a href="euler2quat.html">euler2quat</a>(alpha,beta,gamma) % by Euler angles
+q = <a href="Miller2quat.html">Miller2quat</a>([h k l],[u v w],symmetry); % by Miller indece
+q = <a href="quaternion.id.html">quaternion.id</a>;                % identical quaternion
+q = <a href="vec42quat.html">vec42quat</a>(u1,v1,u2,v2);      % by four vectors</pre><p>Additional methods to define a rotation are <a href="hr2quat.html">hr2quat</a> and <a href="vec42quat.html">vec42quat</a>. Using the brackets <tt>q = [q1,q2]</tt> two quaternions can be concatened. Now each single quaternion is accesable via <tt>q(1)</tt> and <tt>q(2)</tt>.
+         </p>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h3> Calculating with three dimensional vectors<a name="4"> </a></h3>
+         <p>Besides the standard linear algebra operations there are also the following functions available in MTEX.</p><pre><a href="quaternion.angle.html">angle</a>(q); % rotational angle
+<a href="quaternion.axis.html">axis</a>(q);  % rotational axis
+<a href="quaternion.inverse.html">inverse</a>(q);  % inverse rotation</pre><p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h3> Conversion<a name="5"> </a></h3>
+         <p>There are methods to transform quaternion in almost any other parameterization of rotations as they are:</p><pre><a href="quaternion.Euler.html">Euler</a>(q)     % in Euler angle
+<a href="quaternion.Rodrigues.html">Rodrigues</a>(q) % in Rodrigues parameter</pre><p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h3> Plotting quaternions<a name="6"> </a></h3>
+         <p>The <a href="quaternion.plot.html">plot</a> function allows you to visualize an quaternion by plotting how the standard basis x,y,z transforms under the rotation.
+         </p><pre class="codeinput">plot(Miller2quat([-1 -1 -1],[1 -2 1]))</pre><img src="quaternion_index_01.png"> <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Complete Function list<a name="7"> </a></h2>
+         <p><table width="90%"><tr><td width="200px"><a href="quaternion.EinsteinSum.html"><tt>EinsteinSum</tt></a></td><td>tensor multiplication
+            according to Einstein summation</td></tr><tr><td width="200px"><a href="quaternion.Euler.html"><tt>Euler</tt></a></td><td>quaternion
+            to euler angle</td></tr><tr><td width="200px"><a href="quaternion.Rodrigues.html"><tt>Rodrigues</tt></a></td><td>quaternion
+            to rodrigues representation</td></tr><tr><td width="200px"><a href="quaternion.angle.html"><tt>angle</tt></a></td><td>calcualtes
+            the rotational angle between rotations q1 and q2</td></tr><tr><td width="200px"><a href="quaternion.angle_outer.html"><tt>angle_outer</tt></a></td><td>calcualtes
+            the rotational angle between all rotations q1 and q2</td></tr><tr><td width="200px"><a href="quaternion.axis.html"><tt>axis</tt></a></td><td>rotational
+            axis of the quaternion</td></tr><tr><td width="200px"><a href="quaternion.calcVoronoi.html"><tt>calcVoronoi</tt></a></td><td>compute
+            the the Voronoi decomposition for unit quaternions</td></tr><tr><td width="200px"><a href="quaternion.char.html"><tt>char</tt></a></td><td>quaternion
+            to char</td></tr><tr><td width="200px"><a href="quaternion.cross.html"><tt>cross</tt></a></td><td>pointwise cross product
+            of three quaternions</td></tr><tr><td width="200px"><a href="quaternion.ctranspose.html"><tt>ctranspose</tt></a></td><td>transpose
+            quaternion</td></tr><tr><td width="200px"><a href="quaternion.display.html"><tt>display</tt></a></td><td>standart output</td></tr><tr><td
+            width="200px"><a href="quaternion.dot.html"><tt>dot</tt></a></td><td>inner product of quaternions g1 and g2</td></tr><tr><td
+            width="200px"><a href="quaternion.dot_angle.html"><tt>dot_angle</tt></a></td><td>compute minimum q1 . q2 modulo rotation about
+            zaxis and angle omega</td></tr><tr><td width="200px"><a href="quaternion.dot_outer.html"><tt>dot_outer</tt></a></td><td>outer
+            inner product between two quaternions</td></tr><tr><td width="200px"><a href="quaternion.double.html"><tt>double</tt></a></td><td>quaternion
+            to double</td></tr><tr><td width="200px"><a href="quaternion.end.html"><tt>end</tt></a></td><td>overloads end function</td></tr><tr><td
+            width="200px"><a href="quaternion.eq.html"><tt>eq</tt></a></td><td>? q1 == q2</td></tr><tr><td width="200px"><a href="quaternion.export.html"><tt>export</tt></a></td><td>quaternions
+            to a ascii file</td></tr><tr><td width="200px"><a href="quaternion.find.html"><tt>find</tt></a></td><td>return indece and
+            distance of all nodes within a eps neighborhood</td></tr><tr><td width="200px"><a href="quaternion.horzcat.html"><tt>horzcat</tt></a></td><td>implements
+            [q1,q2,q3..]</td></tr><tr><td width="200px"><a href="quaternion.inv.html"><tt>inv</tt></a></td><td>quaternion of the inverse
+            roation</td></tr><tr><td width="200px"><a href="quaternion.isempty.html"><tt>isempty</tt></a></td><td>overloads isempty</td></tr><tr><td
+            width="200px"><a href="quaternion.isnan.html"><tt>isnan</tt></a></td><td>check for nan values</td></tr><tr><td width="200px"><a
+            href="quaternion.length.html"><tt>length</tt></a></td><td>overloads length</td></tr><tr><td width="200px"><a href="quaternion.log.html"><tt>log</tt></a></td><td>project
+            a quaternion into the tangential space</td></tr><tr><td width="200px"><a href="quaternion.logm.html"><tt>logm</tt></a></td><td>the
+            dislocation tensor for a rotation</td></tr><tr><td width="200px"><a href="quaternion.matrix.html"><tt>matrix</tt></a></td><td>quaternion
+            to direction cosine matrix conversion</td></tr><tr><td width="200px"><a href="quaternion.mean.html"><tt>mean</tt></a></td><td>of
+            a list of quaternions, principle axes and moments of inertia</td></tr><tr><td width="200px"><a href="quaternion.mean_CS.html"><tt>mean_CS</tt></a></td><td>fast
+            mean of </td></tr><tr><td width="200px"><a href="quaternion.minus.html"><tt>minus</tt></a></td><td>overloads minus</td></tr><tr><td
+            width="200px"><a href="quaternion.mpower.html"><tt>mpower</tt></a></td><td>q^n</td></tr><tr><td width="200px"><a href="quaternion.mrdivide.html"><tt>mrdivide</tt></a></td><td>scalar
+            division</td></tr><tr><td width="200px"><a href="quaternion.mtimes.html"><tt>mtimes</tt></a></td><td>quaternionen multiplication
+            q1 * q2</td></tr><tr><td width="200px"><a href="quaternion.ndims.html"><tt>ndims</tt></a></td><td>overloads ndims</td></tr><tr><td
+            width="200px"><a href="quaternion.ne.html"><tt>ne</tt></a></td><td>q1 ~= q2 ?</td></tr><tr><td width="200px"><a href="quaternion.norm.html"><tt>norm</tt></a></td><td>quaternion
+            norm sqrt(a^2+b^2+c^2+c^2)</td></tr><tr><td width="200px"><a href="quaternion.normalize.html"><tt>normalize</tt></a></td><td>quaternion
+            </td></tr><tr><td width="200px"><a href="quaternion.permute.html"><tt>permute</tt></a></td><td>overloads permute</td></tr><tr><td
+            width="200px"><a href="quaternion.perturbe.html"><tt>perturbe</tt></a></td><td>pertube data randomly by epsilon</td></tr><tr><td
+            width="200px"><a href="quaternion.plus.html"><tt>plus</tt></a></td><td>pointwise addition</td></tr><tr><td width="200px"><a
+            href="quaternion.power.html"><tt>power</tt></a></td><td>q.^n</td></tr><tr><td width="200px"><a href="quaternion.prod.html"><tt>prod</tt></a></td><td>overloads
+            q1 * q2 * q3</td></tr><tr><td width="200px"><a href="quaternion.project2EulerFR.html"><tt>project2EulerFR</tt></a></td><td>projects
+            quaternions to a fundamental region</td></tr><tr><td width="200px"><a href="quaternion.project2FundamentalRegion.html"><tt>project2FundamentalRegion</tt></a></td><td>projects
+            quaternions to a fundamental region</td></tr><tr><td width="200px"><a href="quaternion.qmatrix.html"><tt>qmatrix</tt></a></td><td>returns
+            the quaternion multiplication matrix</td></tr><tr><td width="200px"><a href="quaternion.qq.html"><tt>qq</tt></a></td><td>returns
+            w * q' * q</td></tr><tr><td width="200px"><a href="quaternion.rdivide.html"><tt>rdivide</tt></a></td><td>scalar division</td></tr><tr><td
+            width="200px"><a href="quaternion.real.html"><tt>real</tt></a></td><td>part of of quaternion</td></tr><tr><td width="200px"><a
+            href="quaternion.repmat.html"><tt>repmat</tt></a></td><td>overloads repmat</td></tr><tr><td width="200px"><a href="quaternion.reshape.html"><tt>reshape</tt></a></td><td>overloads
+            reshape</td></tr><tr><td width="200px"><a href="quaternion.scatter.html"><tt>scatter</tt></a></td><td>plot function</td></tr><tr><td
+            width="200px"><a href="quaternion.setSubSet.html"><tt>setSubSet</tt></a></td><td>indexing of quaternions</td></tr><tr><td
+            width="200px"><a href="quaternion.size.html"><tt>size</tt></a></td><td>overloads size</td></tr><tr><td width="200px"><a href="quaternion.subSet.html"><tt>subSet</tt></a></td><td>indexing
+            of quaternions</td></tr><tr><td width="200px"><a href="quaternion.subsasgn.html"><tt>subsasgn</tt></a></td><td>overloads subsasgn</td></tr><tr><td
+            width="200px"><a href="quaternion.subsref.html"><tt>subsref</tt></a></td><td>overloads subsref</td></tr><tr><td width="200px"><a
+            href="quaternion.sum.html"><tt>sum</tt></a></td><td>overloads sum</td></tr><tr><td width="200px"><a href="quaternion.symmetrise.html"><tt>symmetrise</tt></a></td><td>symmetrcially
+            equivalent orientations</td></tr><tr><td width="200px"><a href="quaternion.times.html"><tt>times</tt></a></td><td>quaternion
+            .* quaternion and quaternion .* vector3d </td></tr><tr><td width="200px"><a href="quaternion.transpose.html"><tt>transpose</tt></a></td><td>array
+            of quaternions</td></tr><tr><td width="200px"><a href="quaternion.uminus.html"><tt>uminus</tt></a></td><td>overload unitary
+            minus</td></tr><tr><td width="200px"><a href="quaternion.unique.html"><tt>unique</tt></a></td><td>disjoint list of quaternions</td></tr><tr><td
+            width="200px"><a href="quaternion.vertcat.html"><tt>vertcat</tt></a></td><td>implements [q1;q2;q3..]</td></tr></table>
+         </p>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

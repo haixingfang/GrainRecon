@@ -1,0 +1,574 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>Crystal Geometry (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: CrystalGeometry -->
+      <!-- HEADSTUFF: CrystalGeometry -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:CrystalGeometry">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div>
+         <table class="nav" summary="Navigation aid" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline"><b>MTEX</b> - A MATLAB Toolbox for Quantitative Texture Analysis</td>
+            </tr>
+         </table>
+         <p style="font-size:1px;"></p>
+      </div>
+      <div class="content">
+         <h1 class="refname">Crystal Geometry</h1>
+         <div class="subheading">
+            <p>Introduces key concepts about the MTEX representation of specimen directions, crystal directions, crystal symmetries, rotations
+               and orientations.
+            </p>
+         </div>
+         <p>
+            <table class="ref" width="90%">
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('SpecimenDirections_block','SpecimenDirections_expandable_text');" valign="top"
+            width="15">
+            <img id="SpecimenDirections_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="SpecimenDirections.html">Specimen Directions<td valign="top" width="75%">How to represent directions with respect
+            to the sample or specimen reference system.</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="SpecimenDirections_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="SpecimenDirections.html#4">Cartesian Coordinates</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="SpecimenDirections.html#9">Polar Coordinates</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="SpecimenDirections.html#11">Calculating with Specimen Directions</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="SpecimenDirections.html#14">Lists of vectors</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="SpecimenDirections.html#19">Indexing lists of vectors</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('Rotations_block','Rotations_expandable_text');" valign="top" width="15">
+            <img id="Rotations_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="Rotations.html">Rotations<td valign="top" width="75%">Rotations are the basic concept to understand crystal orientations
+            and crystal symmetries.</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="Rotations_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="Rotations.html#4">Euler Angle Conventions</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="Rotations.html#8">Other Ways of Defining a Rotation</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="Rotations.html#15">Calculating with Rotations</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="Rotations.html#23">Improper Rotations</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="Rotations.html#28">Conversion into Euler Angles and Rodrigues Parametrisation</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="Rotations.html#29">Plotting Rotations</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('CrystalSymmetries_block','CrystalSymmetries_expandable_text');" valign="top" width="15">
+            <img id="CrystalSymmetries_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="CrystalSymmetries.html">Crystal Symmetries<td valign="top" width="75%">This section covers the unit cell of a crystal,
+            its space, point and Laue groups as well as alignments of the crystal coordinate system.</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="CrystalSymmetries_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="CrystalSymmetries.html#3">Crystallographic Space, Point and Laue Groups</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="CrystalSymmetries.html#14">The Crystal Coordinate System</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="CrystalSymmetries.html#17">Calculations</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="CrystalSymmetries.html#18">Plotting symmetries</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('CrystalDirections_block','CrystalDirections_expandable_text');" valign="top" width="15">
+            <img id="CrystalDirections_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="CrystalDirections.html">Crystal Directions<td valign="top" width="75%">Crystal directions are directions relative
+            to a crystal reference frame and are usually defined in terms of Miller indices. This sections explains how to calculate with
+            crystal directions in MTEX.</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="CrystalDirections_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="CrystalDirections.html#3">Definition</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="CrystalDirections.html#8">Trigonal and Hexagonal Convention</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="CrystalDirections.html#9">Symmetrically Equivalent Crystal Directions</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="CrystalDirections.html#14">Angles</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="CrystalDirections.html#16">Conversions</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="CrystalDirections.html#18">Calculations</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('CrystalOrientations_block','CrystalOrientations_expandable_text');" valign="top"
+            width="15">
+            <img id="CrystalOrientations_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="CrystalOrientations.html">Crystal Orientations<td valign="top" width="75%">Explains how to define crystal orientations,
+            how to switch between different convention and how to compute crystallographic equivalent orientations.</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="CrystalOrientations_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="CrystalOrientations.html#5">Defining a crystal orientation</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="CrystalOrientations.html#14">SUB: Random orientations</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="CrystalOrientations.html#15">Coordinate transformations</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="CrystalOrientations.html#22">Symmetric equivalence</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="CrystalOrientations.html#24">Conversion into Euler angles, matrix, quaternion or Rodrigues vector</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="CrystalOrientations.html#25">Plotting Orientations</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="CrystalOrientations.html#26">SUB: in Euler angle space</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="CrystalOrientations.html#28">SUB: in axis angle space</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="CrystalOrientations.html#30">SUB: in (inverse) pole figures</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="CrystalOrientations.html#32">SUB: in sections of the orientations space</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('crystalShape_index_block','crystalShape_index_expandable_text');" valign="top"
+            width="15">
+            <img id="crystalShape_index_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="crystalShape_index.html">Crystal Shapes (The Class @crystalShape)<td valign="top" width="75%">How to draw threedimensional
+            representations of crystals.</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="crystalShape_index_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="crystalShape_index.html#3">Simple Crystal Shapes</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="crystalShape_index.html#5">Calculating with crystal shapes</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="crystalShape_index.html#7">Plotting crystal shapes</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="crystalShape_index.html#10">Twinning relationships</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="crystalShape_index.html#11">Defining complicated crystal shapes</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="crystalShape_index.html#18">Defining complicated crystals more simple</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('Misorientations_block','Misorientations_expandable_text');" valign="top" width="15">
+            <img id="Misorientations_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="Misorientations.html">Misorientations<td valign="top" width="75%">Misorientation describes the relative orientation
+            of two grains with respect to each other. Important concepts are twinnings and  CSL (coincidence site lattice),</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="Misorientations_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="Misorientations.html#3"> The misorientation angle</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="Misorientations.html#9">Misorientations</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="Misorientations.html#12">Coincident lattice planes</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="Misorientations.html#14">Twinning misorientations</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="Misorientations.html#16">Highlight twinning boundaries</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="Misorientations.html#20">Phase transitions</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('fibre_index_block','fibre_index_expandable_text');" valign="top" width="15">
+            <img id="fibre_index_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="fibre_index.html">Fibres<td valign="top" width="75%">This sections describes the class &lt;fibre_index.html fibre&gt;
+            and gives an overview how to work with fibres in MTEX.</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="fibre_index_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="fibre_index.html#2">Defining a Fibre</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="fibre_index.html#4">SUB: by two orientations</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="fibre_index.html#8">SUB: by two directions</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="fibre_index.html#10">SUB: by one orientation and an orientation gradient</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="fibre_index.html#11">SUB: predefined fibres</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="fibre_index.html#13">Visualize an ODF along a fibre</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="fibre_index.html#14">Compute volume of fibre portions</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('AxialDirectional_block','AxialDirectional_expandable_text');" valign="top" width="15">
+            <img id="AxialDirectional_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="AxialDirectional.html">Antipodal Symmetry<td valign="top" width="75%">MTEX allows to identify antipodal directions
+            to model axes and to identify misorientations with opposite rotational angle. The later is required when working with misorientations
+            between grains of the same phase and the order of the grains is arbitrary.</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="AxialDirectional_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="AxialDirectional.html#3">Directions vs. Axes</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="AxialDirectional.html#7">The Angle between Directions and Axes</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="AxialDirectional.html#9">Antipodal Symmetry in Experimental Pole Figures</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="AxialDirectional.html#10">Antipodal Symmetry in Recalculated Pole Figures</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="AxialDirectional.html#12">Antipodal Symmetry in Inverse Pole Figures</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="AxialDirectional.html#16">EBSD Colocoding</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('MorawiecCell_block','MorawiecCell_expandable_text');" valign="top" width="15">
+            <img id="MorawiecCell_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="MorawiecCell.html">Fundamental Regions <td valign="top" width="75%">Thanks to crystal symmetry the orientation space
+            can be reduced to the so called fundamental or asymmetric region. Those regions play an important role for the computation
+            of axis and angle distributions of misorientations.</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="MorawiecCell_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="MorawiecCell.html#3">The complete, symmetry free, orientation space</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="MorawiecCell.html#6">Crystal Symmetries</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="MorawiecCell.html#10">Change the center of the fundamental region</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="MorawiecCell.html#11">Fundamental regions of misorientations</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="MorawiecCell.html#13">Fundamental regions of misorientations with antipodal symmetry</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="MorawiecCell.html#16">Axis angle sections</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            </table>
+            
+         </p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

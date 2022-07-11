@@ -1,0 +1,508 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>ODFs (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: ODFAnalysis -->
+      <!-- HEADSTUFF: ODFAnalysis -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:ODFAnalysis">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div>
+         <table class="nav" summary="Navigation aid" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline"><b>MTEX</b> - A MATLAB Toolbox for Quantitative Texture Analysis</td>
+            </tr>
+         </table>
+         <p style="font-size:1px;"></p>
+      </div>
+      <div class="content">
+         <h1 class="refname">ODFs</h1>
+         <div class="subheading">
+            <p>ODF stands for orientation distribution functions. This section explains how to import and export ODFs, how to define model
+               ODFs and how to analyze ODFs, e.g., with respect to modalorientations, textureindex, volumeportions. Pole figure simulation
+               and single orientation simulation is explained as well.
+            </p>
+         </div>
+         <p>
+            <table class="ref" width="90%">
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('SantaFe_demo_block','SantaFe_demo_expandable_text');" valign="top" width="15">
+            <img id="SantaFe_demo_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="SantaFe_demo.html">The SantaFe example<td valign="top" width="75%">Simulate a set of pole figures for the SantaFe
+            standard ODF, estimate an ODF and compare it to the inital SantaFe ODF.</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="SantaFe_demo_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="SantaFe_demo.html#2">Simulate pole figures</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="SantaFe_demo.html#3">ODF Estimation with Ghost Correction</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="SantaFe_demo.html#4">ODF Estimation without Ghost Correction</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="SantaFe_demo.html#5">Error analysis</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="SantaFe_demo.html#6">Plot estimated pole figures</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="SantaFe_demo.html#7">Plot estimated ODF (Ghost Corrected)</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="SantaFe_demo.html#8">Plot odf</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="SantaFe_demo.html#9">Plot Fourier Coefficients</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('ModelODFs_block','ModelODFs_expandable_text');" valign="top" width="15">
+            <img id="ModelODFs_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="ModelODFs.html">Model ODFs<td valign="top" width="75%">Describes how to define model ODFs in MTEX, i.e., uniform
+            ODFs, unimodal ODFs, fibre ODFs, Bingham ODFs and ODFs defined by its Fourier coefficients.</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="ModelODFs_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="ModelODFs.html#3">Introduction</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ModelODFs.html#4">The Uniform ODF</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ModelODFs.html#5">Unimodal ODFs</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ModelODFs.html#7">Fibre ODFs</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ModelODFs.html#8">ODFs given by Fourier coefficients</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ModelODFs.html#10">Bingham ODFs</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ModelODFs.html#14">Combining model ODFs</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('ODFImportExport_block','ODFImportExport_expandable_text');" valign="top" width="15">
+            <img id="ODFImportExport_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="ODFImportExport.html">Importing and Exporting ODF Data<td valign="top" width="75%">Explains how to read and write
+            ODFs to a data file</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="ODFImportExport_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="ODFImportExport.html#1">Open in Editor </a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ODFImportExport.html#4">Define an Model ODF</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ODFImportExport.html#5">Save as .mat file</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ODFImportExport.html#7">Export as an generic ASCII file</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ODFImportExport.html#9">Export an ODF to an MTEX ASCII File</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ODFImportExport.html#10"> Export to VPSC format</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ODFImportExport.html#11">Import ODF Data using the import wizard</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ODFImportExport.html#13">Importing EBSD data using the method loadODF</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('PoleFigureSimulation_demo_block','PoleFigureSimulation_demo_expandable_text');"
+            valign="top" width="15">
+            <img id="PoleFigureSimulation_demo_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="PoleFigureSimulation_demo.html">Simulating Pole Figure data<td valign="top" width="75%">Simulate arbitrary pole figure
+            data</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="PoleFigureSimulation_demo_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="PoleFigureSimulation_demo.html#3">Introduction</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="PoleFigureSimulation_demo.html#5">Simulate Pole Figure Data</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="PoleFigureSimulation_demo.html#11">ODF Estimation from Pole Figure Data</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="PoleFigureSimulation_demo.html#14">Exploration of the relationship between estimation error and number of single
+            orientations</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('EBSDSimulation_demo_block','EBSDSimulation_demo_expandable_text');" valign="top"
+            width="15">
+            <img id="EBSDSimulation_demo_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="EBSDSimulation_demo.html">Simulating EBSD data<td valign="top" width="75%">How to simulate an arbitrary number of
+            individual orientations data from any ODF.</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="EBSDSimulation_demo_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="EBSDSimulation_demo.html#6">Simulate EBSD Data</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="EBSDSimulation_demo.html#7">ODF Estimation from EBSD Data</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="EBSDSimulation_demo.html#11">Exploration of the relationship between estimation error and number of single orientations</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('ODFCharacteristics_block','ODFCharacteristics_expandable_text');" valign="top"
+            width="15">
+            <img id="ODFCharacteristics_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="ODFCharacteristics.html">Characterizing ODFs<td valign="top" width="75%">Explains how to analyze ODFs, i.e. how to
+            compute modal orientations, texture index, volume portions, Fourier coefficients and pole figures.</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="ODFCharacteristics_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="ODFCharacteristics.html#7">Modal Orientations</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ODFCharacteristics.html#10">Texture Characteristics</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ODFCharacteristics.html#13">Volume Portions</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ODFCharacteristics.html#16">Fourier Coefficients</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ODFCharacteristics.html#20">Pole Figures and Values at Specific Orientations</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ODFCharacteristics.html#23">Extract Internal Representation</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('ODFPlot_block','ODFPlot_expandable_text');" valign="top" width="15">
+            <img id="ODFPlot_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="ODFPlot.html">Visualizing ODFs<td valign="top" width="75%">Explains all possibilities to visualize ODfs, i.e. pole
+            figure plots, inverse pole figure plots, ODF sections, fibre sections.</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="ODFPlot_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="ODFPlot.html#5">Pole Figures</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ODFPlot.html#8">Inverse Pole Figures</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ODFPlot.html#12">ODF Sections</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ODFPlot.html#18">Plotting the ODF along a fibre</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ODFPlot.html#19">Fourier Coefficients</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="ODFPlot.html#20">Axis / Angle Distribution</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('DetectSampleSymmetry_block','DetectSampleSymmetry_expandable_text');" valign="top"
+            width="15">
+            <img id="DetectSampleSymmetry_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="DetectSampleSymmetry.html">Detecting sample symmetry<td valign="top" width="75%">Explains how to detect orthotropic
+            symmetry in an ODF.</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="DetectSampleSymmetry_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="DetectSampleSymmetry.html#3">A synthetic example</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="DetectSampleSymmetry.html#4">Reconstruct an ODF from simulated EBSD data</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="DetectSampleSymmetry.html#5">Detect the sample symmetry axis in the reconstructed ODF</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="DetectSampleSymmetry.html#6">Sample symmetry in an ODF computed from pole figure data</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            <tr>
+            <td valign="top" width="15">
+            <div align="center">
+            <a href="#" onClick="return toggleexpander('MDFAnalysis_block','MDFAnalysis_expandable_text');" valign="top" width="15">
+            <img id="MDFAnalysis_expandable_text" src="arrow_right.gif" style="border:0px"/></a>
+            </div>
+            </td>
+            <td valign="top" width="250px">
+            <a href="MDFAnalysis.html">Misorientation Distribution Function<td valign="top" width="75%">Explains how to compute and analyze
+            misorientation distribution functions.</td></a>
+            </td>
+            </tr>
+            <tr>
+            <td/>
+            <td colspan="2">
+            <div class="expander" id="MDFAnalysis_block" style="display:none; background:#e7ebf7; padding-left:2ex;">
+            <table>
+            <tr>
+            <td>
+            <a href="MDFAnalysis.html#3">Computing a misorientation distribution function from EBSD data</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="MDFAnalysis.html#4">SUB: The boundary misorientation distribution function</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="MDFAnalysis.html#7">SUB: The uncorrelated misorientation distribution function</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="MDFAnalysis.html#9">Computing the uncorrelated misorientation function from two ODFs</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="MDFAnalysis.html#12">Analyzing misorientation functions</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="MDFAnalysis.html#13">SUB: Angle distribution</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="MDFAnalysis.html#15">SUB: Axis distribution</a>
+            </td>
+            </tr>
+            </table>
+            </div>
+            </td>
+            </tr>
+            </table>
+            
+         </p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

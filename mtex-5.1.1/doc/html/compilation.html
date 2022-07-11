@@ -1,0 +1,123 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>Compiling MTEX (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: compilation -->
+      <!-- HEADSTUFF: compilation -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:compilation">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div>
+         <table class="nav" summary="Navigation aid" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline"><b>MTEX</b> - A MATLAB Toolbox for Quantitative Texture Analysis</td>
+            </tr>
+         </table>
+         <p style="font-size:1px;"></p>
+      </div>
+      <div class="content">
+         <h1 class="refname">Compiling MTEX</h1>
+         <div class="subheading">
+            <p>Explains how to compile MTEX on Mac, Linux, and Windows systems. This should not be necessary in most cases.</p>
+         </div>
+         <h2>Introduction<a name="1"> </a></h2>
+         <p>MTEX is shipped with precompiled binaries for Mac OSX, Windows, and Linux, 32 and 64-bits. However, if these binaries are
+            for some reason not compatible with your system, you have to compile them by hand. Compiling MTEX is not that easy and you
+            are encouraged to contact the author if you have any problem.
+         </p>
+         <h2>Pre-requisites<a name="2"> </a></h2>
+         <p><b>Compiler</b></p>
+         <p>In order to install the MTEX toolbox you will have to compile it. Therefore you need a standard C compiler <a href="http://gnu.gcc.org">gcc</a> and the <b>make</b> utility. You may also need the package named <b>build-essentials</b>. Under Linux and MAC OSX all these components can be easily installed using  your favorite package manager. For Windows,
+            we recommend the usage of MinGW and MSYS.
+         </p>
+         <p><b>FFTW</b></p>
+         <p>The FFTW is one of the most popular fast Fourier transform libraries. For Linux and Mac OSX pre-compiled packages are available
+            through your favorite package manager. The package is called fftw3 or similar. You will also need to install  the header (developer)
+            files. Alternatively, you can download the latest source directly from <a href="http://www.fftw.org">http://www.fftw.org</a> and compile it on your computer. For Windows, this is the only way to go. Download the source code and compile it using MinGW.
+         </p>
+         <p><b>NFFT</b></p>
+         <p>The NFFT is a C library for nonequispaced fast Fourier transforms including Fourier transforms on the sphere. It can be downloaded
+            at <a href="http://www-user.tu-chemnitz.de/~potts/nfft">http://www-user.tu-chemnitz.de/~potts/nfft</a> and has to be installed by the following steps:
+         </p>
+         <div>
+            <ul type="square">
+               <li><tt>cd nfft_download_directory</tt></li>
+               <li><tt>./configure --prefix=nfft_install_directory --enable-nfsft --enable-nfsoft --enable-fpt --enable-static</tt></li>
+               <li><tt>make</tt></li>
+               <li><tt>make install</tt></li>
+            </ul>
+         </div>
+         <h2>Compiling MTEX<a name="3"> </a></h2>
+         <p>Now you can compile the MTEX toolbox. This is done by</p>
+         <div>
+            <ul type="square">
+               <li><tt>cd mtex_download_directory</tt></li>
+               <li>edit the file <a href="matlab:edit([mtexDataPath '/../Makefile'])">Makefile</a> and specify the FFTW3 and the NFFT3 installation directories
+               </li>
+               <li><tt>make</tt></li>
+            </ul>
+         </div>
+         <h2>Checking Your Installation<a name="4"> </a></h2>
+         <p>Before starting MATLAB you can check whether the C programs were compiled successfully by typing</p>
+         <div>
+            <ul type="square">
+               <li><tt>make check</tt></li>
+            </ul>
+         </div>
+         <p>After the next start of MATLAB change to the MTEX path and enter</p>
+         <div>
+            <ul type="square">
+               <li><tt>startup_mtex</tt></li>
+            </ul>
+         </div>
+         <p>This should startup the MTEX toolbox. You can check your installation under MATLAB by typing</p><pre class="codeinput">check_mtex</pre><pre class="codeoutput">checking MTEX installation
+this might take some time
+ 
+simulating pole figures
+ 
+pf = PoleFigure  
+  crystal symmetry : m-3m
+  specimen symmetry: 222
+ 
+  h = (100), r = 1 x 206 points
+  h = (110), r = 1 x 206 points
+  h = (111), r = 1 x 206 points
+  h = (211), r = 1 x 206 points
+ 
+ 
+rec = ODF  
+  crystal symmetry : m-3m
+  specimen symmetry: 222
+ 
+  Uniform portion:
+    weight: 0.73006
+ 
+  Radially symmetric portion:
+    kernel: de la Vallee Poussin, halfwidth 10&deg;
+    center: 94 orientations, resolution: 10&deg;
+    weight: 0.26994
+ 
+ 
+check reconstruction error: 
+progress: 100%
+everythink seems to be ok!
+Elapsed time is 1.081721 seconds.
+</pre><p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

@@ -1,0 +1,98 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>First Steps (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: ODFCalculations -->
+      <!-- HEADSTUFF: ODFCalculations -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:ODFCalculations">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div>
+         <table class="nav" summary="Navigation aid" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline"><b>MTEX</b> - A MATLAB Toolbox for Quantitative Texture Analysis</td>
+            </tr>
+         </table>
+         <p style="font-size:1px;"></p>
+      </div>
+      <div class="content">
+         <h1 class="refname">First Steps</h1>
+         <div class="subheading">
+            <p>Indroduction to analysis of ODFs</p>
+         </div>
+         <div>
+            <table class="content">
+               <tr>
+                  <td class="header">On this page ...</td>
+               </tr>
+               <tr>
+                  <td><a href="#2">Introduction</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#3">Model ODFs</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#4">Estimating ODFs from EBSD Data or Pole Figure Data</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#5">Analyzing ODFs</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#6">Simulate Pole Figures or EBSD Data</a></td>
+               </tr>
+            </table>
+         </div>
+         <h2>Introduction<a name="2"> </a></h2>
+         <p>ODFs are at the very heart of MTEX. Almost any computation in MTEX can be done by estimating ODFs from various data, analyzing
+            modell ODFs, simulating experimental data from ODFs, or calculating any texture characteristics from an ODF. The following
+            mindmap may give you an idea what is possible in MTEX.
+         </p>
+         <p><img src="odf.png"> </p>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Model ODFs<a name="3"> </a></h2>
+         <p>MTEX provides a very simple way to define model ODFs, e.g. unimodal ODFs, fibre ODF, Bingham ODFs or ODFs specified by Fourier
+            coefficients. The central idea is that MTEX allows you to calculate with ODF as with ordinary number. That is you can multiply
+            and ODF with a certain number, you can add, subtract or rotate ODFs. More precise information how to work with model ODFs
+            in MTEX can be found in the section <a href="ModelODFs.html">ModelODFs</a>. There are also some predefined <a href="standardODFs_index.html">standard ODFs</a> used in literature.
+         </p>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Estimating ODFs from EBSD Data or Pole Figure Data<a name="4"> </a></h2>
+         <p>The second natural way how ODFs occurs in MTEX is by estimating them from EBSD or pole figure data. It should be stressed
+            that for MTEX there is no estimated ODFs and difference between model ODFs and estimated ODF. That means any operation that
+            is valid for model ODFs is valid for estimated ODFs as well. More information how to estimate ODFs can be found in the sections
+            <a href="EBSD2odf.html">ODF estimation from EBSD data</a> and <a href="PoleFigure2odf.html">ODF estimation from Pole Figure data</a>.
+         </p>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Analyzing ODFs<a name="5"> </a></h2>
+         <p>MTEX provides a lot of tool to make analyzing and interpreting ODFs as simple as possible. The tools may be split into two
+            groups - texture characteristics and visualization tools.
+         </p>
+         <p><img src="odf2.png"> </p>
+         <p>Have a look at the sections <a href="ODFAnalysis.html">ODF Analysis</a>  and <a href="ODFPlot.html">ODF plots</a> for more information.
+         </p>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Simulate Pole Figures or EBSD Data<a name="6"> </a></h2>
+         <p>In order to analyse the relyability of the ODF estimation it is usefull to start with a given ODF and simulate pole figure
+            or EBSD data, estimate an ODF from these data and to compare the estimated ODF with the original one. This allows one to find
+            best parameters for ODF estimation as well as for the experimental design. This approach is discused in more detail at <a href="PoleFigureSimulation_demo.html">PoleFigure Data Simulation</a> and <a href="EBSDSimulation_demo.html">EBSD Data Simulation</a>.
+         </p>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

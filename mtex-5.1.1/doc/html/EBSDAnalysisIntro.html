@@ -1,0 +1,106 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title>First Steps (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: EBSDAnalysisIntro -->
+      <!-- HEADSTUFF: EBSDAnalysisIntro -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:EBSDAnalysisIntro">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div>
+         <table class="nav" summary="Navigation aid" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline"><b>MTEX</b> - A MATLAB Toolbox for Quantitative Texture Analysis</td>
+            </tr>
+         </table>
+         <p style="font-size:1px;"></p>
+      </div>
+      <div class="content">
+         <h1 class="refname">First Steps</h1>
+         <div class="subheading">
+            <p>Get in touch with EBSD data in MTEX</p>
+         </div>
+         <div>
+            <table class="content">
+               <tr>
+                  <td class="header">On this page ...</td>
+               </tr>
+               <tr>
+                  <td><a href="#2">Import EBSD data</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#4">Correct EBSD data</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#7">Modelling Grains</a></td>
+               </tr>
+               <tr>
+                  <td><a href="#8">Analyzing EBSD Data</a></td>
+               </tr>
+            </table>
+         </div>
+         <h2>Import EBSD data<a name="2"> </a></h2>
+         <p>Importing EBSD data can be done guided by the import wizard</p><pre class="codeinput">import_wizard(<span class="string">'EBSD'</span>)</pre><img src="EBSDAnalysisIntro_01.png"> <p>or directly by the command <a href="loadEBSD.html">loadEBSD</a></p><pre class="codeinput"><span class="comment">% specify file name</span>
+fname = fullfile(mtexDataPath,<span class="string">'EBSD'</span>,<span class="string">'Forsterite.ctf'</span>);
+
+ebsd = loadEBSD(fname,<span class="string">'convertEuler2SpatialReferenceFrame'</span>)</pre><pre class="codeoutput"> 
+ebsd = EBSD  
+ 
+ Phase  Orientations     Mineral        Color  Symmetry  Crystal reference frame
+     0   58485 (24%)  notIndexed                                                
+     1  152345 (62%)  Forsterite   light blue       mmm                         
+     2   26058 (11%)   Enstatite  light green       mmm                         
+     3   9064 (3.7%)    Diopside    light red     12/m1       X||a*, Y||b*, Z||c
+ 
+ Properties: bands, bc, bs, error, mad, x, y
+ Scan unit : um
+ 
+</pre><p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Correct EBSD data<a name="4"> </a></h2>
+         <p>The EBSD data are now represented by the variable <tt>ebsd</tt>. Which is essentially a long list of x and y values together with phase infotmation and orientations. To acces any of these
+            properties do, e.g., the orientations of the Forsterite phase do
+         </p><pre class="codeinput">ebsd(<span class="string">'Forsterite'</span>).orientations</pre><pre class="codeoutput"> 
+ans = orientation  
+  size: 152345 x 1
+  crystal symmetry : Forsterite (mmm)
+  specimen symmetry: 1
+ 
+</pre><pre class="codeinput"><span class="comment">% EBSD data is stored in the class &lt;EBSD_index.html EBSD&gt; while grains are</span>
+<span class="comment">% stored as variables of type &lt;grain2d_index.html grain2d&gt;. The following</span>
+<span class="comment">% mindmap may induce a general idea analysing EBSD Data with MTEX.</span>
+<span class="comment">%</span>
+<span class="comment">% &lt;&lt;grain.png&gt;&gt;</span>
+<span class="comment">%</span>
+<span class="comment">%</span></pre><p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Modelling Grains<a name="7"> </a></h2>
+         <p><b><a href="GrainReconstruction.html">Grains</a></b>  are a basic concept for spatially indexed EBSD Data. With grain modelling comes up the possebility getting more information
+            out of EBSD Data - e.g. fabric analysis, characterisation of misorientation
+         </p>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <h2>Analyzing EBSD Data<a name="8"> </a></h2>
+         <p><b><a href="EBSDOrientationPlots.html">Visualizing EBSD Data</a></b> is a central to understand a specimen. The most naive way is plotting of the individual orientations as pole point plots
+            or spatially indexed in some map with colorcoded orientations. Moreover one gets with grains the possibility to take a closer
+            look on grain boundaries.
+         </p>
+         <p><b><a href="EBSD2odf.html">Estimating ODFs from EBSD Data</a></b> is of interest, furthermore selecting the optimal halfwidth is a difficult question, in particular in matters of grains.
+         </p>
+         <p class="pagenavlink"><script language="Javascript">addTopOfPageButtons();</script><a href="#top_of_page">Back to Top</a></p>
+         <p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>

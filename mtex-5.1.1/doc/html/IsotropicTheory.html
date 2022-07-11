@@ -1,0 +1,139 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <title> (MTEX Toolbox)
+         
+      </title>
+      <!-- DOCNAME: MTEX Toolbox -->
+      <meta name="chunktype" content="refpage">
+      <!-- CHUNKNAME: IsotropicTheory -->
+      <!-- HEADSTUFF: IsotropicTheory -->
+      <!-- HEADSTUFF -->
+      <meta name="refentity" content="method:IsotropicTheory">
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
+      <meta name="toctype" content="fcn">
+      <link rel="stylesheet" href="style.css"><script language="JavaScript" src="docscripts.js"></script></head>
+   <body><a name="top_of_page"></a><div>
+         <table class="nav" summary="Navigation aid" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline"><b>MTEX</b> - A MATLAB Toolbox for Quantitative Texture Analysis</td>
+            </tr>
+         </table>
+         <p style="font-size:1px;"></p>
+      </div>
+      <div class="content"><pre class="codeinput"><span class="comment">%</span>
+<span class="comment">% Defining isotropic compliance and stiffness tensors using</span>
+<span class="comment">% complianceTensor  and  stiffnessTensor introduced in MTEX 5</span>
+<span class="comment">%</span>
+<span class="comment">% David Mainprice 9/03/2018</span>
+<span class="comment">%</span>
+<span class="comment">% Data from</span>
+<span class="comment">% J.Fortin, Y.Gueguen, and A.Schubnel (2007)</span>
+<span class="comment">% Effects of pore collapse and grain crushing on ultrasonic velocities and</span>
+<span class="comment">% Vp/Vs, J. Geophys. Res., 112, B08207, doi:10.1029/2005JB004005.</span>
+<span class="comment">%</span>
+
+<span class="comment">% sandstone constants</span>
+Eo = 42.13; <span class="comment">% Youngs Modulus in GPa</span>
+Ko = 21.3;  <span class="comment">% Bulk Modulus in GPa</span>
+Go = 18.0;  <span class="comment">% Shear Modulus in GPa</span>
+vo=(3*Ko-2*Go)/(2*(3*Ko+Go)); <span class="comment">% Poissons ratio</span></pre><h2>Isotropic tensor compliance Sij defined by Eo and vo<a name="2"> </a></h2><pre class="codeinput">S11=(1/Eo); S12=(-vo/Eo); S44=2*(S11-S12);
+<span class="comment">% define matrix M</span>
+ M =<span class="keyword">...</span>
+ [[  S11     S12    S12    0.0     0.0    0.0];<span class="keyword">...</span>
+ [   S12     S11    S12    0.0     0.0    0.0];<span class="keyword">...</span>
+ [   S12     S12    S11    0.0     0.0    0.0];<span class="keyword">...</span>
+ [   0.0     0.0    0.0    S44     0.0    0.0];<span class="keyword">...</span>
+ [   0.0     0.0    0.0    0.0     S44    0.0];<span class="keyword">...</span>
+ [   0.0     0.0    0.0    0.0     0.0    S44]];
+
+CS_Tensor_Iso = crystalSymmetry(<span class="string">'1'</span>,[1 1 1],<span class="keyword">...</span>
+ [ 90.0 90.0 90.0]*degree,<span class="string">'X||a*'</span>,<span class="string">'Y||b'</span>,<span class="keyword">...</span>
+ <span class="string">'mineral'</span>,<span class="string">'Isotropic tensor'</span>)
+
+S_iso = complianceTensor(M,CS_Tensor_Iso)</pre><pre class="codeoutput"> 
+CS_Tensor_Iso = crystalSymmetry  
+ 
+  mineral           : Isotropic tensor  
+  symmetry          : 1                 
+  a, b, c           : 1, 1, 1           
+  alpha, beta, gamma: 90&deg;, 90&deg;, 90&deg;     
+  reference frame   : X||a, Y||b*, Z||c*
+ 
+ 
+S_iso = complianceTensor  
+  unit            : 1/GPa                                   
+  rank            : 4 (3 x 3 x 3 x 3)                       
+  doubleConvention: true                                    
+  mineral         : Isotropic tensor (1, X||a, Y||b*, Z||c*)
+ 
+  tensor in Voigt matrix representation: *10^-3
+ 23.736 -4.043 -4.043      0      0      0
+ -4.043 23.736 -4.043      0      0      0
+ -4.043 -4.043 23.736      0      0      0
+      0      0      0 55.558      0      0
+      0      0      0      0 55.558      0
+      0      0      0      0      0 55.558
+</pre><h2>Isotropic tensor stiffness Cij defined by Ko and Go<a name="3"> </a></h2><pre class="codeinput">C11 = Ko+(4/3)*Go ; C12=C11-2*Go; C44=(C11-C12)/2;
+<span class="comment">% define matrix M</span>
+ M =<span class="keyword">...</span>
+ [[  C11     C12    C12    0.0     0.0    0.0];<span class="keyword">...</span>
+ [   C12     C11    C12    0.0     0.0    0.0];<span class="keyword">...</span>
+ [   C12     C12    C11    0.0     0.0    0.0];<span class="keyword">...</span>
+ [   0.0     0.0    0.0    C44     0.0    0.0];<span class="keyword">...</span>
+ [   0.0     0.0    0.0    0.0     C44    0.0];<span class="keyword">...</span>
+ [   0.0     0.0    0.0    0.0     0.0    C44]];
+CS_Tensor_Iso = crystalSymmetry(<span class="string">'1'</span>,[1 1 1],<span class="keyword">...</span>
+ [ 90.0 90.0 90.0]*degree,<span class="string">'X||a*'</span>,<span class="string">'Y||b'</span>,<span class="keyword">...</span>
+ <span class="string">'mineral'</span>,<span class="string">'Isotropic tensor'</span>)
+C_iso_solid = stiffnessTensor(M,CS_Tensor_Iso)
+<span class="comment">% Calculate  Compliance tensor by inversion</span>
+S_iso_solid = inv(C_iso_solid)</pre><pre class="codeoutput"> 
+CS_Tensor_Iso = crystalSymmetry  
+ 
+  mineral           : Isotropic tensor  
+  symmetry          : 1                 
+  a, b, c           : 1, 1, 1           
+  alpha, beta, gamma: 90&deg;, 90&deg;, 90&deg;     
+  reference frame   : X||a, Y||b*, Z||c*
+ 
+ 
+C_iso_solid = stiffnessTensor  
+  unit   : GPa                                     
+  rank   : 4 (3 x 3 x 3 x 3)                       
+  mineral: Isotropic tensor (1, X||a, Y||b*, Z||c*)
+ 
+  tensor in Voigt matrix representation:
+ 45.3  9.3  9.3    0    0    0
+  9.3 45.3  9.3    0    0    0
+  9.3  9.3 45.3    0    0    0
+    0    0    0   18    0    0
+    0    0    0    0   18    0
+    0    0    0    0    0   18
+ 
+S_iso_solid = complianceTensor  
+  unit            : 1/GPa                                   
+  rank            : 4 (3 x 3 x 3 x 3)                       
+  doubleConvention: true                                    
+  mineral         : Isotropic tensor (1, X||a, Y||b*, Z||c*)
+ 
+  tensor in Voigt matrix representation: *10^-3
+ 23.735 -4.043 -4.043      0      0      0
+ -4.043 23.735 -4.043      0      0      0
+ -4.043 -4.043 23.735      0      0      0
+      0      0      0 55.556      0      0
+      0      0      0      0 55.556      0
+      0      0      0      0      0 55.556
+</pre><p style="font-size:1px;"></p>
+         <table class="footer" border="0" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+               <td valign="baseline" align="right">MTEX 5.1.0</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>
