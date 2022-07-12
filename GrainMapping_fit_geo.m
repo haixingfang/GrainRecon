@@ -9,16 +9,16 @@ get_para;
 % set up all parameters: geometry, detector, sample, reconstruction, filefolders
 switch(ElementName)
     case 'fe'
-        input_fe;
+%         input_fe;
         [cell,sgno,atomparam,space_group_IT_number]=input_fe_fun();
     case 'al'
-        input_al;
+%         input_al;
         [cell,sgno,atomparam,space_group_IT_number]=input_al_fun();
     case 'ni'
-        input_ni;
+%         input_ni;
         [cell,sgno,atomparam,space_group_IT_number]=input_ni_fun();
     case 'si'
-        input_si;
+%         input_si;
         [cell,sgno,atomparam,space_group_IT_number]=input_si_fun();
     otherwise
         error('this element cannot be identified!');
@@ -89,6 +89,10 @@ grainvolume=DS_new.nVox*DS_new.VoxSize(1)*DS_new.VoxSize(2)*DS_new.VoxSize(3)*1e
 grainsize=2*(3*grainvolume/(4*pi)).^(1/3); % equivalent diameter of grain [um]
 euler_grains=DS_new.EulerZXZ;% Euler angles [deg]: ([0 2*pi], [0 pi], [0 2*pi])
 
+% set to be consistent with the size of the whole volume
+RecVolumePixel(:,1)=[1 1 1]';
+RecVolumePixel(:,2)=size(DS.GIDvol)';
+
 %%%%%% fit geometry, select grains for fitting
 % select grains for fitting
 if nargin<3
@@ -114,24 +118,27 @@ end
 DS_fit.SeedID=DS_new.SeedID(eff_index);
 DS_fit.SeedComp=DS_new.SeedComp(eff_index);
 DS_fit.RodVec=DS_new.RodVec(eff_index,:);
-DS_fit.nVox=DS_new.nVox(eff_index,:);
+DS_fit.nVox=DS_new.nVox(eff_index);
 DS_fit.Coord=DS_new.Coord(eff_index,:);
 DS_fit.EulerZXZ=DS_new.EulerZXZ(eff_index,:);
 
 tic
 Rsample=sqrt(SampleVolumeDim(1)^2+SampleVolumeDim(2)^2)/2; % [mm]
 if length(DS_new.SeedID)>length(DS_fit.SeedID)
+%     rot_angles_simu=[rot_start:3*rot_step:rot_end-180];
+    rot_angles_simu=0;
     [SpotNr_simu_all,SpotNr_obs_all,SpotsPair_all,GrainIndex_all,SubGrain_all,~,SmallGrID]=Forward_simu_spots_exp(DS_new, ...
         Rsample,RecVolumePixel,tomo_scale,ExpTime,atomparam,proj,Spots,rot_start,rot_step, ...
         S,B,Ahkl,nrhkl,hkl_square,Energy,lambda,V,K1,I0E,RotDet,thetamax,lambda_min,lambda_max,Lsam2sou,Lsam2det, ...
         dety00,detz00,P0y,P0z,pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ, ...
         simap_data_flag,strcat(OutputFolder,'/grains_all'),[rot_start:3*rot_step:rot_end-180]);
 end
-[SpotNr_simu,SpotNr_obs,SpotsPair,GrainIndex,SubGrain,rot_angles_calc,~]=Forward_simu_spots_exp(DS_fit, ...
+    rot_angles_simu=[rot_start:2*rot_step:rot_end];
+    [SpotNr_simu,SpotNr_obs,SpotsPair,GrainIndex,SubGrain,rot_angles_calc,~]=Forward_simu_spots_exp(DS_fit, ...
         Rsample,RecVolumePixel,tomo_scale,ExpTime,atomparam,proj,Spots,rot_start,rot_step, ...
         S,B,Ahkl,nrhkl,hkl_square,Energy,lambda,V,K1,I0E,RotDet,thetamax,lambda_min,lambda_max,Lsam2sou,Lsam2det, ...
         dety00,detz00,P0y,P0z,pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ, ...
-        simap_data_flag,strcat(OutputFolder,'/grains_forfit'),[rot_start:2*rot_step:rot_end]);
+        simap_data_flag,strcat(OutputFolder,'/grains_forfit'),rot_angles_simu);
 if length(DS_new.SeedID)==length(DS_fit.SeedID)
     SpotsPair_all=SpotsPair;
 end
