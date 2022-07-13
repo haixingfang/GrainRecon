@@ -31,7 +31,7 @@ RotY=[cosd(tilt_y) 0 sind(tilt_y);0 1 0;-sind(tilt_y) 0 cosd(tilt_y)];
 RotZ=[cosd(tilt_z) -sind(tilt_z) 0;sind(tilt_z) cosd(tilt_z) 0;0 0 1];
 RotDet=RotX*RotY*RotZ;
 
-hklnumber=4; % maximum is 10, recommended be at least >= 3, 4
+hklnumber=length(unique(Ahkl(:,1).^2+Ahkl(:,2).^2+Ahkl(:,3).^2)); % maximum is 10, recommended be at least >= 3, 4
 % iter_end=10; % maximum iterations which determines the finess of gridding for indexing seeds
 sprintf('hklnumber = %.0f, C_trust = %.2f, C_min = %.2f, drop_off = %.2f, minEucDis = %.3f mm, maxD = %.1f pixel and maxDmedian = %.1f pixel', ...
     hklnumber,TrustComp,minComp,drop_off,minEucDis,maxD,maxDmedian)
