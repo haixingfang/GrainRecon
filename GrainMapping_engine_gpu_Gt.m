@@ -9,12 +9,12 @@
 % when growing voxels, also compare the number of intersections because wrong indexing yielding the same completeness value is possible
 % April 8, 2022
 function [indexing_final,pos_list_new,DS_out,Nr_indexed_voxel]=GrainMapping_engine_gpu_Gt(pos_list,OR,RotDet, ...
-    Spots,proj_bin_bw,rot_angles,rot_start,rot_step,S,B,Ahkl,nrhkl,hklnumber,hkl_square, ...
-    hkl_family_square,d_possible,thetamax,lambda_min,lambda_max, ...
-        Lsam2sou,Lsam2det,TrustComp,minComp,minEucDis,dety00,detz00,P0y,P0z, ...
-        pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ, ...
-        drop_off,maxD,DS,tomo_scale,VoxSize,RecVolumePixel,FirstGrainID,simap_data_flag, ...
-        maxDmedian,Nr_seed,OutputFolder,iter,check_fit_all)
+     Spots,proj_bin_bw,rot_angles,rot_start,rot_step,S,B,Ahkl,nrhkl,hklnumber,hkl_square, ...
+     hkl_family_square,d_possible,thetamax,lambda_min,lambda_max, ...
+         Lsam2sou,Lsam2det,TrustComp,minComp,minEucDis,dety00,detz00,P0y,P0z, ...
+         pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ, ...
+         drop_off,maxD,DS,tomo_scale,VoxSize,RecVolumePixel,FirstGrainID,simap_data_flag, ...
+         maxDmedian,Nr_seed,OutputFolder,iter,check_fit_all)
 % % for testing
 % pos_list=pos_seed;
 % if length(FirstGrainID)>1
@@ -55,7 +55,7 @@ for i=1:length(pos_list(:,1))
     while stop_regional_recon~=1 && replace_center_count(i)<=3
         pos_indices=pos2ind(i,pos_indexing,tomo_scale,VoxSize,RecVolumePixel,size(Completeness),simap_data_flag);
         if replace_center_count(i)~=0
-            sprintf('Iter %d: indexing processing %d / %d, updated voxel position [%.4f %.4f %.4f]',iter,i,length(pos_list(:,1)),pos_indexing)
+            fprintf('Iter %d: indexing processing %d / %d, updated voxel position [%.4f %.4f %.4f].\n',iter,i,length(pos_list(:,1)),pos_indexing)
         end
         if (Completeness(pos_indices(1),pos_indices(2),pos_indices(3))<TrustComp || (replace_center_count(i)>0 && ...
                 Completeness(pos_indices(1),pos_indices(2),pos_indices(3))>=TrustComp)) && ...
@@ -106,7 +106,7 @@ for i=1:length(pos_list(:,1))
             if check_fit_all==1 && min(sqrt((ind_GrainId(:,1)-pos_indices(1)).^2+(ind_GrainId(:,2)-pos_indices(2)).^2+ ...
                     (ind_GrainId(:,3)-pos_indices(3)).^2))>5
                 fit_all_flag=1;
-                sprintf('Fit all OR candidates for seed %d.',i)
+                fprintf('Fit all OR candidates for seed %d...\n',i)
             else
                 fit_all_flag=0;
             end
@@ -119,7 +119,7 @@ for i=1:length(pos_list(:,1))
                 thetamax,lambda_min,lambda_max,Lsam2sou,Lsam2det,minEucDis,dety00,detz00,P0y,P0z, ...
                 pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ,fit_all_flag);
             indexing_final0(i,:)=indexing_final(i,:);
-            sprintf('Candidate %d is identified for yielding the best solution.',confident_index(i))
+            fprintf('Candidate %d is identified for yielding the best solution.\n',confident_index(i))
 			candidate_id(i)=confident_index(i);
             fit_all_flag_track(i)=fit_all_flag;
 
@@ -128,7 +128,7 @@ for i=1:length(pos_list(:,1))
 			    [FitOutput,fval]=fit_grain_COM(Spots_pair{i},S,B,Lsam2sou,Lsam2det,P0y,P0z, ...
 				    pixelysize,pixelzsize,dety0,detz0,dety00,detz00,RotDet);
 			    if sqrt(sum((FitOutput(1:3)-indexing_final0(i,2:4)).^2))/VoxSize>maxD % update the voxel position, being closer to the grain COM
-				    sprintf('The spot centroid difference is %.2f pixels after fitting the grain COM.',fval)
+				    fprintf('The spot centroid difference is %.2f pixels after fitting the grain COM.\n',fval)
                     pos_indices_temp=pos2ind(i,FitOutput(1:3),tomo_scale,VoxSize,RecVolumePixel,size(Completeness),simap_data_flag);
                     if Completeness(pos_indices_temp(1),pos_indices_temp(2),pos_indices_temp(3))<indexing_final(i,7) ...
                             && Mask(pos_indices_temp(1),pos_indices_temp(2),pos_indices_temp(3))==1
@@ -143,13 +143,14 @@ for i=1:length(pos_list(:,1))
                             RotDet,thetamax,lambda_min,lambda_max,Lsam2sou,Lsam2det,minEucDis,dety00,detz00,P0y,P0z, ...
                             pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ);
                         indexing_final(i,7)=indexing_final(i,6)/indexing_final(i,5);
-                        sprintf('Update the voxel position from [%.4f %.4f %.4f] to [%.4f %.4f %.4f] mm,\n euler angles from [%.2f %.2f %.2f] to [%.2f %.2f %.2f] degrees,\n completeness from %.2f to %.2f', ...
+                        fprintf('Update the voxel position from [%.4f %.4f %.4f] to [%.4f %.4f %.4f] mm,\n euler angles from [%.2f %.2f %.2f] to [%.2f %.2f %.2f] degrees,\n completeness from %.3f to %.3f.\n', ...
                             pos_indexing,indexing_final(i,2:4),indexing_final0(i,9:11),indexing_final(i,9:11),indexing_final0(i,7),indexing_final(i,7))
                         pos_indexing=FitOutput(1:3);
                         pos_indices=pos2ind(i,pos_indexing,tomo_scale,VoxSize,RecVolumePixel,size(Completeness),simap_data_flag);
                     end
                 end
             end
+
         else
 %             [indexing_final(i,:),indexing_fit{i},confident_index(i),Spots_pair{i}]=fit_OR_constrain_local(i,index_seeds,RotDet, ...
 %                 proj_bin_bw,Spots,pos_indexing,rot_angles,S,B,Ahkl,nrhkl,thetamax,lambda_min,lambda_max, ...
@@ -161,20 +162,20 @@ for i=1:length(pos_list(:,1))
                 pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ);
         end
         fit_time=toc;
-        sprintf('The OR calc and the fitting take %0.2f s and %0.2f s, respectively',OR_time,fit_time)
-        sprintf('Indexed completeness is %.3f and Euler angles are [%.2f, %.2f, %.2f] degrees',indexing_final(i,[7 9:11]))
+        fprintf('The OR calc and the fitting take %0.2f s and %0.2f s, respectively.\n',OR_time,fit_time)
+        fprintf('Indexed completeness is %.3f and Euler angles are [%.2f, %.2f, %.2f] degreesn.\n',indexing_final(i,[7 9:11]))
         
         if indexing_final(i,7)<minComp || indexing_final(i,7)<Completeness(pos_indices(1),pos_indices(2),pos_indices(3)) ...
                 || indexing_final(i,8)>maxDmedian
             stop_regional_recon=1;
             pos_list_new(i,:)=pos_indexing;
             VisitFlag(pos_indices(1),pos_indices(2),pos_indices(3))=0.8; % it means this voxel is a failed seeding voxel
-            sprintf('Not to grow because the completeness (%.3f) is too low (< %.3f or < %.3f) or the median D (%.2f) is too large (>%.1f pixel).', ...
+            fprintf('Not to grow because the completeness (%.3f) is too low (< %.3f or < %.3f) or the median D (%.2f) is too large (>%.1f pixel).\n', ...
                 indexing_final(i,7),minComp,Completeness(pos_indices(1),pos_indices(2),pos_indices(3)),indexing_final(i,8),maxDmedian)
         else
             % update DS and grow around this voxel if its completeness value is
             % higher than the old one
-            sprintf('Grow the region because the completeness (%.3f) is >= %.3f and the median D (%.2f) is <= %.1f pixels.', ...
+            fprintf('Grow the region because the completeness (%.3f) is >= %.3f and the median D (%.2f) is <= %.1f pixels.\n', ...
                 indexing_final(i,7),minComp,indexing_final(i,8),maxDmedian)
             indexing_final_temp=indexing_final(i,:);
             center=pos_indices;
@@ -186,13 +187,13 @@ for i=1:length(pos_list(:,1))
                 tic
                 UU=quaternion2U(indexing_final_temp(15:18));
                 if ~isempty(Spots_pair{i})
-                    Spot_L = mean(Spots_pair{i}(:,21))+2*std(Spots_pair{i}(:,21)); % bounding area of the spot [pixel^2]
+                    Spot_L = mean(Spots_pair{i}(:,21))+1*std(Spots_pair{i}(:,21)); % bounding area of the spot [pixel^2]
                     Spot_L = sqrt(Spot_L/pi); % bounding half length of the spot [pixel]
                 else
                     Spot_L = 20;
                 end
                 if Spot_L <= 2
-                    sprintf("Spot_L = %.2f pixels, grow by connecting voxels (cpu computation)", Spot_L)
+                    fprintf("Spot_L = %.2f pixels, grow by connecting voxels (cpu computation)\n", Spot_L)
                     [J,Completeness_out,DisMedian_out,Ninter_out,center,replace_center,indexed_indices]=grow_indexed_region(Completeness,Mask,Dismedian,Ninter,pos_indices,drop_off,maxD, ...
                         indexed_comp,UU,proj_bin_bw,rot_angles,S,B,Ahkl,nrhkl, ...
                             RotDet,thetamax,lambda_min,lambda_max, ...
@@ -200,7 +201,7 @@ for i=1:length(pos_list(:,1))
                         pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ, ...
                         RecVolumePixel,tomo_scale,VoxSize,simap_data_flag,maxDmedian);
                 else
-                    sprintf("Spot_L = %.2f pixels, grow within a bounding volume (gpu-cuda computation)", Spot_L)
+                    fprintf("Spot_L = %.2f pixels, grow within a bounding volume (gpu-cuda computation)\n", Spot_L)
 %                     [J,Completeness_out,DisMedian_out,Ninter_out,center,replace_center,indexed_indices]=grow_indexed_region_parallel(Completeness,Mask,Dismedian,Ninter,pos_indices,Spot_L,drop_off,maxD, ...
 %                         indexed_comp,UU,proj_bin_bw,rot_angles,S,B,Ahkl,nrhkl, ...
 %                             RotDet,thetamax,lambda_min,lambda_max, ...
@@ -228,8 +229,8 @@ for i=1:length(pos_list(:,1))
                 Dismedian(ind)=DisMedian_out(ind);
                 Ninter(ind)=Ninter_out(ind);
                 grow_time=toc;
-                sprintf('%d voxels have grown around the seed %d and the growth takes %0.2f s',length(ind)-1,i,grow_time)
-                sprintf('center updated from [%d %d %d] to [%d %d %d]',pos_indices,center)
+                fprintf('%d voxels have grown around the seed %d and the growth takes %0.2f s.\n',length(ind)-1,i,grow_time)
+                fprintf('center updated from [%d %d %d] to [%d %d %d].\n',pos_indices,center)
                 if replace_center==1 && GrainId(center(1),center(2),center(3))~=i+FirstGrainID-1 % exclude the possibility to find a new center belong to other grains
 %                     replace_center=0;
 %                     center=pos_indices;
@@ -240,10 +241,10 @@ for i=1:length(pos_list(:,1))
                     % replace_center=0;
                     % sprintf('center will not be re-updated from [%d %d %d] to [%d %d %d]',pos_indices,center)
                     if sqrt(sum((center-pos_indices).^2))>maxD
-                        sprintf('center re-updated from [%d %d %d] to [%d %d %d]',pos_indices,center)
+                        fprintf('center re-updated from [%d %d %d] to [%d %d %d].\n',pos_indices,center)
                         replace_center=1;
                     else
-                        sprintf('center [%d %d %d] is close enough to previous [%d %d %d], stop center updating !',pos_indices,center)
+                        fprintf('center [%d %d %d] is close enough to previous [%d %d %d], stop center updating !\n',pos_indices,center)
                         replace_center=0;
                     end
                 end
