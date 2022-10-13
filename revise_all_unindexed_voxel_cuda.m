@@ -38,8 +38,8 @@ for i = DS_in.SeedID
     end
     U=euler2u(DS_in.EulerAngle(i,1)*pi/180,DS_in.EulerAngle(i,2)*pi/180,DS_in.EulerAngle(i,3)*pi/180);
     [Nr_simu,Nr_intersect,~]=forward_comp(U,proj_bin_bw,pos,rot_angles,S,B,Ahkl,nrhkl, ...
-            RotDet,thetamax,lambda_min,lambda_max,Lsam2sou,Lsam2det,minEucDis,dety00,detz00,P0y,P0z, ...
-            RotAxisOffset,pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ);
+            RotDet,thetamax,lambda_min,lambda_max,Lsam2sou,Lsam2det,pixelysize/2,dety00,detz00,P0y,P0z, ...
+            RotAxisOffset,pixelysize,pixelzsize,detysize/2+0.5,detzsize/2+0.5,detysize,detzsize,BeamStopY,BeamStopZ);
     DS_in.SeedComp(i,1)=Nr_intersect/Nr_simu;
 end
 DS_out = DS_in;
@@ -73,28 +73,29 @@ if correct_already_indexed_only==1
     un_indexed_voxels = find_doubt_indexed_voxels(DS_in,0.35,0);
 end
 
-nr_voxel_per_iter = 30000;
-total_iter = floor(length(un_indexed_voxels(:,1))/nr_voxel_per_iter)+1;
-sprintf('All un-indexed voxels divide to %d segments (each contains %d voxels) per gpu calculation.',total_iter,nr_voxel_per_iter)
-
-for i=1:total_iter
-    if i <= total_iter-1
-        wait_revising_voxels = un_indexed_voxels(nr_voxel_per_iter*(i-1)+1:nr_voxel_per_iter*i,:);
-    else
-        wait_revising_voxels = un_indexed_voxels(nr_voxel_per_iter*(i-1)+1:end,:);
+if ~isempty(un_indexed_voxels)
+    nr_voxel_per_iter = 30000;
+    total_iter = floor(length(un_indexed_voxels(:,1))/nr_voxel_per_iter)+1;
+    sprintf('All un-indexed voxels divide to %d segments (each contains %d voxels) per gpu calculation.',total_iter,nr_voxel_per_iter)
+    
+    for i=1:total_iter
+        if i <= total_iter-1
+            wait_revising_voxels = un_indexed_voxels(nr_voxel_per_iter*(i-1)+1:nr_voxel_per_iter*i,:);
+        else
+            wait_revising_voxels = un_indexed_voxels(nr_voxel_per_iter*(i-1)+1:end,:);
+        end
+        tic
+        [id_neigb_all, id_neigb_ind] = find_neighbor_ORs(DS_in, wait_revising_voxels, search_radius);
+        find_neighbor_time=toc;
+    
+        tic
+        DS_out = grow_unindexed_compete_comp_cuda(DS_out,wait_revising_voxels,id_neigb_all,id_neigb_ind, ...
+                            proj_bin_bw,rot_angles,S,B,Ahkl,nrhkl,RotDet,thetamax,lambda_min,lambda_max, ...
+                            Lsam2sou,Lsam2det,dety00,detz00,P0y,P0z,RotAxisOffset,pixelysize,pixelzsize,detysize,detzsize, ...
+                            BeamStopY,BeamStopZ,RecVolumePixel,tomo_scale,VoxSize,simap_data_flag);
+        grow_time=toc;
+        fprintf('The find_neighbor_time and the grow_time take %0.2f s and %0.2f s, respectively\n',find_neighbor_time,grow_time)
+        fprintf('Iter %d: reconstructed volume fraction: %.4f = %d / %d \n',i,length(find(DS_out.GrainId>0))/length(find(DS_out.Mask==1)), ...
+            length(find(DS_out.GrainId>0)),length(find(DS_out.Mask==1)))
     end
-    tic
-    [id_neigb_all, id_neigb_ind] = find_neighbor_ORs(DS_in, wait_revising_voxels, search_radius);
-    find_neighbor_time=toc;
-
-    tic
-    DS_out = grow_unindexed_compete_comp_cuda(DS_out,wait_revising_voxels,id_neigb_all,id_neigb_ind, ...
-                        proj_bin_bw,rot_angles,S,B,Ahkl,nrhkl,RotDet,thetamax,lambda_min,lambda_max, ...
-                        Lsam2sou,Lsam2det,dety00,detz00,P0y,P0z,RotAxisOffset,pixelysize,pixelzsize,detysize,detzsize, ...
-                        BeamStopY,BeamStopZ,RecVolumePixel,tomo_scale,VoxSize,simap_data_flag);
-    grow_time=toc;
-    fprintf('The find_neighbor_time and the grow_time take %0.2f s and %0.2f s, respectively\n',find_neighbor_time,grow_time)
-    fprintf('Iter %d: reconstructed volume fraction: %.4f = %d / %d \n',i,length(find(DS_out.GrainId>0))/length(find(DS_out.Mask==1)), ...
-        length(find(DS_out.GrainId>0)),length(find(DS_out.Mask==1)))
 end
-
