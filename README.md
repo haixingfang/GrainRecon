@@ -24,7 +24,7 @@ LabDCT is a novel technique for 3D grain mapping using lab X-ray source, inspire
   - run [GrainMapping_assemble_vol.m](https://github.com/haixingfang/GrainRecon/blob/main/GrainMapping_assemble_vol.m), it will generate a .h5 file, a .dream3d file and a .xdmf file, which you can use ParaView for 3D visualization
   - Optionally, you can force this function to use the strategy of "completeness competing" to correct suspicious voxels and compute for empty voxels. By default, grains with fewer than 5 voxels or with seeding completeness lower than a threshold will be checked by this strategy.
 ## 4) Geometry fitting
-  - If geometry is needed to be fitting (this is usually the case with the first time grain reconstruction), run [GrainMapping_geo_fit.m](https://github.com/haixingfang/GrainRecon/blob/main/GrainMapping_fit_geo.m) to fit 7 parameters, including P0y, P0z, dety00, detz00, tilt_x, tilt_y and tilt_z.
+  - If geometry is needed to be fitted (this is usually the case with the first time grain reconstruction), run [GrainMapping_geo_fit.m](https://github.com/haixingfang/GrainRecon/blob/main/GrainMapping_fit_geo.m) to fit 7 parameters, including Lsam2sou, Lsam2det, dety00, detz00, tilt_x, tilt_y and tilt_z, and even additional parameters such as P0y, P0z, RotAxisOffset.
   - After geometry fitting, you may repeat steps of 2-3 to redo/refine grain mapping results.<br>
 ### All the codes have been tested executable with a Matlab version 2020a or later.
 
