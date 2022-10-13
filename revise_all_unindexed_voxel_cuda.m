@@ -15,12 +15,32 @@ if nargin<30 || ~exist('search_radius','var')
 end
 sprintf('search_radius = %d pixels',search_radius)
 
+% DS_in.SeedID = 1:max(DS_in.GrainId(:));
+% for i = DS_in.SeedID
+%     ind = ind2sub(size(DS_in.GrainId),find(DS_in.GrainId == i));
+%     if ~isempty(ind)
+%         DS_in.EulerAngle(i,:)=DS_in.EulerZXZ(:,ind(1))';
+%     end
+% end
 DS_in.SeedID = 1:max(DS_in.GrainId(:));
 for i = DS_in.SeedID
-    ind = ind2sub(size(DS_in.GrainId),find(DS_in.GrainId == i));
-    if ~isempty(ind)
-        DS_in.EulerAngle(i,:)=DS_in.EulerZXZ(:,ind(1))';
+    [x,y,z] = ind2sub(size(DS_in.GrainId),find(DS_in.GrainId == i));
+    X = mean(x);
+    Y = mean(y);
+    Z = mean(z);
+    DS_in.Coord(i,:) = [X,Y,Z]; % each row represents coodinate for each grain
+    DS_in.nVox(i,1) = length(find(DS_in.GrainId == i)); % number of voxels for each grain
+    DS_in.EulerAngle(i,:)=DS_in.EulerZXZ(:,x(1),y(1),z(1))';
+
+    pos=((DS_in.Coord(i,:)+RecVolumePixel(:,1)'-1)-tomo_scale.Dimension/2).*tomo_scale.VoxSize'+tomo_scale.Center'; % [mm]
+    if simap_data_flag==1
+        pos(1:2)=-pos(1:2);
     end
+    U=euler2u(DS_in.EulerAngle(i,1)*pi/180,DS_in.EulerAngle(i,2)*pi/180,DS_in.EulerAngle(i,3)*pi/180);
+    [Nr_simu,Nr_intersect,~]=forward_comp(U,proj_bin_bw,pos,rot_angles,S,B,Ahkl,nrhkl, ...
+            RotDet,thetamax,lambda_min,lambda_max,Lsam2sou,Lsam2det,minEucDis,dety00,detz00,P0y,P0z, ...
+            RotAxisOffset,pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ);
+    DS_in.SeedComp(i,1)=Nr_intersect/Nr_simu;
 end
 DS_out = DS_in;
 
@@ -38,9 +58,9 @@ end
 correct_low_C=1;
 doubt_indexed_voxels=[];
 [doubt_indexed_voxels(:,1),doubt_indexed_voxels(:,2),doubt_indexed_voxels(:,3)]=ind2sub(size(DS_in.GrainId), ...
-        find(DS_in.Completeness>0 & DS_in.Completeness<0.45));
+        find(DS_in.Completeness>0 & DS_in.Completeness<0.4));
 if ~isempty(doubt_indexed_voxels)
-    sprintf('find %d low-C indexed voxels among all %d voxels',length(doubt_indexed_voxels(:,1)),length(find(DS_in.Mask==1)))
+    sprintf('find %d low-C (smaller than 0.40) indexed voxels among all %d voxels',length(doubt_indexed_voxels(:,1)),length(find(DS_in.Mask==1)))
 else
     sprintf('find 0 low-C indexed voxels')
 end
