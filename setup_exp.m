@@ -45,12 +45,13 @@ if simap_data_flag~=1
     P0=P0-aquisition_center;
     P0y=P0(2); 
     P0z=P0(3);
+	RotAxisOffset=0;
     % detector offset and tilt
     det_center=[Lsam2det 0 0];
-    det_normal=[1.0000 0 0];
-    tilt_x=acosd(dot(det_normal/norm(det_normal),[1 0 0])); % [deg]
-    tilt_y=acosd(dot(det_normal/norm(det_normal),[0 1 0]))-90; % [deg]
-    tilt_z=acosd(dot(det_normal/norm(det_normal),[0 0 1]))-90; % [deg]
+    det_normal=[1 0 0];
+	detdiru=[0 -1 0]; % pointing to the right
+	detdirv=[0 0 -1]; % pointing downwards
+	[RotDet,tilt_x,tilt_y,tilt_z]=get_det_tilt(det_normal,detdiru);
     dety00=det_center(2)-aquisition_center(2); % [mm]
     detz00=det_center(3)-aquisition_center(3); % [mm]
     ExpTime=500; % exposure time [s]
@@ -79,9 +80,9 @@ else
     % detector offset and tilt
     det_center=[57.3633 -0.2345 -108.3650]; % from get_geometry.m
     det_normal=[0.9999 -0.0041 -0.0096];   % from get_geometry.m
-    tilt_x=acosd(dot(det_normal/norm(det_normal),[1 0 0])); % [deg]
-    tilt_y=acosd(dot(det_normal/norm(det_normal),[0 1 0]))-90; % [deg]
-    tilt_z=acosd(dot(det_normal/norm(det_normal),[0 0 1]))-90; % [deg]
+	detdiru = [-0.004080 -0.999992 0.000041];  % pointing to the right, from get_geometry.m
+	detdirv = [-0.009640 -0.000008 -0.999953]; % pointing downwards, from get_geometry.m
+	[RotDet,tilt_x,tilt_y,tilt_z]=get_det_tilt(det_normal,detdiru);
     dety00=det_center(2)-aquisition_center(2); % [mm]
     detz00=det_center(3)-aquisition_center(3); % [mm]
     ExpTime=60*6; % exposure time [s]
@@ -98,6 +99,11 @@ else
         tilt_x = ParaFit(5);
         tilt_y = ParaFit(6);
         tilt_z = ParaFit(7);
+		if length(ParaFit)==10
+			P0y=ParaFit(8);
+			P0z=ParaFit(9);
+			RotAxisOffset=ParaFit(10);
+		end
     end
     
     elseif sample_no==2
@@ -123,10 +129,10 @@ else
     P0z=P0(3);
     % detector offset and tilt
     det_center=[52.9931 -0.2163 -119.684]; % from get_geometry.m
-    det_normal=[0.9999 -0.0041 -0.0096];   % from get_geometry.m
-    tilt_x=acosd(dot(det_normal/norm(det_normal),[1 0 0])); % [deg]
-    tilt_y=acosd(dot(det_normal/norm(det_normal),[0 1 0]))-90; % [deg]
-    tilt_z=acosd(dot(det_normal/norm(det_normal),[0 0 1]))-90; % [deg]
+    det_normal=[0.999945 -0.004076 -0.009639];   % from get_geometry.m
+	detdiru = [-0.004077 -0.999992 -0.000041];
+	detdirv = [-0.009639 0.000079 -0.999954]
+	[RotDet,tilt_x,tilt_y,tilt_z]=get_det_tilt(det_normal,detdiru);
     dety00=det_center(2)-aquisition_center(2); % [mm]
     detz00=det_center(3)-aquisition_center(3); % [mm]
     ExpTime=60*6; % exposure time [s]
@@ -140,6 +146,11 @@ else
         tilt_x = ParaFit(5);
         tilt_y = ParaFit(6);
         tilt_z = ParaFit(7);
+		if length(ParaFit)==10
+			P0y=ParaFit(8);
+			P0z=ParaFit(9);
+			RotAxisOffset=ParaFit(10);
+		end
     end
     elseif sample_no==3
         % simu_Fe using the geometry from CCD_AlCu8wt%_DCT_middle_thinned_2021_09_30_121projs
@@ -164,10 +175,10 @@ else
         P0z=P0(3);
         % detector offset and tilt
         det_center=[52.9931 -0.2163 -119.684]; % from get_geometry.m
-        det_normal=[0.9999 -0.0041 -0.0096];   % from get_geometry.m
-        tilt_x=acosd(dot(det_normal/norm(det_normal),[1 0 0])); % [deg]
-        tilt_y=acosd(dot(det_normal/norm(det_normal),[0 1 0]))-90; % [deg]
-        tilt_z=acosd(dot(det_normal/norm(det_normal),[0 0 1]))-90; % [deg]
+		det_normal=[0.999945 -0.004076 -0.009639];   % from get_geometry.m
+		detdiru = [-0.004077 -0.999992 -0.000041];
+		detdirv = [-0.009639 0.000079 -0.999954]
+		[RotDet,tilt_x,tilt_y,tilt_z]=get_det_tilt(det_normal,detdiru);
         dety00=det_center(2)-aquisition_center(2); % [mm]
         detz00=det_center(3)-aquisition_center(3); % [mm]
         ExpTime=60*6; % exposure time [s]
@@ -181,6 +192,11 @@ else
             tilt_x = ParaFit(5);
             tilt_y = ParaFit(6);
             tilt_z = ParaFit(7);
+			if length(ParaFit)==10
+                P0y=ParaFit(8);
+                P0z=ParaFit(9);
+                RotAxisOffset=ParaFit(10);
+            end
         end
     elseif sample_no==4
         % simu_Fe using the geometry from CCD_AlCu8wt%_DCT_middle_thinned_2021_09_30_121projs
@@ -205,10 +221,10 @@ else
         P0z=P0(3);
         % detector offset and tilt
         det_center=[52.9931 -0.2163 -119.684]; % from get_geometry.m
-        det_normal=[0.9999 -0.0041 -0.0096];   % from get_geometry.m
-        tilt_x=acosd(dot(det_normal/norm(det_normal),[1 0 0])); % [deg]
-        tilt_y=acosd(dot(det_normal/norm(det_normal),[0 1 0]))-90; % [deg]
-        tilt_z=acosd(dot(det_normal/norm(det_normal),[0 0 1]))-90; % [deg]
+		det_normal=[0.999945 -0.004076 -0.009639];   % from get_geometry.m
+		detdiru = [-0.004077 -0.999992 -0.000041];
+		detdirv = [-0.009639 0.000079 -0.999954]
+		[RotDet,tilt_x,tilt_y,tilt_z]=get_det_tilt(det_normal,detdiru);
         dety00=det_center(2)-aquisition_center(2); % [mm]
         detz00=det_center(3)-aquisition_center(3); % [mm]
         ExpTime=60*6; % exposure time [s]
@@ -222,6 +238,11 @@ else
             tilt_x = ParaFit(5);
             tilt_y = ParaFit(6);
             tilt_z = ParaFit(7);
+			if length(ParaFit)==10
+                P0y=ParaFit(8);
+                P0z=ParaFit(9);
+                RotAxisOffset=ParaFit(10);
+            end
         end
     end
 end

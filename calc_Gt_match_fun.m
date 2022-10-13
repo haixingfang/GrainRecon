@@ -1,5 +1,5 @@
 function [Gt_matched_all,Nr_match,Gt_matched_all_mean,Gt_matched_all_median,NrSpotExpectAll]=calc_Gt_match_fun(U,pos,Spots,rot_angles,rot_start,rot_step,S,B,Ahkl,nrhkl,RotDet, ...
-    hkl_family,hkl_family_square,d_possible,Glen_possible,Lsam2sou,Lsam2det,dety00,detz00,P0y,P0z, ...
+    hkl_family,hkl_family_square,d_possible,Glen_possible,Lsam2sou,Lsam2det,dety00,detz00,P0y,P0z,RotAxisOffset, ...
     pixelysize,pixelzsize,dety0,detz0,thetamax,lambda_min,lambda_max,detysize,detzsize,BeamStopY,BeamStopZ)
 
     L=Lsam2sou+Lsam2det;
@@ -9,7 +9,7 @@ function [Gt_matched_all,Nr_match,Gt_matched_all_mean,Gt_matched_all_median,NrSp
     NrSpotExpectAll=0;
     
     % consider the detector tilts for calculating the diffraction vector
-    d_tr=RotDet'*[Lsam2det dety00 detz00]';
+    d_tr=RotDet'*[Lsam2det dety00-RotAxisOffset detz00]';
     Lsam2det_tr=d_tr(1)/RotDet(1,1);
     dety00_tr=RotDet(1,2)*Lsam2det_tr-d_tr(2);
     detz00_tr=RotDet(1,3)*Lsam2det_tr-d_tr(3);
@@ -22,20 +22,20 @@ function [Gt_matched_all,Nr_match,Gt_matched_all_mean,Gt_matched_all_median,NrSp
         omega=rot*pi/180; % [rad]
         Omega=[cos(omega) -sin(omega) 0;sin(omega) cos(omega) 0;0 0 1];
         SamposW=Omega*S*pos';
-        center = [L_tr, (SamposW(2)-P0y)*L_tr/(Lsam2sou+SamposW(1)), ...
+        center = [L_tr, (SamposW(2)-P0y+RotAxisOffset)*L_tr/(Lsam2sou+SamposW(1)), ...
             (SamposW(3)-P0z)*L_tr/(Lsam2sou+SamposW(1))]; % sample center projected to the position of the detector
-        alpha = atan(sqrt((SamposW(2)-P0y)^2+(SamposW(3)-P0z)^2)/(Lsam2sou+SamposW(1)));
-        grainpos = [Lsam2sou+SamposW(1) SamposW(2)-P0y SamposW(3)-P0z];
+        alpha = atan(sqrt((SamposW(2)-P0y+RotAxisOffset)^2+(SamposW(3)-P0z)^2)/(Lsam2sou+SamposW(1)));
+        grainpos = [Lsam2sou+SamposW(1) SamposW(2)-P0y+RotAxisOffset SamposW(3)-P0z];
 
         % unit vectors along incoming and diffracted beams
-        Kin_unit=[Lsam2sou+SamposW(1),SamposW(2)-P0y,SamposW(3)-P0z]./ ...
-            norm([Lsam2sou+SamposW(1),SamposW(2)-P0y,SamposW(3)-P0z]); % unit vector along the incoming beam 
+        Kin_unit=[Lsam2sou+SamposW(1),SamposW(2)-P0y+RotAxisOffset,SamposW(3)-P0z]./ ...
+            norm([Lsam2sou+SamposW(1),SamposW(2)-P0y+RotAxisOffset,SamposW(3)-P0z]); % unit vector along the incoming beam 
+%         dety22=(dety0-dety+0.5)*pixelysize; % [mm]
+%         detz22=(detz0-detz+0.5)*pixelzsize; % [mm]
         dety22=(dety0-dety)*pixelysize; % [mm]
         detz22=(detz0-detz)*pixelzsize; % [mm]
-%         dety22=(dety0-dety)*pixelysize; % [mm]
-%         detz22=(detz0-detz)*pixelzsize; % [mm]
-        Kout_unit=[repmat(Lsam2det-SamposW(1),length(dety),1),dety22-SamposW(2)-dety00,detz22-SamposW(3)-detz00]./ ...
-            sqrt((Lsam2det-SamposW(1)).^2+(dety22-SamposW(2)-dety00).^2+(detz22-SamposW(3)-detz00).^2); % unit vector along the diffracted beam
+        Kout_unit=[repmat(Lsam2det-SamposW(1),length(dety),1),dety22-SamposW(2)-dety00+RotAxisOffset,detz22-SamposW(3)-detz00]./ ...
+            sqrt((Lsam2det-SamposW(1)).^2+(dety22-SamposW(2)-dety00+RotAxisOffset).^2+(detz22-SamposW(3)-detz00).^2); % unit vector along the diffracted beam
         
 %         % consider the detector tilts for calculating the diffraction vector
 %         d_tr=RotDet'*[Lsam2det dety00 detz00]';
@@ -60,7 +60,7 @@ function [Gt_matched_all,Nr_match,Gt_matched_all_mean,Gt_matched_all_median,NrSp
         Gt=Omega*Gw;
         Gt=Gt';
         NrSpotExpect=calcExpectSpotNr(Gt',hkl,grainpos,center,alpha,RotDet, ...
-                SamposW,thetamax,lambda_min,lambda_max,Lsam2det,dety00,detz00, ...
+                SamposW,thetamax,lambda_min,lambda_max,Lsam2det,dety00,detz00,RotAxisOffset, ...
                 pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ);
         NrSpotExpectAll=NrSpotExpectAll+NrSpotExpect;
         % find matched diffraction vectors

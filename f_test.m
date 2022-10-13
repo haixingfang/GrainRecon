@@ -56,13 +56,13 @@ i=1;
     
     K_out_unit = ([ones(1,size(hkl,2))*Lsam2det;dety22;detz22]-ones(1,size(hkl,2)).*SamposW) ...
         ./((Lsam2det-SamposW(1)).^2+(dety22-SamposW(2)).^2+(detz22-SamposW(3)).^2).^(1/2);
-    t = (RotDet(1,1)*(Lsam2det-SamposW(1))-RotDet(2,1)*(dety00-SamposW(2))-RotDet(3,1)*(detz00-SamposW(3)))./ ...
-    (RotDet(1,1)*K_out_unit(1,:)+RotDet(2,1)*K_out_unit(2,:)+RotDet(3,1)*K_out_unit(3,:));
+    t = (RotDet(1,1)*(Lsam2det-SamposW(1))+RotDet(2,1)*(dety00-SamposW(2))+RotDet(3,1)*(detz00-SamposW(3)))./ ...
+        (RotDet(1,1)*K_out_unit(1,:)+RotDet(2,1)*K_out_unit(2,:)+RotDet(3,1)*K_out_unit(3,:));
 
     dety22 = [RotDet(1,2) RotDet(2,2) RotDet(3,2)]*(t.*K_out_unit+[SamposW(1)-Lsam2det SamposW(2)-dety00 SamposW(3)-detz00]');
     detz22 = [RotDet(1,3) RotDet(2,3) RotDet(3,3)]*(t.*K_out_unit+[SamposW(1)-Lsam2det SamposW(2)-dety00 SamposW(3)-detz00]');
-    dety = -round(dety22/pixelysize)+dety0; % [pixel]
-    detz = -round(detz22/pixelzsize)+detz0; % [pixel]
+    dety = round(-dety22/pixelysize+dety0); % [pixel]
+    detz = round(-detz22/pixelzsize+detz0); % [pixel]
 
     select3=find(beta > pi/2 & ...
     lambdahkl > lambda_min & lambdahkl < lambda_max & ...

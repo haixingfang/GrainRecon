@@ -29,7 +29,7 @@ L=Lsam2sou+Lsam2det;
 RotX=[1 0 0; 0 cosd(tilt_x) -sind(tilt_x); 0 sind(tilt_x) cosd(tilt_x)];
 RotY=[cosd(tilt_y) 0 sind(tilt_y);0 1 0;-sind(tilt_y) 0 cosd(tilt_y)];
 RotZ=[cosd(tilt_z) -sind(tilt_z) 0;sind(tilt_z) cosd(tilt_z) 0;0 0 1];
-RotDet=RotX*RotY*RotZ;
+RotDet=RotZ*RotY*RotX;
 if simap_data_flag==1
     S=[1 0 0;0 1 0;0 0 1];
 else
@@ -94,7 +94,7 @@ Rsample=sqrt(SampleVolumeDim(1)^2+SampleVolumeDim(2)^2)/2; % [mm]
 if gpuDeviceCount( "available" )
     DS_out = Forward_calc_comp_allvoxel_fun(DS,proj_bin_bw,rot_angles,S,B,Ahkl,nrhkl, ...
                             RotDet,thetamax,lambda_min,lambda_max,Lsam2sou,Lsam2det,dety00,detz00, ...
-                            P0y,P0z,pixelysize,pixelzsize,detysize,detzsize,BeamStopY,BeamStopZ, ...
+                            P0y,P0z,RotAxisOffset,pixelysize,pixelzsize,detysize,detzsize,BeamStopY,BeamStopZ, ...
                             RecVolumePixel,tomo_scale,VoxSize,simap_data_flag,maxD,maxDmedian);
 else
     warning("GPU is required for the computation! NO processing has been done!")

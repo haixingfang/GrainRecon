@@ -5,7 +5,7 @@
 
 function [Output,Gt_matched_all]=ForwardCalc_OR_space_Gt(q_b,q_c,q_d,dim_OR,RotDet, ...
     Spots,pos,rot_angles,rot_start,rot_step,S,B,Ahkl,nrhkl,hkl_family,hkl_family_square,d_possible,Glen_possible, ...
-    Lsam2sou,Lsam2det,dety00,detz00,P0y,P0z,pixelysize,pixelzsize,dety0,detz0, ...
+    Lsam2sou,Lsam2det,dety00,detz00,P0y,P0z,RotAxisOffset,pixelysize,pixelzsize,dety0,detz0, ...
     thetamax,lambda_min,lambda_max,detysize,detzsize,BeamStopY,BeamStopZ)
 
 % % for testing
@@ -67,7 +67,7 @@ function [Output,Gt_matched_all]=ForwardCalc_OR_space_Gt(q_b,q_c,q_d,dim_OR,RotD
                 U = [r00 r01 r02;r10 r11 r12;r20 r21 r22];
                 [Gt_matched_all{i},Nr_match,~,Gt_matched_cost,NrSpotExpectAll]=calc_Gt_match(U,pos,SpotsSelect, ...
                     rot_angles_select,rot_start,rot_step,S,B,Ahkl,nrhkl,RotDet, ...
-                    hkl_family,hkl_family_square,d_possible,Glen_possible,Lsam2sou,Lsam2det,dety00,detz00,P0y,P0z, ...
+                    hkl_family,hkl_family_square,d_possible,Glen_possible,Lsam2sou,Lsam2det,dety00,detz00,P0y,P0z,RotAxisOffset, ...
                     pixelysize,pixelzsize,dety0,detz0,thetamax,lambda_min,lambda_max,detysize,detzsize,BeamStopY,BeamStopZ);
                 Output(i,:)=[i Nr_match Gt_matched_cost Nr_match/NrSpotExpectAll q0 q1 q2 q3];
             end
@@ -103,7 +103,7 @@ function [Output,Gt_matched_all]=ForwardCalc_OR_space_Gt(q_b,q_c,q_d,dim_OR,RotD
             U = [r00 r01 r02;r10 r11 r12;r20 r21 r22];
             [Gt_matched_all{i},Nr_match,~,Gt_matched_cost,NrSpotExpectAll]=calc_Gt_match(U,pos,SpotsSelect, ...
                 rot_angles_select,rot_start,rot_step,S,B,Ahkl,nrhkl,RotDet, ...
-                hkl_family,hkl_family_square,d_possible,Glen_possible,Lsam2sou,Lsam2det,dety00,detz00,P0y,P0z, ...
+                hkl_family,hkl_family_square,d_possible,Glen_possible,Lsam2sou,Lsam2det,dety00,detz00,P0y,P0z,RotAxisOffset, ...
                 pixelysize,pixelzsize,dety0,detz0,thetamax,lambda_min,lambda_max,detysize,detzsize,BeamStopY,BeamStopZ);            
             Output(i,:)=[i Nr_match Gt_matched_cost Nr_match/NrSpotExpectAll q0 q1 q2 q3];
         end
@@ -116,7 +116,7 @@ end
 % Sep 23, 2021
 function [Gt_matched_all,Nr_match,Gt_matched_all_mean,Gt_matched_cost,NrSpotExpectAll]=calc_Gt_match(U,pos,Spots, ...
     rot_angles,rot_start,rot_step,S,B,Ahkl,nrhkl,RotDet, ...
-    hkl_family,hkl_family_square,d_possible,Glen_possible,Lsam2sou,Lsam2det,dety00,detz00,P0y,P0z, ...
+    hkl_family,hkl_family_square,d_possible,Glen_possible,Lsam2sou,Lsam2det,dety00,detz00,P0y,P0z,RotAxisOffset, ...
     pixelysize,pixelzsize,dety0,detz0,thetamax,lambda_min,lambda_max,detysize,detzsize,BeamStopY,BeamStopZ)
     
     L=Lsam2sou+Lsam2det;
@@ -126,12 +126,13 @@ function [Gt_matched_all,Nr_match,Gt_matched_all_mean,Gt_matched_cost,NrSpotExpe
     NrSpotExpectAll=0;
     
     % consider the detector tilts for calculating the diffraction vector
-    d_tr=RotDet'*[Lsam2det dety00 detz00]';
+    d_tr=RotDet'*[Lsam2det dety00-RotAxisOffset detz00]';
     Lsam2det_tr=d_tr(1)/RotDet(1,1);
     dety00_tr=RotDet(1,2)*Lsam2det_tr-d_tr(2);
     detz00_tr=RotDet(1,3)*Lsam2det_tr-d_tr(3);
     L_tr=Lsam2sou+Lsam2det_tr;
     
+    pos(:,2)=pos(:,2)-RotAxisOffset;
     for rot=rot_angles
         rot_number=(rot-rot_start)/rot_step+1;
         dety=Spots{rot_number}(:,9);
@@ -140,21 +141,21 @@ function [Gt_matched_all,Nr_match,Gt_matched_all_mean,Gt_matched_cost,NrSpotExpe
         omega=rot*pi/180; % [rad]
         Omega=[cos(omega) -sin(omega) 0;sin(omega) cos(omega) 0;0 0 1];
         SamposW=Omega*S*pos';
-        center = [L_tr, (SamposW(2)-P0y)*L_tr/(Lsam2sou+SamposW(1)), ...
+        center = [L_tr, (SamposW(2)-P0y+RotAxisOffset)*L_tr/(Lsam2sou+SamposW(1)), ...
             (SamposW(3)-P0z)*L_tr/(Lsam2sou+SamposW(1))]; % sample center projected to the position of the detector
-        alpha = atan(sqrt((SamposW(2)-P0y)^2+(SamposW(3)-P0z)^2)/(Lsam2sou+SamposW(1)));
-        grainpos = [Lsam2sou+SamposW(1) SamposW(2)-P0y SamposW(3)-P0z];
+        alpha = atan(sqrt((SamposW(2)-P0y+RotAxisOffset)^2+(SamposW(3)-P0z)^2)/(Lsam2sou+SamposW(1)));
+        grainpos = [Lsam2sou+SamposW(1) SamposW(2)-P0y+RotAxisOffset SamposW(3)-P0z];
 
         % unit vectors along incoming and diffracted beams
-        Kin_unit=[Lsam2sou+SamposW(1),SamposW(2)-P0y,SamposW(3)-P0z]./ ...
-            norm([Lsam2sou+SamposW(1),SamposW(2)-P0y,SamposW(3)-P0z]); % unit vector along the incoming beam 
+        Kin_unit=[Lsam2sou+SamposW(1),SamposW(2)-P0y+RotAxisOffset,SamposW(3)-P0z]./ ...
+            norm([Lsam2sou+SamposW(1),SamposW(2)-P0y+RotAxisOffset,SamposW(3)-P0z]); % unit vector along the incoming beam 
 %         dety22=(dety0-dety+0.5)*pixelysize; % [mm]
 %         detz22=(detz0-detz+0.5)*pixelzsize; % [mm]
         dety22=(dety0-dety)*pixelysize; % [mm]
         detz22=(detz0-detz)*pixelzsize; % [mm]
         
-        Kout_unit=[repmat(Lsam2det-SamposW(1),length(dety),1),dety22-SamposW(2)-dety00,detz22-SamposW(3)-detz00]./ ...
-            sqrt((Lsam2det-SamposW(1)).^2+(dety22-SamposW(2)-dety00).^2+(detz22-SamposW(3)-detz00).^2); % unit vector along the diffracted beam
+        Kout_unit=[repmat(Lsam2det-SamposW(1),length(dety),1),dety22-SamposW(2)-dety00+RotAxisOffset,detz22-SamposW(3)-detz00]./ ...
+            sqrt((Lsam2det-SamposW(1)).^2+(dety22-SamposW(2)-dety00+RotAxisOffset).^2+(detz22-SamposW(3)-detz00).^2); % unit vector along the diffracted beam
         
         % consider the detector tilts for calculating the diffraction vector
 %         d_tr=RotDet'*[Lsam2det dety00 detz00]';
@@ -179,7 +180,7 @@ function [Gt_matched_all,Nr_match,Gt_matched_all_mean,Gt_matched_cost,NrSpotExpe
         Gt=Omega*Gw;
         Gt=Gt';
         NrSpotExpect=calcExpectSpotNr(Gt',hkl,grainpos,center,alpha,RotDet, ...
-        SamposW,thetamax,lambda_min,lambda_max,Lsam2det,dety00,detz00, ...
+        SamposW,thetamax,lambda_min,lambda_max,Lsam2det,dety00,detz00,RotAxisOffset, ...
         pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ);
         NrSpotExpectAll=NrSpotExpectAll+NrSpotExpect;
 

@@ -2,11 +2,11 @@
 % Feb 14, 2022
 function [DS_out]=revise_all_unindexed_voxel(DS_in,proj_bin_bw,rot_angles,S,B,Ahkl,nrhkl,hklnumber,hkl_square, ...
             RotDet,thetamax,lambda_min,lambda_max,Lsam2sou,Lsam2det,minEucDis,minComp,dety00,detz00,P0y,P0z, ...
-            pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ, ...
+            RotAxisOffset,pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ, ...
             tomo_scale,RecVolumePixel,simap_data_flag,revise_all,search_radius)
-if nargin<34
+if nargin<35 || ~exist('search_radius','var')
     search_radius=20; % radius of search region to find candidate orientations [pixel]
-    sprintf('search_radius = %d pixels',search_radius)
+    fprintf('search_radius = %d pixels\n',search_radius)
 end
 DS_out=DS_in;
 
@@ -27,7 +27,7 @@ for i = DS_in.SeedID
     U=euler2u(DS_in.EulerAngle(i,1)*pi/180,DS_in.EulerAngle(i,2)*pi/180,DS_in.EulerAngle(i,3)*pi/180);
     [Nr_simu,Nr_intersect,~]=forward_comp(U,proj_bin_bw,pos,rot_angles,S,B,Ahkl,nrhkl, ...
             RotDet,thetamax,lambda_min,lambda_max,Lsam2sou,Lsam2det,minEucDis,dety00,detz00,P0y,P0z, ...
-            pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ);
+            RotAxisOffset,pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ);
     DS_in.SeedComp(i,1)=Nr_intersect/Nr_simu;
 end
 
@@ -36,27 +36,13 @@ un_indexed_voxels=[];
 [un_indexed_voxels(:,1), un_indexed_voxels(:,2), un_indexed_voxels(:,3)]=ind2sub(size(DS_in.VisitFlag), ...
         find(DS_in.GrainId==0 & DS_in.Mask==1));
 if ~isempty(un_indexed_voxels)
-    sprintf('find %d un-indexed voxels',length(un_indexed_voxels(:,1)))
+    fprintf('find %d un-indexed voxels\n',length(un_indexed_voxels(:,1)))
 else
-    sprintf('find 0 un-indexed voxels')
+    fprintf('find 0 un-indexed voxels\n')
 end
 
 % indices for indexed voxels yielding less than n-voxel size grains, n=2 by default
-doubt_indexed_voxels=[];
-nVox_min=5;
-minComp_thres=min([minComp*1.15 0.52]);
-doubt_indexed_GrainId=DS_in.SeedID(DS_in.nVox<=nVox_min | DS_in.SeedComp<=minComp_thres);
-if ~isempty(doubt_indexed_GrainId)
-    for i=doubt_indexed_GrainId
-        ind=[];
-        [ind(:,1),ind(:,2),ind(:,3)]=ind2sub(size(DS_in.GrainId),find(DS_in.GrainId==i));
-        doubt_indexed_voxels=[doubt_indexed_voxels;ind];
-    end
-    sprintf('find %d doubtful grains (<= %d voxels or seedcomp <= %.3f): %d voxels', ...
-        length(doubt_indexed_GrainId),nVox_min,minComp_thres,length(doubt_indexed_voxels(:,1)))
-else
-    sprintf('find 0 doubtful grains (<= %d voxels)',nVox_min)
-end
+doubt_indexed_voxels = find_doubt_indexed_voxels(DS_in,minComp,1);
 
 % all voxels waiting for revision
 % revise_all=0;
@@ -89,11 +75,11 @@ if ~isempty(wait_revising_voxels)
             [Comp, Dis_median,ind]=revise_all_unindexed_voxel_fun(id_neigb,DS_in,proj_bin_bw,pos,rot_angles, ...
                 S,B,Ahkl,nrhkl,hklnumber,hkl_square, ...
                 RotDet,thetamax,lambda_min,lambda_max,Lsam2sou,Lsam2det,minEucDis,dety00,detz00,P0y,P0z, ...
-                pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ);
+                RotAxisOffset,pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ);
             if Comp(ind)>=DS_in.Completeness(xn,yn,zn)
                 reindex_out(i,:)=[i,Comp(ind),Dis_median(ind),id_neigb(ind),ind];
             end
-            sprintf('Voxel %d: old orientation (C = %.3f, grain_id = %d) vs new one (C = %.3f, grain_id = %d).', ...
+            fprintf('Voxel %d: old orientation (C = %.3f, grain_id = %d) vs new one (C = %.3f, grain_id = %d).\n', ...
                     i,DS_in.Completeness(xn,yn,zn),DS_in.GrainId(xn,yn,zn),Comp(ind),id_neigb(ind))
         end
     else
@@ -115,11 +101,11 @@ if ~isempty(wait_revising_voxels)
             [Comp, Dis_median,ind]=revise_all_unindexed_voxel_fun(id_neigb,DS_in,proj_bin_bw,pos,rot_angles, ...
                 S,B,Ahkl,nrhkl,hklnumber,hkl_square, ...
                 RotDet,thetamax,lambda_min,lambda_max,Lsam2sou,Lsam2det,minEucDis,dety00,detz00,P0y,P0z, ...
-                pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ);
+                RotAxisOffset,pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ);
             if Comp(ind)>=DS_in.Completeness(xn,yn,zn)
                 reindex_out(i,:)=[i,Comp(ind),Dis_median(ind),id_neigb(ind),ind];
             end
-            sprintf('Voxel %d: old orientation (C = %.3f, grain_id = %d) vs new one (C = %.3f, grain_id = %d).', ...
+            fprintf('Voxel %d: old orientation (C = %.3f, grain_id = %d) vs new one (C = %.3f, grain_id = %d).\n', ...
                     i,DS_in.Completeness(xn,yn,zn),DS_in.GrainId(xn,yn,zn),Comp(ind),id_neigb(ind))
         end
     end
@@ -142,7 +128,7 @@ if ~isempty(wait_revising_voxels)
             count=count+1;
         end
     end
-    sprintf('%d / %d voxels have been re-indexed and successfully revised: taking %0.2f s.', ...
+    fprintf('%d / %d voxels have been re-indexed and successfully revised: taking %0.2f s.\n', ...
         count,length(wait_revising_voxels(:,1)),revise_time)
 else
     sprintf('No need to revise any voxels.')
@@ -152,7 +138,7 @@ end
 function [Comp, Dis_median,ind]=revise_all_unindexed_voxel_fun(id_neigb,DS_in,proj_bin_bw,pos,rot_angles, ...
             S,B,Ahkl,nrhkl,hklnumber,hkl_square, ...
             RotDet,thetamax,lambda_min,lambda_max,Lsam2sou,Lsam2det,minEucDis,dety00,detz00,P0y,P0z, ...
-            pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ)
+            RotAxisOffset,pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ)
 
 Comp=[];
 Dis_median=[];
@@ -160,7 +146,7 @@ for j=1:size(id_neigb,1)
     UU=euler2u(DS_in.EulerAngle(id_neigb(j),1)*pi/180,DS_in.EulerAngle(id_neigb(j),2)*pi/180,DS_in.EulerAngle(id_neigb(j),3)*pi/180);
     [Nr_simu,Nr_intersect,dis_median]=forward_comp(UU,proj_bin_bw,pos,rot_angles,S,B,Ahkl,nrhkl, ...
         RotDet,thetamax,lambda_min,lambda_max,Lsam2sou,Lsam2det,minEucDis,dety00,detz00,P0y,P0z, ...
-        pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ);
+        RotAxisOffset,pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ);
     Comp=[Comp;Nr_intersect/Nr_simu];
     Dis_median=[Dis_median;dis_median];
 end

@@ -38,10 +38,10 @@ else
 end
 RecVolumePixel=RecVolumePixel_FOV;
 
-sprintf('Start grain reconstruction for %s ...',SampleName)
-sprintf('The fullvolume has dimensions in X from %d to %d ...',RecVolumePixel(1,1),RecVolumePixel(1,2))
-sprintf('The fullvolume has dimensions in Y from %d to %d ...',RecVolumePixel(2,1),RecVolumePixel(2,2))
-sprintf('The fullvolume has dimensions in Z from %d to %d ...',RecVolumePixel(3,1),RecVolumePixel(3,2))
+fprintf('Start grain reconstruction for %s ...\n',SampleName)
+fprintf('The fullvolume has dimensions in X from %d to %d ...\n',RecVolumePixel(1,1),RecVolumePixel(1,2))
+fprintf('The fullvolume has dimensions in Y from %d to %d ...\n',RecVolumePixel(2,1),RecVolumePixel(2,2))
+fprintf('The fullvolume has dimensions in Z from %d to %d ...\n',RecVolumePixel(3,1),RecVolumePixel(3,2))
 
 if strcmp(compute_opt,'gpu_cuda_index_compete') == 1
     GrainMapping_index_and_compete(OutputFolder,fname_prefix,RecVolumePixel,SampleName);

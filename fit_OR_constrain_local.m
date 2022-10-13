@@ -4,7 +4,7 @@
 
 function [indexing_OR,indexing_result,confident_index_list,spots_pair]=fit_OR_constrain_local(i,index_seeds,RotDet, ...
     proj_bin_bw,Spots,pos_indexing,rot_angles,S,B,Ahkl,nrhkl,thetamax,lambda_min,lambda_max, ...
-    Lsam2sou,Lsam2det,minEucDis,dety00,detz00,P0y,P0z, ...
+    Lsam2sou,Lsam2det,minEucDis,dety00,detz00,P0y,P0z,RotAxisOffset, ...
     pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ)
 
 SpotsPair={};
@@ -17,7 +17,7 @@ if length(index_seeds(:,1))>20
         x0=[index_seeds(j,6:8)];
         Err2Sum=@(x)fit_OR_fun(x,proj_bin_bw,pos_indexing,rot_angles,S,B,Ahkl,nrhkl,RotDet, ...
             thetamax,lambda_min,lambda_max,Lsam2sou,Lsam2det,minEucDis,dety00,detz00,P0y,P0z, ...
-            pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ);
+            RotAxisOffset,pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ);
         opts=optimset('Display','off','Algorithm',{'levenberg-marquardt',0.005}, ...
             'MaxFunEvals',2000,'MaxIter',2000,'TolFun',1e-10);
         LB=[max([x0(1)-0.05 -1]) max([x0(2)-0.05 -1]) max([x0(3)-0.05 -1])];
@@ -43,7 +43,7 @@ if length(index_seeds(:,1))>20
 
         % indexing verification
         [Nr_simu,Nr_intersect,dis_mean,~,SpotsPair{j}]=forward_comp_pair_spots(UU,proj_bin_bw,Spots,pos_indexing,rot_angles,S,B,Ahkl,nrhkl, ...
-            RotDet,thetamax,lambda_min,lambda_max,Lsam2sou,Lsam2det,minEucDis,dety00,detz00,P0y,P0z, ...
+            RotDet,thetamax,lambda_min,lambda_max,Lsam2sou,Lsam2det,minEucDis,dety00,detz00,P0y,P0z,RotAxisOffset, ...
             pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ);
         % save the result
         indexing_result(j,:)=[i pos_indexing Nr_simu Nr_intersect Nr_intersect/Nr_simu ...
@@ -56,7 +56,7 @@ else
     x0=[index_seeds(j,6:8)];
     Err2Sum=@(x)fit_OR_fun(x,proj_bin_bw,pos_indexing,rot_angles,S,B,Ahkl,nrhkl,RotDet, ...
         thetamax,lambda_min,lambda_max,Lsam2sou,Lsam2det,minEucDis,dety00,detz00,P0y,P0z, ...
-        pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ);
+        RotAxisOffset,pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ);
     opts=optimset('Display','off','Algorithm',{'levenberg-marquardt',0.005}, ...
         'MaxFunEvals',2000,'MaxIter',2000,'TolFun',1e-10);
     LB=[max([x0(1)-0.05 -1]) max([x0(2)-0.05 -1]) max([x0(3)-0.05 -1])];
@@ -83,7 +83,7 @@ else
     % indexing verification
     [Nr_simu,Nr_intersect,dis_mean,~,SpotsPair{j}]=forward_comp_pair_spots(UU,proj_bin_bw,Spots,pos_indexing,rot_angles,S,B,Ahkl,nrhkl, ...
             RotDet,thetamax,lambda_min,lambda_max,Lsam2sou,Lsam2det,minEucDis,dety00,detz00,P0y,P0z, ...
-            pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ);
+            RotAxisOffset,pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ);
     % save the result
     indexing_result(j,:)=[i pos_indexing Nr_simu Nr_intersect Nr_intersect/Nr_simu ...
         dis_mean yaw pitch roll rod quat];
@@ -101,7 +101,7 @@ end
 % maximize the completeness to derive orientation expressed by quaternions
 function Err2Sum=fit_OR_fun(x,proj_bin_bw,pos,rot_angles,S,B,Ahkl,nrhkl,RotDet, ...
     thetamax,lambda_min,lambda_max,Lsam2sou,Lsam2det,minEucDis,dety00,detz00,P0y,P0z, ...
-    pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ)
+    RotAxisOffset,pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ)
 
     L=Lsam2sou+Lsam2det; % [mm]
     % x is represented by the last three quantities of the quaternions (a, b, c, d)
@@ -134,15 +134,16 @@ function Err2Sum=fit_OR_fun(x,proj_bin_bw,pos,rot_angles,S,B,Ahkl,nrhkl,RotDet, 
 
     hkl = [Ahkl(1:nrhkl,1) Ahkl(1:nrhkl,2) Ahkl(1:nrhkl,3)]';
     Gw = S*U*B*hkl;
+    pos(:,2)=pos(:,2)-RotAxisOffset;
     for i=1:length(rot_angles)    
         omega=rot_angles(i)*pi/180; % [rad]
         Omega(:,:,i)=[cos(omega) -sin(omega) 0;sin(omega) cos(omega) 0;0 0 1];
 
         SamposW=Omega(:,:,i)*S*pos';
-        center = [L, (SamposW(2)-P0y)*L/(Lsam2sou+SamposW(1)), ...
+        center = [L, (SamposW(2)-P0y+RotAxisOffset)*L/(Lsam2sou+SamposW(1)), ...
             (SamposW(3)-P0z)*L/(Lsam2sou+SamposW(1))]; % sample center projected to the position of the detector
-        alpha = atan(sqrt((SamposW(2)-P0y)^2+(SamposW(3)-P0z)^2)/(Lsam2sou+SamposW(1)));
-        grainpos = [Lsam2sou+SamposW(1) SamposW(2)-P0y SamposW(3)-P0z];
+        alpha = atan(sqrt((SamposW(2)-P0y+RotAxisOffset)^2+(SamposW(3)-P0z)^2)/(Lsam2sou+SamposW(1)));
+        grainpos = [Lsam2sou+SamposW(1) SamposW(2)-P0y+RotAxisOffset SamposW(3)-P0z];
 
         Gt=Omega(:,:,i)*Gw;
         v1 = [zeros(1,size(hkl,2));Gt(2,:);Gt(3,:)];
@@ -167,15 +168,15 @@ function Err2Sum=fit_OR_fun(x,proj_bin_bw,pos,rot_angles,S,B,Ahkl,nrhkl,RotDet, 
 
         K_out_unit = ([ones(1,size(hkl,2))*Lsam2det;dety22;detz22]-ones(1,size(hkl,2)).*SamposW) ...
             ./((Lsam2det-SamposW(1)).^2+(dety22-SamposW(2)).^2+(detz22-SamposW(3)).^2).^(1/2);
-        t = (RotDet(1,1)*(Lsam2det-SamposW(1))-RotDet(2,1)*(dety00-SamposW(2))-RotDet(3,1)*(detz00-SamposW(3)))./ ...
-        (RotDet(1,1)*K_out_unit(1,:)+RotDet(2,1)*K_out_unit(2,:)+RotDet(3,1)*K_out_unit(3,:));
+        t = (RotDet(1,1)*(Lsam2det-SamposW(1))+RotDet(2,1)*(dety00-RotAxisOffset-SamposW(2))+RotDet(3,1)*(detz00-SamposW(3)))./ ...
+            (RotDet(1,1)*K_out_unit(1,:)+RotDet(2,1)*K_out_unit(2,:)+RotDet(3,1)*K_out_unit(3,:));
 
-        dety22 = [RotDet(1,2) RotDet(2,2) RotDet(3,2)]*(t.*K_out_unit+[SamposW(1)-Lsam2det SamposW(2)-dety00 SamposW(3)-detz00]');
-        detz22 = [RotDet(1,3) RotDet(2,3) RotDet(3,3)]*(t.*K_out_unit+[SamposW(1)-Lsam2det SamposW(2)-dety00 SamposW(3)-detz00]');
+        dety22 = [RotDet(1,2) RotDet(2,2) RotDet(3,2)]*(t.*K_out_unit+[SamposW(1)-Lsam2det SamposW(2)-dety00+RotAxisOffset SamposW(3)-detz00]');
+        detz22 = [RotDet(1,3) RotDet(2,3) RotDet(3,3)]*(t.*K_out_unit+[SamposW(1)-Lsam2det SamposW(2)-dety00+RotAxisOffset SamposW(3)-detz00]');
 %         dety = -round(dety22/pixelysize-0.5)+dety0; % [pixel]
 %         detz = -round(detz22/pixelzsize-0.5)+detz0; % [pixel]
-        dety = -round(dety22/pixelysize)+dety0; % [pixel]
-        detz = -round(detz22/pixelzsize)+detz0; % [pixel]
+        dety = round(-dety22/pixelysize+dety0); % [pixel]
+        detz = round(-detz22/pixelzsize+detz0); % [pixel]
 
         select3=find(beta > pi/2 & beta < (90+thetamax*4)/180*pi & ...
         lambdahkl > lambda_min & lambdahkl < lambda_max & ...

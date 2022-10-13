@@ -291,7 +291,7 @@ while stop_grain_indexing~=1
         length(find(indexing_final(:,7)>=minComp))/length(find(indexing_final(:,7)>0)))
     save(fullfile(OutputFolder,[strcat('pos',num2str(iter)) '.mat']),'pos_seed','pos_seed_new');
     %%%%%%%%%%%%%%%% store intermediate data
-    if length(find(indexing_final(:,7)>=minComp))/length(find(indexing_final(:,7)>0))<1/4
+    if length(find(indexing_final(:,7)>=minComp))/length(find(indexing_final(:,7)>0))<1/4 && Nr_seed<300
         Nr_seed=300;
         sprintf("Nr_seed switches its value to %d.", Nr_seed)
         not_remove_spot=1;

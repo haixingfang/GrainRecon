@@ -6,6 +6,9 @@ Lsam2sou=geo.Lsam2sou;
 Lsam2det=geo.Lsam2det;
 P0y=geo.P0y;
 P0z=geo.P0z;
+if isfield(geo,'RotAxisOffset')
+    RotAxisOffset=geo.RotAxisOffset;
+end
 dety00=geo.dety00;
 detz00=geo.detz00;
 tilt_x=geo.tilt_x;

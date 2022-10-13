@@ -8,7 +8,7 @@
 function [DS_merge,i,id0,Inherit_region_nr,CentroidComp]=merge_and_update_completeness_mtex(DS,mtex_avail,cs,min_misori,proj_bin_bw, ...
         Spots,rot_start,rot_step,rot_angles,S,B,Ahkl,nrhkl,hklnumber,hkl_square, ...
         RotDet,thetamax,lambda_min,lambda_max,Lsam2sou,Lsam2det,minEucDis,dety00,detz00,P0y,P0z, ...
-        pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ, ...
+        RotAxisOffset,pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ, ...
         tomo_scale,VoxSize,RecVolumePixel,simap_data_flag)
     
 % % for testing
@@ -144,7 +144,7 @@ while stop_merge~=1
                 % indexing verification
                 [Nr_simu,Nr_intersect,~]=forward_comp(U_new,proj_bin_bw,pos_indexing,rot_angles,S,B,Ahkl,nrhkl, ...
                     RotDet,thetamax,lambda_min,lambda_max,Lsam2sou,Lsam2det,minEucDis,dety00,detz00,P0y,P0z, ...
-                    pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ);      
+                    RotAxisOffset,pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ);      
                 update_completeness_factor(k)=(Nr_intersect/Nr_simu)/DS.Completeness(pos_indices(1),pos_indices(2),pos_indices(3));
             end
             DS_merge.Completeness(ind)=DS.Completeness(ind)*sum(update_completeness_factor.*weights); % times the weighted factor
@@ -158,9 +158,9 @@ while stop_merge~=1
         % remove the id which have been processed
         id=setdiff(id,[id(1);ID_for_merge]);
 %         if ~isempty(ID_for_merge)
-%             sprintf('%d grains identified. %d regions have been merged and %d regions waiting for merging ...',i,length(ID_for_merge)+1,length(id))
+%             fprintf('%d grains identified. %d regions have been merged and %d regions waiting for merging ...\n',i,length(ID_for_merge)+1,length(id))
 %         else
-%             sprintf('%d grains identified. 0 region has been merged and %d regions waiting for merging ...',i,length(id))
+%             fprintf('%d grains identified. 0 region has been merged and %d regions waiting for merging ...\n',i,length(id))
 %         end
     else
         % update DS_merge
@@ -193,7 +193,7 @@ while stop_merge~=1
 %     % indexing verification
     [Nr_simu,Nr_intersect,~]=forward_comp(U_new,proj_bin_bw,pos_indexing,rot_angles,S,B,Ahkl,nrhkl, ...
             RotDet,thetamax,lambda_min,lambda_max,Lsam2sou,Lsam2det,minEucDis,dety00,detz00,P0y,P0z, ...
-            pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ);
+            RotAxisOffset,pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ);
     CentroidComp(i)=Nr_intersect/Nr_simu;
     
     % update the completeness again, Dec 9, 2021
@@ -205,5 +205,5 @@ while stop_merge~=1
         stop_merge=1;
     end
 end
-sprintf('%d grains identified out of %d regions.',i,length(id0))
+fprintf('%d grains identified out of %d regions.\n',i,length(id0))
 

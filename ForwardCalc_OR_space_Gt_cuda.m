@@ -6,7 +6,7 @@
 
 function Output = ForwardCalc_OR_space_Gt_cuda(pos,OR,S,B,Ahkl,nrhkl,hkl_family_square,d_possible, ...
                         Spots,rot_angles,RotDet,rot_start,rot_step,Lsam2sou,Lsam2det, ...
-                        P0y,P0z,dety00,detz00,pixelysize,pixelzsize,detysize,detzsize)
+                        P0y,P0z,RotAxisOffset,dety00,detz00,pixelysize,pixelzsize,detysize,detzsize)
 % % for testing
 % pos=pos_indexing;
 hkl = [Ahkl(1:nrhkl,1) Ahkl(1:nrhkl,2) Ahkl(1:nrhkl,3)]';
@@ -32,7 +32,7 @@ RotDet_cuda = single(reshape(RotDet',1,9));
 hkl_family_square_cuda = single(hkl_family_square);
 d_possible_cuda = single(d_possible);
 param_cuda = single([hklnumber nr_hkl nr_rot nr_spots rot_start rot_step Lsam2sou Lsam2det P0y P0z ...
-                    dety00 detz00 pixelysize pixelzsize detysize detzsize]);
+                    dety00 detz00 pixelysize pixelzsize detysize detzsize RotAxisOffset]);
 
 % mexcuda cuda_forward_Gt.cu
 % clear Output_cuda tmp Output;

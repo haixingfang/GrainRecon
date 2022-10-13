@@ -25,10 +25,7 @@ switch(ElementName)
 end
 setup_exp;
 L=Lsam2sou+Lsam2det;
-RotX=[1 0 0; 0 cosd(tilt_x) -sind(tilt_x); 0 sind(tilt_x) cosd(tilt_x)];
-RotY=[cosd(tilt_y) 0 sind(tilt_y);0 1 0;-sind(tilt_y) 0 cosd(tilt_y)];
-RotZ=[cosd(tilt_z) -sind(tilt_z) 0;sind(tilt_z) cosd(tilt_z) 0;0 0 1];
-RotDet=RotX*RotY*RotZ;
+RotDet=get_det_R(tilt_x,tilt_y,tilt_z);
 if simap_data_flag==1
     S=[1 0 0;0 1 0;0 0 1];
 else
@@ -42,6 +39,9 @@ sprintf('hklnumber = %.0f, C_trust = %.2f, C_min = %.2f, drop_off = %.2f, minEuc
 B=FormB(cell);
 V = cellvolume(cell); % [Angs^3]
 
+if ~exist('RotAxisOffset','var')
+    RotAxisOffset=0; % added on Aug 30, 2022
+end
 sprintf('Tomo and spot files will be loaded from %s',FileFolder)
 sprintf('Output files will be written to %s',OutputFolder)
 
@@ -130,14 +130,14 @@ if length(DS_new.SeedID)>length(DS_fit.SeedID)
     [SpotNr_simu_all,SpotNr_obs_all,SpotsPair_all,GrainIndex_all,SubGrain_all,~,SmallGrID]=Forward_simu_spots_exp(DS_new, ...
         Rsample,RecVolumePixel,tomo_scale,ExpTime,atomparam,proj,Spots,rot_start,rot_step, ...
         S,B,Ahkl,nrhkl,hkl_square,Energy,lambda,V,K1,I0E,RotDet,thetamax,lambda_min,lambda_max,Lsam2sou,Lsam2det, ...
-        dety00,detz00,P0y,P0z,pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ, ...
+        dety00,detz00,P0y,P0z,RotAxisOffset,pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ, ...
         simap_data_flag,strcat(OutputFolder,'/grains_all'),[rot_start:3*rot_step:rot_end-180]);
 end
     rot_angles_simu=[rot_start:2*rot_step:rot_end];
     [SpotNr_simu,SpotNr_obs,SpotsPair,GrainIndex,SubGrain,rot_angles_calc,~]=Forward_simu_spots_exp(DS_fit, ...
         Rsample,RecVolumePixel,tomo_scale,ExpTime,atomparam,proj,Spots,rot_start,rot_step, ...
         S,B,Ahkl,nrhkl,hkl_square,Energy,lambda,V,K1,I0E,RotDet,thetamax,lambda_min,lambda_max,Lsam2sou,Lsam2det, ...
-        dety00,detz00,P0y,P0z,pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ, ...
+        dety00,detz00,P0y,P0z,RotAxisOffset,pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ, ...
         simap_data_flag,strcat(OutputFolder,'/grains_forfit'),rot_angles_simu);
 if length(DS_new.SeedID)==length(DS_fit.SeedID)
     SpotsPair_all=SpotsPair;
@@ -153,9 +153,9 @@ SpotsPair_all=make_unique_spot_pair(SpotsPair_all0);
 
 % col 13-14 forward simulated position; col 16-17 experimental position [pixel]
 [ErrMean0,Err0,dis_y0,dis_z0]=dis_calc_spotspair([Lsam2sou Lsam2det dety00 detz00 tilt_x tilt_y tilt_z], ...
-    SpotsPair,S,B,P0y,P0z,pixelysize,pixelzsize,dety0,detz0);
+        SpotsPair,S,B,P0y,P0z,RotAxisOffset,pixelysize,pixelzsize,dety0,detz0);
 [ErrMean0_all,Err0_all,dis_y0_all,dis_z0_all]=dis_calc_spotspair([Lsam2sou Lsam2det dety00 detz00 tilt_x tilt_y tilt_z], ...
-    SpotsPair_all,S,B,P0y,P0z,pixelysize,pixelzsize,dety0,detz0);
+    SpotsPair_all,S,B,P0y,P0z,RotAxisOffset,pixelysize,pixelzsize,dety0,detz0);
 fprintf('%d spots are selected for fitting the geometry. \n',length(SpotsPair(:,1)));
 fprintf('Average distance for selected grains is %.2f pixels. \n',ErrMean0);
 fprintf('Average distance for all grains is %.2f pixels. \n',ErrMean0_all);
@@ -174,7 +174,7 @@ for j=1:iter_fit
         x0(j,6)=tilt_y-1+rand(1)*2;
         x0(j,7)=tilt_z-1+rand(1)*2;
     end
-    [ParaFit(j,:),fval(j)]=L_shift_tilt_fitting(SpotsPair,S,B,P0y,P0z,pixelysize,pixelzsize, ...
+    [ParaFit(j,:),fval(j)]=L_shift_tilt_fitting(SpotsPair,S,B,P0y,P0z,RotAxisOffset,RotAxisOffset,pixelysize,pixelzsize, ...
         dety0,detz0,x0(j,1),x0(j,2),x0(j,3),x0(j,4),x0(j,5),x0(j,6),x0(j,7),'FitAllOnce');
     j
 end
@@ -184,9 +184,10 @@ ParaFit=ParaFit(ind,:);
 fval=fval(ind);
 
 % col 13-14 forward simulated position; col 16-17 experimental position [pixel]
-[ErrMean_fit,Err_fit,dis_y_fit,dis_z_fit]=dis_calc_spotspair(ParaFit,SpotsPair,S,B,P0y,P0z,pixelysize,pixelzsize,dety0,detz0);
+[ErrMean_fit,Err_fit,dis_y_fit,dis_z_fit]=dis_calc_spotspair(ParaFit,SpotsPair,S,B,P0y,P0z,RotAxisOffset, ...
+    pixelysize,pixelzsize,dety0,detz0);
 [ErrMean_all_fit,Err_all_fit,dis_y_all_fit,dis_z_all_fit]=dis_calc_spotspair(ParaFit, ...
-    SpotsPair_all,S,B,P0y,P0z,pixelysize,pixelzsize,dety0,detz0);
+    SpotsPair_all,S,B,P0y,P0z,RotAxisOffset,pixelysize,pixelzsize,dety0,detz0);
 fprintf('Average distances for selected grains before and after fitting are %.2f and %.2f pixels,respectively. \n', ...
     ErrMean0,ErrMean_fit);
 fprintf('Average distances for all grains before and after fitting are %.2f and %.2f pixels,respectively. \n', ...
@@ -195,10 +196,12 @@ fprintf('Average distances for all grains before and after fitting are %.2f and 
 Forward_simu_spots_exp_after_geo_fit(DS_fit,ParaFit, ...
     Rsample,RecVolumePixel,tomo_scale,ExpTime,atomparam,proj,Spots,rot_start,rot_step, ...
     S,B,Ahkl,nrhkl,hkl_square,Energy,lambda,V,K1,I0E,thetamax,lambda_min,lambda_max, ...
-    P0y,P0z,pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ, ...
+    P0y,P0z,RotAxisOffset,pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ, ...
     simap_data_flag,OutputFolder,[rot_start:2*rot_step:rot_end-180]);
 
 if true
     plot_dis;
 %     slice0=slice_show(DS_new,round(DS_new.Dimension(3)/2),1,0,0)
 end
+
+

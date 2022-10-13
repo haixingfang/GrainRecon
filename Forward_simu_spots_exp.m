@@ -5,12 +5,12 @@ function [SpotNr_simu,SpotNr_obs,SpotsPair_all,GrainIndex_all,SubGrain,rot_angle
     SpotNr_simu_hkl,SpotNr_obs_hkl]=Forward_simu_spots_exp(DS,Rsample,RecVolumePixel, ...
     tomo_scale,ExpTime,atomparam,proj,Spots,rot_start,rot_step,S,B,Ahkl,nrhkl,hkl_square, ...
     Energy,lambda,V,K1,I0E,RotDet,thetamax,lambda_min,lambda_max,Lsam2sou,Lsam2det,dety00,detz00,P0y,P0z, ...
-    pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ,simap_data_flag, ...
+    RotAxisOffset,pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ,simap_data_flag, ...
     OutputFolder,rot_angles,simu_grainno)
 % for testing
 % DS=DS_fit;
 
-if nargin<=41
+if nargin<=42
     simu_grainno=1:length(DS.SeedID);
 end
 L = Lsam2sou + Lsam2det;
@@ -41,8 +41,10 @@ for jj=simu_grainno%1:length(DS.SeedID)
         Scaling=1;
     elseif DS.nVox(jj)<8000
         Scaling=0.5;
-    else
+    elseif DS.nVox(jj)<4000*4^3
         Scaling=0.25;
+    else
+        Scaling=1/((DS.nVox(jj)/4000)^(1/3));
     end
     zz=imresize3(yy,Scaling,'nearest'); % function valid after 2017a
     Binning=size(yy)./size(zz);
@@ -168,11 +170,12 @@ for rot = rot_angles
         % Gt is the G-vector in the tilted system (identical to the lab-system except for the tilt of sample stage)
         % All angles in A are in degrees
         pos=SubGrain{grainno}(:,2:4); % [mm]
+        pos(:,2)=pos(:,2)-RotAxisOffset;
         SamposW_all=Omega*S*pos';
-        center_all = [L*ones(1,size(SamposW_all,2)); (SamposW_all(2,:)-P0y)*L./(Lsam2sou+SamposW_all(1,:)); ...
+        center_all = [L*ones(1,size(SamposW_all,2)); (SamposW_all(2,:)-P0y+RotAxisOffset)*L./(Lsam2sou+SamposW_all(1,:)); ...
             (SamposW_all(3,:)-P0z)*L./(Lsam2sou+SamposW_all(1,:))]'; % sample center projected to the position of the detector
-        alpha_all = atan(sqrt((SamposW_all(2,:)-P0y).^2+(SamposW_all(3,:)-P0z).^2)./(Lsam2sou+SamposW_all(1,:)));
-        grainpos_all = [Lsam2sou+SamposW_all(1,:); SamposW_all(2,:)-P0y; SamposW_all(3,:)-P0z]';
+        alpha_all = atan(sqrt((SamposW_all(2,:)-P0y+RotAxisOffset).^2+(SamposW_all(3,:)-P0z).^2)./(Lsam2sou+SamposW_all(1,:)));
+        grainpos_all = [Lsam2sou+SamposW_all(1,:); SamposW_all(2,:)-P0y+RotAxisOffset; SamposW_all(3,:)-P0z]';
 
         Gw = S*U*B*hkl;
         Gt=Omega*Gw;
@@ -180,7 +183,8 @@ for rot = rot_angles
         Glen = (Gt(1,:).^2 + Gt(2,:).^2 + Gt(3,:).^2).^0.5;
         nr=1;
         nrefl = 1;
-        SubA{grainno}=[];
+%         SubA{grainno}=[];
+        SubA{grainno} = zeros(length(SubGrain{grainno}(:,1))*size(hkl,2),23); % maximum size
         for subgrainno=1:length(SubGrain{grainno}(:,1))
             SamposW=SamposW_all(:,subgrainno);
             center=center_all(subgrainno,:);
@@ -206,15 +210,15 @@ for rot = rot_angles
 
             K_out_unit = ([ones(1,size(hkl,2))*Lsam2det;dety22;detz22]-ones(1,size(hkl,2)).*SamposW) ...
                 ./((Lsam2det-SamposW(1)).^2+(dety22-SamposW(2)).^2+(detz22-SamposW(3)).^2).^(1/2);
-            t = (RotDet(1,1)*(Lsam2det-SamposW(1))-RotDet(2,1)*(dety00-SamposW(2))-RotDet(3,1)*(detz00-SamposW(3)))./ ...
-            (RotDet(1,1)*K_out_unit(1,:)+RotDet(2,1)*K_out_unit(2,:)+RotDet(3,1)*K_out_unit(3,:));
+            t = (RotDet(1,1)*(Lsam2det-SamposW(1))+RotDet(2,1)*(dety00-RotAxisOffset-SamposW(2))+RotDet(3,1)*(detz00-SamposW(3)))./ ...
+                (RotDet(1,1)*K_out_unit(1,:)+RotDet(2,1)*K_out_unit(2,:)+RotDet(3,1)*K_out_unit(3,:));
 
-            dety22 = [RotDet(1,2) RotDet(2,2) RotDet(3,2)]*(t.*K_out_unit+[SamposW(1)-Lsam2det SamposW(2)-dety00 SamposW(3)-detz00]');
-            detz22 = [RotDet(1,3) RotDet(2,3) RotDet(3,3)]*(t.*K_out_unit+[SamposW(1)-Lsam2det SamposW(2)-dety00 SamposW(3)-detz00]');
+            dety22 = [RotDet(1,2) RotDet(2,2) RotDet(3,2)]*(t.*K_out_unit+[SamposW(1)-Lsam2det SamposW(2)-dety00+RotAxisOffset SamposW(3)-detz00]');
+            detz22 = [RotDet(1,3) RotDet(2,3) RotDet(3,3)]*(t.*K_out_unit+[SamposW(1)-Lsam2det SamposW(2)-dety00+RotAxisOffset SamposW(3)-detz00]');
 %             dety = -round(dety22/pixelysize-0.5)+dety0; % [pixel]
 %             detz = -round(detz22/pixelzsize-0.5)+detz0; % [pixel]
-            dety = -round(dety22/pixelysize)+dety0; % [pixel]
-            detz = -round(detz22/pixelzsize)+detz0; % [pixel]
+            dety = round(-dety22/pixelysize+dety0); % [pixel]
+            detz = round(-detz22/pixelzsize+detz0); % [pixel]
 
             select3=find(beta > pi/2 & beta < (90+thetamax*4)/180*pi & ...
                 lambdahkl > lambda_min & lambdahkl < lambda_max & ...
@@ -269,16 +273,27 @@ for rot = rot_angles
                 end
             end
         end % Loop over subgrains
-
-        SubA_eff{grainno}=[];
+%         SubA_eff{grainno}=[];
+%         if ~isempty(SubA{grainno})
+%             for kk=1:length(SubA{grainno}(:,1))
+%                 if (~(all(SubA{grainno}(kk,:))==0) || SubA{grainno}(kk,21)>0) ...
+%                         && (SubA{grainno}(kk,17)>=1 && SubA{grainno}(kk,17)<detysize ...
+%                         && SubA{grainno}(kk,18)>=1 && SubA{grainno}(kk,18)<detzsize)
+%                     SubA_eff{grainno}=[SubA_eff{grainno};SubA{grainno}(kk,:)]; % select the data contributing to the intensity on the detector
+%                 end
+%             end
+%         end
+        SubA{grainno} = SubA{grainno}(SubA{grainno}(:,1)>0,:);
         if ~isempty(SubA{grainno})
-            for kk=1:length(SubA{grainno}(:,1))
-                if (~(all(SubA{grainno}(kk,:))==0) || SubA{grainno}(kk,21)>0) ...
-                        && (SubA{grainno}(kk,17)>=1 && SubA{grainno}(kk,17)<detysize ...
-                        && SubA{grainno}(kk,18)>=1 && SubA{grainno}(kk,18)<detzsize)
-                    SubA_eff{grainno}=[SubA_eff{grainno};SubA{grainno}(kk,:)]; % select the data contributing to the intensity on the detector
-                end
+            ind0 = find(SubA{grainno}(:,21)>0 & SubA{grainno}(:,17)>=1 & SubA{grainno}(:,17)<detysize ...
+                        & SubA{grainno}(:,18)>=1 & SubA{grainno}(:,18)<detzsize);
+            if ~isempty(ind0)
+                SubA_eff{grainno} = SubA{grainno}(ind0,:);
+            else
+                SubA_eff{grainno} = [];
             end
+        else
+            SubA_eff{grainno} = [];
         end
         A=[A;SubA_eff{grainno}];
         grainno;

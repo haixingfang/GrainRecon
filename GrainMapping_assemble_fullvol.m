@@ -3,7 +3,7 @@
 clear all;
 close all;
 
-SampleFlag=3;
+SampleFlag=15;
 if SampleFlag==2
     SampleName='AlCu8wt_middle_thinned_0930';
     % RecVolumePixel=[1   395;
@@ -34,11 +34,8 @@ elseif SampleFlag==3
 %     OutputFolder='./Fe_100um_11_11_simu_rec/fullvol_simap_gpu_cuda_index_compete';
 %     OutputFolder='./Fe_100um_11_11_simu_rec/fullvol_laue_old_spots_gpu_cuda_comp';
 %     OutputFolder='./Fe_100um_11_11_simu_rec/fullvol_simap_new_spots_maxD_2std_gpu_cuda_Gt';
-%     OutputFolder='./Fe_100um_11_11_simu_rec/fullvol_laue_maxD_2std_gpu_cuda_comp';
-%     OutputFolder='./Fe_100um_11_11_simu_rec/fullvol_laue_new_spots_maxD_2std_gpu_cuda_comp';
-%     OutputFolder='./Fe_100um_11_11_simu_rec/esrf_cluster/fullvol_simap_181projs_maxD_2std_gpu_cuda_Gt';
-    OutputFolder='./Fe_100um_11_11_simu_rec/esrf_cluster/fullvol_laue_new_spots_maxD_2std_gpu_cuda_Gt';
-    fname_prefix='fullvol';
+    OutputFolder='./Fe_100um_11_11_simu_rec/fullvol_laue_maxD_2std_gpu_cuda_comp';
+   fname_prefix='fullvol';
 elseif SampleFlag==4
     SampleName='virtual_Fe_100um_6grains';
     RecVolumePixel_FOV=[1   60;
@@ -81,6 +78,111 @@ elseif SampleFlag==7
     % OutputFolder='./AlCu_8wt_580C_1h_nano_source_rec/fullvol_no_fit';
     OutputFolder='./AlCu_8wt_580C_1h_nano_source_rec/fullvol_fitted_geo';
     fname_prefix='fullvol_v4';
+elseif SampleFlag==8
+    SampleName='AlCu_8wt_580C_1h_nanoS_varian';
+    % RecVolumePixel=[1   316;
+    %                 1   316;
+    %                  1   434]; % full volume
+    RecVolumePixel_FOV=[1   316;
+                    1   316;
+                    40   434]; % effective volume masked by tomo
+%     OutputFolder='.\AlCu_8wt_580C_1h_nanoS_varian_rec\fullvol_raw_geo_gpu_cuda_Gt';
+%     OutputFolder='.\AlCu_8wt_580C_1h_nanoS_varian_rec\fullvol_raw_geo_gpu_cuda_comp';
+%     OutputFolder='.\AlCu_8wt_580C_1h_nanoS_varian_rec\fullvol_fitted_geo_shiftY_gpu_cuda_comp';
+    OutputFolder='.\AlCu_8wt_580C_1h_nanoS_varian_rec\fullvol_2nd_fitted_geo_gpu_cuda_comp';
+%     OutputFolder='AlCu_8wt_580C_1h_nanoS_varian_rec\fullvol_3rd_fitted_geo_P0y_p0z_gpu_cuda_comp';
+    fname_prefix='fullvol';
+elseif SampleFlag==9
+    SampleName='AlCu_8wt_580C_1h_nanoS_varian_link_mode';
+    % RecVolumePixel=[1   321;
+    %                 1   324;
+    %                  1   451]; % full volume
+    RecVolumePixel_FOV=[1   321;
+                    1   324;
+                    1   451]; % effective volume masked by tomo
+    OutputFolder='.\AlCu_8wt_580C_1h_nanoS_varian_link_mode_rec\fullvol_raw_geo_gpu_cuda_Gt';
+    fname_prefix='fullvol';
+elseif SampleFlag==10
+    SampleName='AlCu_8wt_580C_1h_nano_source_with_pinhole';
+    RecVolumePixel_FOV=[1   294;
+                    1   301;
+                    1   280]; % full volume
+%     OutputFolder='.\AlCu_8wt_580C_1h_nano_source_rec\fullvol_with_pinhole_raw_geo_gpu_cuda_Gt';
+%     OutputFolder='.\AlCu_8wt_580C_1h_nano_source_rec\fullvol_with_pinhole_raw_geo_offsetX_minus_gpu_cuda_Gt';
+%     OutputFolder='.\AlCu_8wt_580C_1h_nano_source_rec\fullvol_with_pinhole_raw_geo_offsetX_gpu_cuda_Gt';
+%     OutputFolder='.\AlCu_8wt_580C_1h_nano_source_rec\fullvol_with_pinhole_fitted_geo_offsetX_minus_gpu_cuda_Gt';
+%     OutputFolder='.\AlCu_8wt_580C_1h_nano_source_rec\fullvol_with_pinhole_fitted_geo_RotAxisOffset_gpu_cuda_Gt';
+%     OutputFolder='.\AlCu_8wt_580C_1h_nano_source_rec\fullvol_with_pinhole_fitted_geo_P0y_P0z_gpu_cuda_Gt';
+%     OutputFolder='.\AlCu_8wt_580C_1h_nano_source_rec\fullvol_with_pinhole_fitted_geo_RotAxisOffset_new_gpu_cuda_Gt';
+    OutputFolder='.\AlCu_8wt_580C_1h_nano_source_rec\fullvol_with_pinhole_fitted_geo_RotAxisOffset_round_bound_gpu_cuda_Gt';
+    fname_prefix='fullvol';
+elseif SampleFlag==11
+   SampleName='Al2024_T26_varian';
+%     RecVolumePixel_FOV=[1   212;
+%                     1   200;
+%                     1   390]; % full volume
+    RecVolumePixel_FOV=[1   212;
+                    1   200;
+                    150   390]; % effective volume masked by tomo
+%     OutputFolder='.\Al2024_T26_varian_rec\fullvol_no_pinhole_raw_geo_gpu_cuda_Gt';
+    OutputFolder='.\Al2024_T26_varian_rec\fullvol_no_pinhole_fitted_geo_gpu_cuda_Gt';
+    fname_prefix='fullvol';
+elseif SampleFlag==12
+   SampleName='AlCu_8wt_580C_1h_nanoS_pixirad';
+%     % pixirad tomo
+%     % RecVolumePixel=[1   298;
+%     %                 1   299;
+%     %                  1   441]; % full volume
+%     RecVolumePixel_FOV=[1   298;
+%                     1   299;
+%                     40   441]; % effective volume masked by tomo
+                
+    % varian tomo
+    % RecVolumePixel=[1   316;
+    %                 1   316;
+    %                  1   434]; % full volume
+    RecVolumePixel_FOV=[1  316;
+                    1  316;
+                    40   434]; % effective volume masked by tomo
+                
+%     OutputFolder='./AlCu_8wt_580C_1h_nanoS_Pixirad_rec\fullvol_fitted_geo_gpu_cuda_Gt';
+%     OutputFolder='./AlCu_8wt_580C_1h_nanoS_Pixirad_rec\fullvol_fitted_geo_gpu_cuda_comp';
+    OutputFolder='./AlCu_8wt_580C_1h_nanoS_Pixirad_rec\fullvol_fitted_geo_detz00_varian_tomo_gpu_cuda_Gt';
+    fname_prefix='fullvol';
+elseif SampleFlag==13   
+    SampleName='AlCu_8wt_580C_1h_nanoS_CCD';
+    % RecVolumePixel=[1   345;
+    %                 1   344;
+    %                  1   465]; % full volume
+    RecVolumePixel_FOV=[1   345; % 1 280
+                    1   344; % 35 295
+                    60   465]; % effective volume masked by tomo
+%     OutputFolder='./AlCu_8wt_580C_1h_nanoS_CCD_rec\fullvol_fitted_geo_gpu_cuda_Gt';
+%     OutputFolder='./AlCu_8wt_580C_1h_nanoS_CCD_rec\fullvol_fitted_geo_detz00_gpu_cuda_comp';
+%     OutputFolder='./AlCu_8wt_580C_1h_nanoS_CCD_rec\fullvol_fitted_geo_gpu_cuda_comp';
+    OutputFolder='./AlCu_8wt_580C_1h_nanoS_CCD_rec\fullvol_fitted_geo_detz00_tomo_center_shift_gpu_cuda_comp';
+    fname_prefix='fullvol';
+ elseif SampleFlag==14
+    SampleName='AlCu_8wt_580C_1h_nano_source_0923_CCD_after_calib';
+    % RecVolumePixel=[1   354;
+    %                 1   356;
+    %                  1   474]; % full volume
+    RecVolumePixel_FOV=[1   354;
+                    1   356;
+                    60   474]; % effective volume masked by tomo
+    OutputFolder='./AlCu_8wt_580C_1h_nano_source_0923_CCD_after_calib_rec/fullvol_fitted_geo_gpu_cuda_comp';
+    fname_prefix='fullvol';
+elseif SampleFlag==15
+    SampleName='AlCu_8wt_580C_1h_nano_source_0926_Varian';
+    % RecVolumePixel=[1   345;
+    %                 1   351;
+    %                  1   467]; % full volume
+    RecVolumePixel_FOV=[1   345;
+                    1   351;
+                    60   467]; % effective volume masked by tomo
+%     OutputFolder='./AlCu_8wt_580C_1h_nano_source_0926_Varian_rec/fullvol_fitted_geo_gpu_cuda_comp';
+    OutputFolder='./AlCu_8wt_580C_1h_nano_source_0926_Varian_rec/fullvol_corrR_raw_geo_gpu_cuda_Gt';
+    fname_prefix='fullvol';   
 else
     error('No such sample exists')
 end
@@ -89,18 +191,20 @@ RecVolumePixel=RecVolumePixel_FOV;
 % set up all parameters: geometry, detector, sample, reconstruction, filefolders
 % SampleName='AlCu8wt_middle_thinned_0930'; % 'simu_Fe'; 'AlCu8wt_middle_thinned_0930'
 setup_para;
-% B=FormB(cell);
-% V = cellvolume(cell); % [Angs^3]
-sprintf('Tomo and spot files will be loaded from %s',FileFolder)
-sprintf('Output files will be written to %s',OutputFolder)
+if ~exist('RotAxisOffset','var')
+    RotAxisOffset=0;
+    fprintf('RotAxisOffset = 0 as it was not pre-set.\n');
+end
+fprintf('Tomo and spot files will be loaded from %s\n',FileFolder)
+fprintf('Output files will be written to %s\n',OutputFolder)
 
 % load tomographic volume data
 % h5FileName_tomo='tomo_2022_01_20_AlCu_8wt_580C_1h_microS_vol.h5';
-sprintf('load tomo file: %s',fullfile(h5Folder_tomo,h5FileName_tomo))
+fprintf('load tomo file: %s\n',fullfile(h5Folder_tomo,h5FileName_tomo))
 tomo=get_tomo_fromh5(fullfile(h5Folder_tomo,h5FileName_tomo),1);
 
 % load DCT images for processing and spot segmentation, get binary images
-sprintf('load spots file: %s',fullfile(FileFolder,SpotsFile))
+fprintf('load spots file: %s\n',fullfile(FileFolder,SpotsFile))
 load(fullfile(FileFolder,SpotsFile));
 
 for i=1:length(proj_bin)
@@ -156,18 +260,20 @@ for m=1:length(files_mat)
         matFileName_prefix=[matFileName_prefix;iter];
         if iter>0
             load(fullfile(OutputFolder,matFileName));
+            fprintf('Loading file %s ...\n',matFileName);
             f_iter(iter)=length(find(DS_out.GrainId>0))/length(find(DS_out.Mask==1)); % indexed fraction
         end
     end
 end
-
+fprintf(['Reconstructed volume fraction as a function of iteration: ' ...
+            repmat('%.4f ', 1, length(f_iter)) '\n'],f_iter);
 if DS_final_flag==0
     [~,matFileName_ind]=max(matFileName_prefix);    
     matFileName=files_mat(matFileName_ind).name;
 else
     matFileName = 'DS_final.mat';
 end
-sprintf('Loading the file %s ...',matFileName)
+fprintf('Loading the file %s ...\n',matFileName)
 load(fullfile(OutputFolder,matFileName));
 
 if ~all(size(DS_out.PhaseId)==dim)
@@ -251,13 +357,14 @@ else
     cs = [];
 end
 min_misori = 0.5; % recommend to be 0.5 [deg]
+revise_all_flag=0; % by default
 [DS_merge,Ngrain,Nregion,Inherit_region_nr,CentroidComp]=merge_and_identify_grains(DS,mtex_avail,cs,min_misori,proj_bin_bw,Spots, ...
                     rot_start,rot_step,rot_angles,S,B,Ahkl,nrhkl,hklnumber,hkl_square, ...
                     RotDet,thetamax,lambda_min,lambda_max,Lsam2sou,Lsam2det,minEucDis,minComp,dety00,detz00,P0y,P0z, ...
-                    pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ, ...
-                    tomo_scale,VoxSize,RecVolumePixel,simap_data_flag);
+                    RotAxisOffset,pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ, ...
+                    tomo_scale,VoxSize,RecVolumePixel,simap_data_flag,revise_all_flag);
 % [DS_merge]=revise_single_unindexed_voxel(DS_merge0);
-sprintf('There are %d voxels with C > 1 and C_max = %.3f.',length(find(DS_merge.Completeness>1)),max(DS_merge.Completeness(:)))
+fprintf('There are %d voxels with C > 1 and C_max = %.3f.\n',length(find(DS_merge.Completeness>1)),max(DS_merge.Completeness(:)))
 DS_merge.Completeness(DS_merge.Completeness>1)=1;
 
 % write output as h5 file and generate dream3d and xdmf files for visualization
@@ -300,7 +407,7 @@ for i=1:length(DS_new.SeedID)
         U=euler2u(DS_new.EulerZXZ(i,1)*pi/180,DS_new.EulerZXZ(i,2)*pi/180,DS_new.EulerZXZ(i,3)*pi/180);
         [Nr_simu,Nr_intersect,dis_median,SimuSpots,HittedSpots]=index_verify_v3(U,proj_bin_bw,Spots,pos,rot_angles,S,B,Ahkl,nrhkl,hklnumber,hkl_square, ...
                 RotDet,thetamax,lambda_min,lambda_max,Lsam2sou,Lsam2det,minEucDis,dety00,detz00,P0y,P0z, ...
-                pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ);
+                RotAxisOffset,pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ);
         GrainInfo(i,:)=[i pos DS_new.EulerZXZ(i,:) grainsize(i) Nr_intersect Nr_simu Nr_intersect/Nr_simu dis_median];
     end
 end

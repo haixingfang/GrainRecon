@@ -6,10 +6,11 @@
 % April 20, 2022
 function [DS_out] = revise_all_unindexed_voxel_cuda(DS_in,proj_bin_bw,rot_angles,S,B,Ahkl,nrhkl, ...
                         RotDet,thetamax,lambda_min,lambda_max,Lsam2sou,Lsam2det,dety00,detz00, ...
-                        P0y,P0z,pixelysize,pixelzsize,detysize,detzsize,BeamStopY,BeamStopZ, ...
-                        RecVolumePixel,tomo_scale,VoxSize,simap_data_flag,search_radius)
+                        P0y,P0z,RotAxisOffset,pixelysize,pixelzsize,detysize,detzsize,BeamStopY,BeamStopZ, ...
+                        RecVolumePixel,tomo_scale,VoxSize,simap_data_flag, ...
+                        correct_already_indexed_only,search_radius)
 
-if nargin<28
+if nargin<30 || ~exist('search_radius','var')
     search_radius=20; % radius of search region to find candidate orientations [pixel]
 end
 sprintf('search_radius = %d pixels',search_radius)
@@ -47,6 +48,11 @@ if correct_low_C==1
     un_indexed_voxels=[un_indexed_voxels;doubt_indexed_voxels];
 end
 
+% if only consider the already-indexed voxels with low completeness or belong to small grains
+if correct_already_indexed_only==1
+    un_indexed_voxels = find_doubt_indexed_voxels(DS_in,0.35,0);
+end
+
 nr_voxel_per_iter = 30000;
 total_iter = floor(length(un_indexed_voxels(:,1))/nr_voxel_per_iter)+1;
 sprintf('All un-indexed voxels divide to %d segments (each contains %d voxels) per gpu calculation.',total_iter,nr_voxel_per_iter)
@@ -64,11 +70,11 @@ for i=1:total_iter
     tic
     DS_out = grow_unindexed_compete_comp_cuda(DS_out,wait_revising_voxels,id_neigb_all,id_neigb_ind, ...
                         proj_bin_bw,rot_angles,S,B,Ahkl,nrhkl,RotDet,thetamax,lambda_min,lambda_max, ...
-                        Lsam2sou,Lsam2det,dety00,detz00,P0y,P0z,pixelysize,pixelzsize,detysize,detzsize, ...
+                        Lsam2sou,Lsam2det,dety00,detz00,P0y,P0z,RotAxisOffset,pixelysize,pixelzsize,detysize,detzsize, ...
                         BeamStopY,BeamStopZ,RecVolumePixel,tomo_scale,VoxSize,simap_data_flag);
     grow_time=toc;
-    sprintf('The find_neighbor_time and the grow_time take %0.2f s and %0.2f s, respectively',find_neighbor_time,grow_time)
-    sprintf('Iter %d: reconstructed volume fraction: %.4f = %d / %d ',i,length(find(DS_out.GrainId>0))/length(find(DS_out.Mask==1)), ...
+    fprintf('The find_neighbor_time and the grow_time take %0.2f s and %0.2f s, respectively\n',find_neighbor_time,grow_time)
+    fprintf('Iter %d: reconstructed volume fraction: %.4f = %d / %d \n',i,length(find(DS_out.GrainId>0))/length(find(DS_out.Mask==1)), ...
         length(find(DS_out.GrainId>0)),length(find(DS_out.Mask==1)))
 end
 

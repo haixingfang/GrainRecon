@@ -2,23 +2,22 @@
 % fit Lss, Lsd, dety00, detz00, tilt angles (optional)
 % July 6, 2021
 % updated on September 9, 2021
-function ErrMean=geo_fitting(x,hittedSpots_pair,S,B,P0y,P0z, ...
-    pixelysize,pixelzsize,dety0,detz0,tilt_x,tilt_y,tilt_z)
+function ErrMean=geo_fitting(x,hittedSpots_pair,S,B,P0y,P0z,RotAxisOffset, ...
+                        pixelysize,pixelzsize,dety0,detz0,tilt_x,tilt_y,tilt_z)
 
 Lsam2sou=x(1);
 Lsam2det=x(2);
 dety00=x(3);
 detz00=x(4);
-if nargin<=10
+if nargin<=11
     tilt_x=x(5);         % detector tilt counterclockwise around lab x axis [deg] 
     tilt_y=x(6);         % detector tilt counterclockwise around lab y axis [deg] 
     tilt_z=x(7);         % detector tilt counterclockwise around lab z axis [deg]
 end
-RotX=[1 0 0; 0 cosd(tilt_x) -sind(tilt_x); 0 sind(tilt_x) cosd(tilt_x)];
-RotY=[cosd(tilt_y) 0 sind(tilt_y);0 1 0;-sind(tilt_y) 0 cosd(tilt_y)];
-RotZ=[cosd(tilt_z) -sind(tilt_z) 0;sind(tilt_z) cosd(tilt_z) 0;0 0 1];
-RotDet=RotX*RotY*RotZ;
+RotDet=get_det_R(tilt_x,tilt_y,tilt_z);
 
+P0y=P0y-RotAxisOffset;
+P0z=P0z-RotAxisOffset;
 L=Lsam2sou+Lsam2det; % [mm]
 Err=[];
 for i=1:length(hittedSpots_pair(:,1)) 
@@ -30,6 +29,7 @@ for i=1:length(hittedSpots_pair(:,1))
     hkl=[hittedSpots_pair(i,5) hittedSpots_pair(i,6) hittedSpots_pair(i,7)]';
     
     pos=hittedSpots_pair(i,2:4);
+    pos(:,2)=pos(:,2)-RotAxisOffset;
     U=euler2u(hittedSpots_pair(i,8)*pi/180,hittedSpots_pair(i,9)*pi/180,hittedSpots_pair(i,10)*pi/180);
 
     SamposW=Omega*S*pos';
@@ -38,7 +38,7 @@ for i=1:length(hittedSpots_pair(:,1))
     alpha = atan(sqrt((SamposW(2)-P0y)^2+(SamposW(3)-P0z)^2)/(Lsam2sou+SamposW(1)));
     grainpos = [Lsam2sou+SamposW(1) SamposW(2)-P0y SamposW(3)-P0z];
     Gw = S*U*B*hkl;
-    Gt=Omega*Gw;
+    Gt=Omega*Gw ;
     v1 = [0 Gt(2) Gt(3)];
     Glen = (Gt(1)^2 + Gt(2)^2 + Gt(3)^2)^0.5;
     beta = acos(dot(grainpos/norm(grainpos),Gt/Glen)); % [rad]
@@ -61,14 +61,14 @@ for i=1:length(hittedSpots_pair(:,1))
             
             %%% include detector tilt and center offset
             K_out_unit = ([Lsam2det dety22 detz22]'-SamposW)./norm([Lsam2det dety22 detz22]'-SamposW);
-            t = (RotDet(1,1)*(Lsam2det-SamposW(1))-RotDet(2,1)*(dety00-SamposW(2))-RotDet(3,1)*(detz00-SamposW(3)))./ ...
-            (RotDet(1,1)*K_out_unit(1)+RotDet(2,1)*K_out_unit(2)+RotDet(3,1)*K_out_unit(3));
+            t = (RotDet(1,1)*(Lsam2det-SamposW(1))+RotDet(2,1)*(dety00-SamposW(2))+RotDet(3,1)*(detz00-SamposW(3)))./ ...
+                (RotDet(1,1)*K_out_unit(1)+RotDet(2,1)*K_out_unit(2)+RotDet(3,1)*K_out_unit(3));
             dety22 = [RotDet(1,2) RotDet(2,2) RotDet(3,2)]*(t*K_out_unit+[SamposW(1)-Lsam2det SamposW(2)-dety00 SamposW(3)-detz00]');
             detz22 = [RotDet(1,3) RotDet(2,3) RotDet(3,3)]*(t*K_out_unit+[SamposW(1)-Lsam2det SamposW(2)-dety00 SamposW(3)-detz00]');
 %             dety = -round(dety22/pixelysize-0.5)+dety0; % [pixel]
 %             detz = -round(detz22/pixelzsize-0.5)+detz0; % [pixel]
-            dety = -round(dety22/pixelysize)+dety0; % [pixel]
-            detz = -round(detz22/pixelzsize)+detz0; % [pixel]
+            dety = round(-dety22/pixelysize+dety0); % [pixel]
+            detz = round(-detz22/pixelzsize+detz0); % [pixel]
             
             dis=sqrt((dety-dety_exp).^2+(detz-detz_exp).^2); % [pixel]
             Err=[Err;dis]; % [pixel]

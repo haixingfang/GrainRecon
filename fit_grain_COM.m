@@ -2,20 +2,20 @@
 % fit the grain center of mass
 % input: x is the position of the voxel [mm], euler angle fitting is optional
 % Dec 3, 2021
-function [FitOutput,fval]=fit_grain_COM(hittedSpots_pair,S,B,Lsam2sou,Lsam2det,P0y,P0z, ...
+function [FitOutput,fval]=fit_grain_COM(hittedSpots_pair,S,B,Lsam2sou,Lsam2det,P0y,P0z,RotAxisOffset, ...
             pixelysize,pixelzsize,dety0,detz0,dety00,detz00,RotDet)
     U=reshape(hittedSpots_pair(1,2:10),3,3);
     clear x;
     fit_grain_COM_only=0;
     if fit_grain_COM_only==1
         x0=hittedSpots_pair(1,11:13); % position
-        ErrMean=@(x)fit_grain_COM_fun(x,hittedSpots_pair,S,B,Lsam2sou,Lsam2det,P0y,P0z, ...
+        ErrMean=@(x)fit_grain_COM_fun(x,hittedSpots_pair,S,B,Lsam2sou,Lsam2det,P0y,P0z,RotAxisOffset, ...
             pixelysize,pixelzsize,dety0,detz0,dety00,detz00,RotDet,U);
         LB=x0-0.1;
         UB=x0+0.1;
     else
         x0=[hittedSpots_pair(1,11:13) u2euler_corr(U)]; % position + euler_angle
-        ErrMean=@(x)fit_grain_COM_fun(x,hittedSpots_pair,S,B,Lsam2sou,Lsam2det,P0y,P0z, ...
+        ErrMean=@(x)fit_grain_COM_fun(x,hittedSpots_pair,S,B,Lsam2sou,Lsam2det,P0y,P0z,RotAxisOffset, ...
             pixelysize,pixelzsize,dety0,detz0,dety00,detz00,RotDet);
         LB=x0-0.1;
         UB=x0+0.1;
@@ -29,11 +29,11 @@ function [FitOutput,fval]=fit_grain_COM(hittedSpots_pair,S,B,Lsam2sou,Lsam2det,P
 end
 
 
-function ErrMean=fit_grain_COM_fun(x,hittedSpots_pair,S,B,Lsam2sou,Lsam2det,P0y,P0z, ...
+function ErrMean=fit_grain_COM_fun(x,hittedSpots_pair,S,B,Lsam2sou,Lsam2det,P0y,P0z,RotAxisOffset, ...
     pixelysize,pixelzsize,dety0,detz0,dety00,detz00,RotDet,U)
 
-pos=[x(1) x(2) x(3)]; % [mm]
-if nargin<=15
+pos=[x(1) x(2)-RotAxisOffset x(3)]; % [mm]
+if nargin<=16
     U=euler2u(x(4)*pi/180,x(5)*pi/180,x(6)*pi/180);
 end
 L=Lsam2sou+Lsam2det; % [mm]
@@ -47,10 +47,10 @@ for i=1:length(hittedSpots_pair(:,1))
     hkl=[hittedSpots_pair(i,14) hittedSpots_pair(i,15) hittedSpots_pair(i,16)]';
 
     SamposW=Omega*S*pos';
-    center = [L, (SamposW(2)-P0y)*L/(Lsam2sou+SamposW(1)), ...
+    center = [L, (SamposW(2)-P0y+RotAxisOffset)*L/(Lsam2sou+SamposW(1)), ...
         (SamposW(3)-P0z)*L/(Lsam2sou+SamposW(1))]; % sample center projected to the position of the detector
-    alpha = atan(sqrt((SamposW(2)-P0y)^2+(SamposW(3)-P0z)^2)/(Lsam2sou+SamposW(1)));
-    grainpos = [Lsam2sou+SamposW(1) SamposW(2)-P0y SamposW(3)-P0z];
+    alpha = atan(sqrt((SamposW(2)-P0y+RotAxisOffset)^2+(SamposW(3)-P0z)^2)/(Lsam2sou+SamposW(1)));
+    grainpos = [Lsam2sou+SamposW(1) SamposW(2)-P0y+RotAxisOffset SamposW(3)-P0z];
     Gw = S*U*B*hkl;
     Gt=Omega*Gw;
     v1 = [0 Gt(2) Gt(3)];
@@ -73,14 +73,14 @@ for i=1:length(hittedSpots_pair(:,1))
             
     %%% include detector tilt and center offset
     K_out_unit = ([Lsam2det dety22 detz22]'-SamposW)./norm([Lsam2det dety22 detz22]'-SamposW);
-    t = (RotDet(1,1)*(Lsam2det-SamposW(1))-RotDet(2,1)*(dety00-SamposW(2))-RotDet(3,1)*(detz00-SamposW(3)))./ ...
-    (RotDet(1,1)*K_out_unit(1)+RotDet(2,1)*K_out_unit(2)+RotDet(3,1)*K_out_unit(3));
-    dety22 = [RotDet(1,2) RotDet(2,2) RotDet(3,2)]*(t*K_out_unit+[SamposW(1)-Lsam2det SamposW(2)-dety00 SamposW(3)-detz00]');
-    detz22 = [RotDet(1,3) RotDet(2,3) RotDet(3,3)]*(t*K_out_unit+[SamposW(1)-Lsam2det SamposW(2)-dety00 SamposW(3)-detz00]');
+    t = (RotDet(1,1)*(Lsam2det-SamposW(1))+RotDet(2,1)*(dety00-RotAxisOffset-SamposW(2))+RotDet(3,1)*(detz00-SamposW(3)))./ ...
+        (RotDet(1,1)*K_out_unit(1)+RotDet(2,1)*K_out_unit(2)+RotDet(3,1)*K_out_unit(3));
+    dety22 = [RotDet(1,2) RotDet(2,2) RotDet(3,2)]*(t*K_out_unit+[SamposW(1)-Lsam2det SamposW(2)-dety00+RotAxisOffset SamposW(3)-detz00]');
+    detz22 = [RotDet(1,3) RotDet(2,3) RotDet(3,3)]*(t*K_out_unit+[SamposW(1)-Lsam2det SamposW(2)-dety00+RotAxisOffset SamposW(3)-detz00]');
 %     dety = -round(dety22/pixelysize-0.5)+dety0; % [pixel]
 %     detz = -round(detz22/pixelzsize-0.5)+detz0; % [pixel]
-    dety = -round(dety22/pixelysize)+dety0; % [pixel]
-    detz = -round(detz22/pixelzsize)+detz0; % [pixel]
+    dety = round(-dety22/pixelysize+dety0); % [pixel]
+    detz = round(-detz22/pixelzsize+detz0); % [pixel]
             
     dis=sqrt((dety-dety_exp).^2+(detz-detz_exp).^2); % [pixel]
     Err=[Err;dis]; % [pixel]

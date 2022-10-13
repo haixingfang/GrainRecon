@@ -15,11 +15,6 @@ switch(SampleName)
     % load experimental parameters: source, detector and distances
     setup_exp;
     L=Lsam2sou+Lsam2det;
-    RotX=[1 0 0; 0 cosd(tilt_x) -sind(tilt_x); 0 sind(tilt_x) cosd(tilt_x)];
-    RotY=[cosd(tilt_y) 0 sind(tilt_y);0 1 0;-sind(tilt_y) 0 cosd(tilt_y)];
-    RotZ=[cosd(tilt_z) -sind(tilt_z) 0;sind(tilt_z) cosd(tilt_z) 0;0 0 1];
-    RotDet=RotX*RotY*RotZ;
-
     % tomo file
     FileFolder='./Examples/AlCu_8wt_middle_thinned_0930';
     fname_prefix=FileFolder(3:end);
@@ -61,11 +56,6 @@ switch(SampleName)
     % load experimental parameters: source, detector and distances
     setup_exp;
     L=Lsam2sou+Lsam2det;
-    RotX=[1 0 0; 0 cosd(tilt_x) -sind(tilt_x); 0 sind(tilt_x) cosd(tilt_x)];
-    RotY=[cosd(tilt_y) 0 sind(tilt_y);0 1 0;-sind(tilt_y) 0 cosd(tilt_y)];
-    RotZ=[cosd(tilt_z) -sind(tilt_z) 0;sind(tilt_z) cosd(tilt_z) 0;0 0 1];
-    RotDet=RotX*RotY*RotZ;
-
     % tomo file
     FileFolder='./Examples/Fe_100um_11_11_simu';
     fname_prefix=FileFolder(3:end);
@@ -116,11 +106,6 @@ case 'virtual_Fe_100um_6grains'
     % load experimental parameters: source, detector and distances
     setup_exp;
     L=Lsam2sou+Lsam2det;
-    RotX=[1 0 0; 0 cosd(tilt_x) -sind(tilt_x); 0 sind(tilt_x) cosd(tilt_x)];
-    RotY=[cosd(tilt_y) 0 sind(tilt_y);0 1 0;-sind(tilt_y) 0 cosd(tilt_y)];
-    RotZ=[cosd(tilt_z) -sind(tilt_z) 0;sind(tilt_z) cosd(tilt_z) 0;0 0 1];
-    RotDet=RotX*RotY*RotZ;
-
     % tomo file
     FileFolder='./Examples/virtual_Fe_100um_6grains';
     fname_prefix=FileFolder(3:end);
@@ -154,10 +139,15 @@ case 'virtual_Fe_100um_6grains'
         S=[1 0 0;0 -1 0;0 0 1];
     end
 end
-hklnumber=3; % maximum is 10, recommended be at least >= 3, 4
-% iter_end=10; % maximum iterations which determines the finess of gridding for indexing seeds
-sprintf('hklnumber = %.0f, C_trust = %.2f, C_min = %.2f, drop_off = %.2f, minEucDis = %.3f mm, maxD = %.1f pixel and maxDmedian = %.1f pixel', ...
+hklnumber=4; % maximum is 10, recommended be at least >= 3, 4
+fprintf('*** hklnumber = %.0f, C_trust = %.2f, C_min = %.2f, drop_off = %.2f,\n*** minEucDis = %.3f mm, maxD = %.1f pixel and maxDmedian = %.1f pixel ***\n', ...
     hklnumber,TrustComp,minComp,drop_off,minEucDis,maxD,maxDmedian)
+if fitted_geo_already==1
+    fprintf('A fitted geometry is used for reconstruction ...\n');
+else
+    fprintf('A raw geometry is used for reconstruction ...\n');
+end
+RotDet=get_det_R(tilt_x,tilt_y,tilt_z);
 B=FormB(cell);
 V = cellvolume(cell); % [Angs^3]
 

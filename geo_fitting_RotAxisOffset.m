@@ -1,36 +1,30 @@
-% calculate Euclidian distances between paired spots
-% ouput average distance and distances between calculated and exp spot positions
-% updated on September 9, 2021
-function [ErrMean,Err,dis_y,dis_z]=dis_calc_spotspair(x,hittedSpots_pair,S,B,P0y,P0z,RotAxisOffset, ...
-                pixelysize,pixelzsize,dety0,detz0)
-% % for testing
-% x=[Lsam2sou Lsam2det dety00 detz00 tilt_x tilt_y tilt_z];
-% hittedSpots_pair=SpotsPair;
+% fit RotAxisOffset
+% updated on September 12, 2022
+function ErrMean=geo_fitting_RotAxisOffset(x,hittedSpots_pair,S,B,P0y,P0z, ...
+                        pixelysize,pixelzsize,dety0,detz0,Lsam2sou,Lsam2det,dety00, ...
+                        detz00,tilt_x,tilt_y,tilt_z)
 
-Lsam2sou=x(1);
-Lsam2det=x(2);
-dety00=x(3);
-detz00=x(4);
-tilt_x=x(5);         % detector tilt counterclockwise around lab x axis [deg] 
-tilt_y=x(6);         % detector tilt counterclockwise around lab y axis [deg] 
-tilt_z=x(7);         % detector tilt counterclockwise around lab z axis [deg]
+RotAxisOffset=x;
 RotDet=get_det_R(tilt_x,tilt_y,tilt_z);
 
 L=Lsam2sou+Lsam2det; % [mm]
 Err=[];
-dis_y=[];
-dis_z=[];
+Su_angle=[0 0 0];
+Su=euler2u(Su_angle(1)*pi/180,Su_angle(2)*pi/180,Su_angle(3)*pi/180);
+trans_pos=[0 0 0];
 for i=1:length(hittedSpots_pair(:,1)) 
-    dety_exp=hittedSpots_pair(i,16); % [pixel]
-    detz_exp=hittedSpots_pair(i,17); % [pixel]   
+    dety_exp=hittedSpots_pair(i,12); % [pixel]
+    detz_exp=hittedSpots_pair(i,13); % [pixel]   
     
-    omega=hittedSpots_pair(i,12)*pi/180; % [rad]
+    omega=hittedSpots_pair(i,5)*pi/180; % [rad]
     Omega=[cos(omega) -sin(omega) 0;sin(omega) cos(omega) 0;0 0 1];
-    hkl=[hittedSpots_pair(i,5) hittedSpots_pair(i,6) hittedSpots_pair(i,7)]';
-    
+    hkl=[hittedSpots_pair(i,6) hittedSpots_pair(i,7) hittedSpots_pair(i,8)]';
+
     pos=hittedSpots_pair(i,2:4);
+    pos=pos+trans_pos;
     pos(:,2)=pos(:,2)-RotAxisOffset;
-    U=euler2u(hittedSpots_pair(i,8)*pi/180,hittedSpots_pair(i,9)*pi/180,hittedSpots_pair(i,10)*pi/180);
+    U=euler2u(hittedSpots_pair(i,9)*pi/180,hittedSpots_pair(i,10)*pi/180,hittedSpots_pair(i,11)*pi/180);
+    U=Su*U;
 
     SamposW=Omega*S*pos';
     center = [L, (SamposW(2)-P0y+RotAxisOffset)*L/(Lsam2sou+SamposW(1)), ...
@@ -65,19 +59,13 @@ for i=1:length(hittedSpots_pair(:,1))
                 (RotDet(1,1)*K_out_unit(1)+RotDet(2,1)*K_out_unit(2)+RotDet(3,1)*K_out_unit(3));
             dety22 = [RotDet(1,2) RotDet(2,2) RotDet(3,2)]*(t*K_out_unit+[SamposW(1)-Lsam2det SamposW(2)-dety00+RotAxisOffset SamposW(3)-detz00]');
             detz22 = [RotDet(1,3) RotDet(2,3) RotDet(3,3)]*(t*K_out_unit+[SamposW(1)-Lsam2det SamposW(2)-dety00+RotAxisOffset SamposW(3)-detz00]');
-%             dety = -round(dety22/pixelysize-0.5)+dety0; % [pixel]
-%             detz = -round(detz22/pixelzsize-0.5)+detz0; % [pixel]
             dety = round(-dety22/pixelysize+dety0); % [pixel]
             detz = round(-detz22/pixelzsize+detz0); % [pixel]
-
+            
             dis=sqrt((dety-dety_exp).^2+(detz-detz_exp).^2); % [pixel]
-            dis_y=[dis_y;dety-dety_exp];
-            dis_z=[dis_z;detz-detz_exp];
-            Err=[Err;dis]; % [pixel]
+            Err=[Err;dis]; % [mm]
 %         end
 %     end
 end
-ErrMean=mean(Err); % minimize the Euclidian distance [pixel]
+ErrMean=mean(Err); % minimize the Euclidian distance [mm]
 % ErrMean=sum(Err);
-
-

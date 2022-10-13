@@ -10,48 +10,45 @@ get_para;
 % set up all parameters: geometry, detector, sample, reconstruction, filefolders
 switch(ElementName)
     case 'fe'
-        % input_fe;
+        input_fe;
         [cell,sgno,atomparam,space_group_IT_number]=input_fe_fun();
     case 'al'
-        % input_al;
+        input_al;
         [cell,sgno,atomparam,space_group_IT_number]=input_al_fun();
     case 'ni'
-        % input_ni;
+        input_ni;
         [cell,sgno,atomparam,space_group_IT_number]=input_ni_fun();
     case 'si'
-        % input_si;
+        input_si;
         [cell,sgno,atomparam,space_group_IT_number]=input_si_fun();
     otherwise
         error('this element cannot be identified!');
 end
 setup_exp;
 L=Lsam2sou+Lsam2det;
-RotX=[1 0 0; 0 cosd(tilt_x) -sind(tilt_x); 0 sind(tilt_x) cosd(tilt_x)];
-RotY=[cosd(tilt_y) 0 sind(tilt_y);0 1 0;-sind(tilt_y) 0 cosd(tilt_y)];
-RotZ=[cosd(tilt_z) -sind(tilt_z) 0;sind(tilt_z) cosd(tilt_z) 0;0 0 1];
-RotDet=RotX*RotY*RotZ;
-
-hklnumber=length(unique(Ahkl(:,1).^2+Ahkl(:,2).^2+Ahkl(:,3).^2)); % maximum is 10, recommended be at least >= 3, 4
-% iter_end=10; % maximum iterations which determines the finess of gridding for indexing seeds
-sprintf('hklnumber = %.0f, C_trust = %.2f, C_min = %.2f, drop_off = %.2f, minEucDis = %.3f mm, maxD = %.1f pixel and maxDmedian = %.1f pixel', ...
-    hklnumber,TrustComp,minComp,drop_off,minEucDis,maxD,maxDmedian)
+RotDet=get_det_R(tilt_x,tilt_y,tilt_z);
 if simap_data_flag==1
     S=[1 0 0;0 1 0;0 0 1];
 else
     S=[1 0 0;0 -1 0;0 0 1];
 end
+
+hklnumber=length(unique(Ahkl(:,1).^2+Ahkl(:,2).^2+Ahkl(:,3).^2)); % maximum is 10, recommended be at least >= 3, 4
+% iter_end=10; % maximum iterations which determines the finess of gridding for indexing seeds
+sprintf('hklnumber = %.0f, C_trust = %.2f, C_min = %.2f, drop_off = %.2f, minEucDis = %.3f mm, maxD = %.1f pixel and maxDmedian = %.1f pixel', ...
+    hklnumber,TrustComp,minComp,drop_off,minEucDis,maxD,maxDmedian)
 B=FormB(cell);
 V = cellvolume(cell); % [Angs^3]
 
-sprintf('Tomo and spot files will be loaded from %s',FileFolder)
-sprintf('Output files will be written to %s',OutputFolder)
+fprintf('Tomo and spot files will be loaded from %s\n',FileFolder)
+fprintf('Output files will be written to %s\n',OutputFolder)
 
 % load tomographic volume data
-sprintf('load tomo file: %s',tomoFile)
+fprintf('load tomo file: %s\n',tomoFile)
 tomo=get_tomo_fromh5(tomoFile,1);
 
 % load DCT images for processing and spot segmentation, get binary images
-sprintf('load spots file: %s',SpotsFile)
+fprintf('load spots file: %s\n',SpotsFile)
 load(SpotsFile);
 
 for i=1:length(proj_bin)
@@ -101,10 +98,14 @@ for m=1:length(files_mat)
         matFileName_prefix=[matFileName_prefix;iter];
         if iter>0
             load(fullfile(OutputFolder,matFileName));
+            fprintf('Loading file %s ...\n',matFileName);
             f_iter(iter)=length(find(DS_out.GrainId>0))/length(find(DS_out.Mask==1)); % indexed fraction
         end
     end
 end
+fprintf(['Reconstructed volume fraction as a function of iteration: ' ...
+            repmat('%.4f ', 1, length(f_iter)) '\n'],f_iter);
+
 
 if DS_final_flag==0
     [~,matFileName_ind]=max(matFileName_prefix);    
@@ -112,7 +113,7 @@ if DS_final_flag==0
 else
     matFileName = 'DS_final.mat';
 end
-sprintf('Loading the file %s ...',matFileName)
+fprintf('Loading the file %s ...\n',matFileName)
 load(fullfile(OutputFolder,matFileName));
 
 if ~all(size(DS_out.PhaseId)==dim)
@@ -196,13 +197,14 @@ else
     cs = [];
 end
 min_misori = 0.5; % recommend to be 0.5 [deg]
+revise_all_flag=0; % by default
 [DS_merge,Ngrain,Nregion,Inherit_region_nr,CentroidComp]=merge_and_identify_grains(DS,mtex_avail,cs,min_misori,proj_bin_bw,Spots, ...
                     rot_start,rot_step,rot_angles,S,B,Ahkl,nrhkl,hklnumber,hkl_square, ...
                     RotDet,thetamax,lambda_min,lambda_max,Lsam2sou,Lsam2det,minEucDis,minComp,dety00,detz00,P0y,P0z, ...
-                    pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ, ...
-                    tomo_scale,VoxSize,RecVolumePixel,simap_data_flag);
+                    RotAxisOffset,pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ, ...
+                    tomo_scale,VoxSize,RecVolumePixel,simap_data_flag,revise_all_flag);
 % [DS_merge]=revise_single_unindexed_voxel(DS_merge0);
-sprintf('There are %d voxels with C > 1 and C_max = %.3f.',length(find(DS_merge.Completeness>1)),max(DS_merge.Completeness(:)))
+fprintf('There are %d voxels with C > 1 and C_max = %.3f.\n',length(find(DS_merge.Completeness>1)),max(DS_merge.Completeness(:)))
 DS_merge.Completeness(DS_merge.Completeness>1)=1;
 
 % write output as h5 file and generate dream3d and xdmf files for visualization
@@ -244,7 +246,7 @@ for i=1:length(DS_new.SeedID)
         U=euler2u(DS_new.EulerZXZ(i,1)*pi/180,DS_new.EulerZXZ(i,2)*pi/180,DS_new.EulerZXZ(i,3)*pi/180);
         [Nr_simu,Nr_intersect,dis_median,SimuSpots,HittedSpots]=index_verify_v3(U,proj_bin_bw,Spots,pos,rot_angles,S,B,Ahkl,nrhkl,hklnumber,hkl_square, ...
                 RotDet,thetamax,lambda_min,lambda_max,Lsam2sou,Lsam2det,minEucDis,dety00,detz00,P0y,P0z, ...
-                pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ);
+                RotAxisOffset,pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ);
         GrainInfo(i,:)=[i pos DS_new.EulerZXZ(i,:) grainsize(i) Nr_intersect Nr_simu Nr_intersect/Nr_simu dis_median];
     end
 end
