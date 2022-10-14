@@ -42,15 +42,15 @@ V = cellvolume(cell); % [Angs^3]
 if ~exist('RotAxisOffset','var')
     RotAxisOffset=0; % added on Aug 30, 2022
 end
-sprintf('Tomo and spot files will be loaded from %s',FileFolder)
-sprintf('Output files will be written to %s',OutputFolder)
+fprintf('Tomo and spot files will be loaded from %s\n',FileFolder)
+fprintf('Output files will be written to %s\n',OutputFolder)
 
 % load tomographic volume data
-sprintf('load tomo file: %s',tomoFile)
+fprintf('load tomo file: %s\n',tomoFile)
 tomo=get_tomo_fromh5(tomoFile,1);
 
 % load DCT images for processing and spot segmentation, get binary images
-sprintf('load spots file: %s',SpotsFile)
+fprintf('load spots file: %s\n',SpotsFile)
 load(SpotsFile);
 
 for i=1:length(proj_bin)
@@ -107,7 +107,7 @@ select_ind=find(grainsize>grainsize_min & DS_new.SeedComp>=comp_min);
 if isempty(select_ind)
     [~,select_ind]=max(grainsize);
 end
-sprintf('%d grains of total %d grains are selected for fitting',length(select_ind),length(grainsize))
+fprintf('%d grains of total %d grains are selected for fitting\n',length(select_ind),length(grainsize))
     
 % select grains for fitting
 DS_fit=DS_new;
@@ -131,14 +131,14 @@ if length(DS_new.SeedID)>length(DS_fit.SeedID)
         Rsample,RecVolumePixel,tomo_scale,ExpTime,atomparam,proj,Spots,rot_start,rot_step, ...
         S,B,Ahkl,nrhkl,hkl_square,Energy,lambda,V,K1,I0E,RotDet,thetamax,lambda_min,lambda_max,Lsam2sou,Lsam2det, ...
         dety00,detz00,P0y,P0z,RotAxisOffset,pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ, ...
-        simap_data_flag,strcat(OutputFolder,'/grains_all'),[rot_start:3*rot_step:rot_end-180]);
+        simap_data_flag,strcat(OutputFolder,'/grains_all'),rot_angles_simu);
 end
-    rot_angles_simu=[rot_start:2*rot_step:rot_end];
-    [SpotNr_simu,SpotNr_obs,SpotsPair,GrainIndex,SubGrain,rot_angles_calc,~]=Forward_simu_spots_exp(DS_fit, ...
-        Rsample,RecVolumePixel,tomo_scale,ExpTime,atomparam,proj,Spots,rot_start,rot_step, ...
-        S,B,Ahkl,nrhkl,hkl_square,Energy,lambda,V,K1,I0E,RotDet,thetamax,lambda_min,lambda_max,Lsam2sou,Lsam2det, ...
-        dety00,detz00,P0y,P0z,RotAxisOffset,pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ, ...
-        simap_data_flag,strcat(OutputFolder,'/grains_forfit'),rot_angles_simu);
+rot_angles_simu=[rot_start:4*rot_step:rot_end];
+[SpotNr_simu,SpotNr_obs,SpotsPair,GrainIndex,SubGrain,rot_angles_calc,~]=Forward_simu_spots_exp(DS_fit, ...
+    Rsample,RecVolumePixel,tomo_scale,ExpTime,atomparam,proj,Spots,rot_start,rot_step, ...
+    S,B,Ahkl,nrhkl,hkl_square,Energy,lambda,V,K1,I0E,RotDet,thetamax,lambda_min,lambda_max,Lsam2sou,Lsam2det, ...
+    dety00,detz00,P0y,P0z,RotAxisOffset,pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ, ...
+    simap_data_flag,strcat(OutputFolder,'/grains_forfit'),rot_angles_simu);
 if length(DS_new.SeedID)==length(DS_fit.SeedID)
     SpotsPair_all=SpotsPair;
 end
@@ -160,7 +160,33 @@ fprintf('%d spots are selected for fitting the geometry. \n',length(SpotsPair(:,
 fprintf('Average distance for selected grains is %.2f pixels. \n',ErrMean0);
 fprintf('Average distance for all grains is %.2f pixels. \n',ErrMean0_all);
 
+if false
+    figure;
+    subplot(1,3,1);
+    hist(SpotsPair(:,18));
+    xlabel('{\Delta_{horizontal}} (pixel)');
+    ylabel('Counts','FontSize',20);
+    set(gca,'FontSize',18);
+    set(gca,'LineWidth',2);
+    axis square;
+    subplot(1,3,2);
+    hist(SpotsPair(:,19));
+    xlabel('{\Delta_{vertical}} (pixel)');
+    ylabel('Counts','FontSize',20);
+    set(gca,'FontSize',18);
+    set(gca,'LineWidth',2);
+    axis square;
+    subplot(1,3,3);
+    hist(SpotsPair(:,20));
+    xlabel('{\Delta} (pixel)');
+    ylabel('Counts','FontSize',20);
+    set(gca,'FontSize',18);
+    set(gca,'LineWidth',2);
+    axis square;
+    [length(SpotsPair(:,1)) mean(SpotsPair(:,20)) std(SpotsPair(:,20))]
+end
 % add on Nov 25, 2021, random testing on different initial values
+clear ParaFit;
 iter_fit=1;
 for j=1:iter_fit
     if j==1
@@ -174,7 +200,7 @@ for j=1:iter_fit
         x0(j,6)=tilt_y-1+rand(1)*2;
         x0(j,7)=tilt_z-1+rand(1)*2;
     end
-    [ParaFit(j,:),fval(j)]=L_shift_tilt_fitting(SpotsPair,S,B,P0y,P0z,RotAxisOffset,RotAxisOffset,pixelysize,pixelzsize, ...
+    [ParaFit(j,:),fval(j)]=L_shift_tilt_fitting(SpotsPair,S,B,P0y,P0z,RotAxisOffset,pixelysize,pixelzsize, ...
         dety0,detz0,x0(j,1),x0(j,2),x0(j,3),x0(j,4),x0(j,5),x0(j,6),x0(j,7),'FitAllOnce');
     j
 end
@@ -182,6 +208,12 @@ end
 
 ParaFit=ParaFit(ind,:);
 fval=fval(ind);
+
+% fit RotAxisOffset
+[RotAxisOffset_fitted,fval]=fit_RotAxisOffset(RotAxisOffset,SpotsPair,S,B,P0y,P0z, ...
+                        pixelysize,pixelzsize,dety0,detz0,ParaFit(1),ParaFit(2),ParaFit(3), ...
+                        ParaFit(4),ParaFit(5),ParaFit(6),ParaFit(7));
+fprintf('Before fitting: RotAxisOffset = %f;\nAfter fitting: RotAxisOffset = %f\n',RotAxisOffset,RotAxisOffset_fitted); 
 
 % col 13-14 forward simulated position; col 16-17 experimental position [pixel]
 [ErrMean_fit,Err_fit,dis_y_fit,dis_z_fit]=dis_calc_spotspair(ParaFit,SpotsPair,S,B,P0y,P0z,RotAxisOffset, ...
@@ -193,15 +225,15 @@ fprintf('Average distances for selected grains before and after fitting are %.2f
 fprintf('Average distances for all grains before and after fitting are %.2f and %.2f pixels,respectively. \n', ...
     ErrMean0_all,ErrMean_all_fit);
 
+% rot_angles_simu=[rot_start:2*rot_step:rot_end-180];
+rot_angles_simu=0;
 Forward_simu_spots_exp_after_geo_fit(DS_fit,ParaFit, ...
     Rsample,RecVolumePixel,tomo_scale,ExpTime,atomparam,proj,Spots,rot_start,rot_step, ...
     S,B,Ahkl,nrhkl,hkl_square,Energy,lambda,V,K1,I0E,thetamax,lambda_min,lambda_max, ...
-    P0y,P0z,RotAxisOffset,pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ, ...
-    simap_data_flag,OutputFolder,[rot_start:2*rot_step:rot_end-180]);
+    P0y,P0z,RotAxisOffset_fitted,pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ, ...
+    simap_data_flag,OutputFolder,rot_angles_simu);
 
 if true
     plot_dis;
 %     slice0=slice_show(DS_new,round(DS_new.Dimension(3)/2),1,0,0)
 end
-
-

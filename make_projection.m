@@ -103,7 +103,7 @@ function [SpotsPair,GrainIndex,GrainIndex_unique]=make_projection(A,imdata,Spots
 %     frame_image=uint16(ceil(frame));
     frame_image=frame;clear frame;
 %     ThresholdValue=0;
-    ThresholdValue=0.2; % if it is 0, it is possible to segment spots as one sigle spot
+    ThresholdValue=0.1; % if it is 0, it is possible to segment spots as one sigle spot
     frame_bin = frame_image>ThresholdValue;
 %     [SpotBoundary,frame_label,~,~] = bwboundaries(frame_bin,'noholes');
     frame_label=bwlabeln(frame_bin,18);
@@ -172,7 +172,7 @@ function [SpotsPair,GrainIndex,GrainIndex_unique]=make_projection(A,imdata,Spots
 
         % pairing the spots
         spotpair_exp_ID=find(sqrt((Spots{rot_number}(:,9)-frame_measure_list(pair_spot_ID,2)).^2+ ...
-            (Spots{rot_number}(:,10)-frame_measure_list(pair_spot_ID,3)).^2)<15 & ...
+            (Spots{rot_number}(:,10)-frame_measure_list(pair_spot_ID,3)).^2)<20 & ...
             (Spots{rot_number}(:,11)-frame_measure_list(pair_spot_ID,1))./frame_measure_list(pair_spot_ID,1)<5 & ... % used to be 10
             (Spots{rot_number}(:,11)-frame_measure_list(pair_spot_ID,1))./frame_measure_list(pair_spot_ID,1)>-0.5);
         if ~isempty(spotpair_exp_ID) && A_filted(1,4)^2+A_filted(1,5)^2+A_filted(1,6)^2<=hkl_square(3)
