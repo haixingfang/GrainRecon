@@ -6,9 +6,7 @@
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % steps for grain mapping
 % step 1: get geometry information using get_geometry.m and input those information to setup_exp.m
-% step 2: get spots info
-%         if spot segmented images have been obtained, get spot info from binarized images using get_spots.m and set load_spot = 1;
-%         if DCT projections are not segmented yet, continue this program by setting load_spot = 0
+% step 2: get spots info, using get_spots.m; You may need to segment your images first
 % step 3: get absorption tomo, run get_tomo_slices_create_h5.m
 % step 4: check other parameters, e.g. RecBox, RecCenter, RecVoxelSize, S etc;
 %         note the coordinate differences betweeen DTU and Simap datasets
@@ -236,11 +234,15 @@ check_fit_all=0;
 if check_fit_all==1
     sprintf("Grain mapping engine will check the need of fit_all mode for seeds.")
 end
+fprintf('*********** Start grain reconstruction engine **************\n')
 while stop_grain_mapping~=1
     iter=iter+1;
     % generate seeding positions for indexing, April 14, 2022
 %     pos_seed = generate_uniform_seeding_pos(iter,RecVolumePixel,tomo_scale,VoxSize,simap_data_flag);
-
+    if iter>=10
+        Nr_seed=2500;
+        fprintf("Nr_seed switches its value to %d.\n", Nr_seed);
+    end
     tStart=tic;
     fprintf('Grain mapping engine starts with an iterative attempt of %d ...\n',iter)
     fprintf('There are %d / %d unvisited voxels and %d / %d = %.3f voxels to be indexed ...\n', ...
@@ -288,14 +290,17 @@ while stop_grain_mapping~=1
         not_remove_spot=1;
     end
     if iter>2 && indexed_voxel_fraction(iter)>0.95 && ...
-            abs(indexed_voxel_fraction(iter)-indexed_voxel_fraction(iter-1))<0.01
-        check_fit_all=1;
-        sprintf("OR fitting switches to fit_all mode.")
-        if strcmp(compute_opt, 'gpu_cuda_comp')
-            compute_opt = 'gpu_cuda_Gt';
-        elseif strcmp(compute_opt, 'gpu_cuda_Gt')
-            OR = get_ori_set(OR_folder,sgno,'1')
+            abs(indexed_voxel_fraction(iter)-indexed_voxel_fraction(iter-1))<0.04
+		check_fit_all=1;
+        fprintf("OR fitting switches to fit_all mode.\n")
+        if Nr_seed<500
+            Nr_seed=500;
         end
+        % if strcmp(compute_opt, 'gpu_cuda_comp')
+            % compute_opt = 'gpu_cuda_Gt';
+        % elseif strcmp(compute_opt, 'gpu_cuda_Gt')
+            % OR = get_ori_set(OR_folder,sgno,'1')
+        % end
     end
     if (iter>=2 && indexed_voxel_fraction(iter)>indexed_voxel_fraction_min && ...
                abs(indexed_voxel_fraction(iter)-indexed_voxel_fraction(iter-1))*total_voxel<=2) || ...

@@ -46,7 +46,11 @@ candidate_id=zeros(length(pos_list(:,1)),1);
 fit_all_flag_track=zeros(length(pos_list(:,1)),1);
 if check_fit_all==1
     ind_GrainId=[];
-    [ind_GrainId(:,1),ind_GrainId(:,2),ind_GrainId(:,3)]=ind2sub(size(DS.GrainId),find(DS.GrainId>0));
+	[ind_GrainId(:,1),ind_GrainId(:,2),ind_GrainId(:,3)]=ind2sub(size(DS.GrainId),find(DS.Completeness>=TrustComp));
+	if isempty(ind_GrainId)
+	    clear ind_GrainId;
+        [ind_GrainId(:,1),ind_GrainId(:,2),ind_GrainId(:,3)]=ind2sub(size(DS.GrainId),find(DS.Completeness>=min([minComp*1.5 TrustComp*0.8])));
+    end
 end
 for i=1:length(pos_list(:,1))
     stop_regional_recon=0;
@@ -106,20 +110,20 @@ for i=1:length(pos_list(:,1))
 %         indexing_fit{i}=zeros(length(index_seeds(:,1)),18);
         if replace_center_count(i)==0
             if check_fit_all==1 && min(sqrt((ind_GrainId(:,1)-pos_indices(1)).^2+(ind_GrainId(:,2)-pos_indices(2)).^2+ ...
-                    (ind_GrainId(:,3)-pos_indices(3)).^2))>5
-                fit_all_flag=1;
-                fprintf('Fit all OR candidates for seed %d...\n',i)
+                    (ind_GrainId(:,3)-pos_indices(3)).^2))>2
+				fit_all_flag=1;
+				fprintf('Activate fit_all_flag for seed %d (%d OR candidates) ...\n',i,length(select_index3));
+                [indexing_final(i,:),confident_index(i),Spots_pair{i}]=fit_OR_constrain_with_local_comp_cuda_2(i,index_seeds,RotDet, ...
+                    proj_bin_bw,Spots,pos_indexing,rot_angles,S,B,Ahkl,nrhkl, ...
+                    thetamax,lambda_min,lambda_max,Lsam2sou,Lsam2det,minEucDis,dety00,detz00,P0y,P0z, ...
+                    RotAxisOffset,pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ,fit_all_flag);
             else
                 fit_all_flag=0;
+				[indexing_final(i,:),confident_index(i),Spots_pair{i}]=fit_OR_constrain_with_local_comp_cuda(i,index_seeds,RotDet, ...
+                    proj_bin_bw,Spots,pos_indexing,rot_angles,S,B,Ahkl,nrhkl, ...
+                    thetamax,lambda_min,lambda_max,Lsam2sou,Lsam2det,minEucDis,dety00,detz00,P0y,P0z, ...
+                    RotAxisOffset,pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ,fit_all_flag);
             end
-%             [indexing_final(i,:),indexing_fit{i},confident_index(i),Spots_pair{i}]=fit_OR_constrain_with_local_comp(i,index_seeds,RotDet, ...
-%                 proj_bin_bw,Spots,pos_indexing,rot_angles,S,B,Ahkl,nrhkl,hklnumber,hkl_square, ...
-%                 thetamax,lambda_min,lambda_max,Lsam2sou,Lsam2det,minEucDis,dety00,detz00,P0y,P0z,RotAxisOffset, ...
-%                 pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ);
-            [indexing_final(i,:),confident_index(i),Spots_pair{i}]=fit_OR_constrain_with_local_comp_cuda(i,index_seeds,RotDet, ...
-                proj_bin_bw,Spots,pos_indexing,rot_angles,S,B,Ahkl,nrhkl, ...
-                thetamax,lambda_min,lambda_max,Lsam2sou,Lsam2det,minEucDis,dety00,detz00,P0y,P0z,RotAxisOffset, ...
-                pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ,fit_all_flag);
             indexing_final0(i,:)=indexing_final(i,:);
             fprintf('Candidate %d is identified for yielding the best solution.\n',confident_index(i))
 			candidate_id(i)=confident_index(i);
