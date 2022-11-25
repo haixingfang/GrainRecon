@@ -52,8 +52,9 @@ This package is free to use, ditribute and adapt for non-commercial use only. Se
 A mirror site is accessible [here](https://github.com/haixingfang/GrainRecon) on Github.
 
 # Reference
-A manuscript has been prepared and now is under review:<br>
-H. Fang, W. Ludwig, P. Lhuissier, Reconstruction algorithms for grain mapping by laboratory X-ray diffraction contrast tomography (in review).<br>
+A manuscript has been prepared and now is published:<br>
+H. Fang, W. Ludwig, P. Lhuissier, Reconstruction algorithms for grain mapping by laboratory X-ray diffraction contrast tomography, Journal of Applied Crystallography, 2023, 56.<br>
+https://doi.org/10.1107/S1600576722010214. <br>
 Please cite this article if you use or get inspired by the code presented here. <br>
 
 # Know more about LabDCT or synchrotron DCT?
