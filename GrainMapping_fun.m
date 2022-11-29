@@ -240,7 +240,7 @@ while stop_grain_mapping~=1
     % generate seeding positions for indexing, April 14, 2022
 %     pos_seed = generate_uniform_seeding_pos(iter,RecVolumePixel,tomo_scale,VoxSize,simap_data_flag);
     if iter>=10
-        Nr_seed=2500;
+        Nr_seed=1000;
         fprintf("Nr_seed switches its value to %d.\n", Nr_seed);
     end
     tStart=tic;
@@ -287,7 +287,7 @@ while stop_grain_mapping~=1
     if (length(find(indexing_final(:,7)>=minComp))/length(find(indexing_final(:,7)>0))<1/4 && Nr_seed<500) || iter>=iter_end
         Nr_seed=500;
         sprintf("Nr_seed switches its value to %d.", Nr_seed)
-        not_remove_spot=1;
+%        not_remove_spot=1;
     end
     if iter>2 && indexed_voxel_fraction(iter)>0.95 && ...
             abs(indexed_voxel_fraction(iter)-indexed_voxel_fraction(iter-1))<0.04
@@ -353,11 +353,12 @@ while stop_grain_mapping~=1
            end
        end
        if iter>2 && not_remove_spot~=1
-           if (indexed_voxel_fraction(iter-1) == 0 && indexed_voxel_fraction(iter)>0.3) ...
-               || (indexed_voxel_fraction(iter-1)>0 && abs(indexed_voxel_fraction(iter)-indexed_voxel_fraction(iter-1))<0.1)
+           if (indexed_voxel_fraction(iter-1) == 0 && indexed_voxel_fraction(iter)>0.3 && iter>=9) ...
+               || (indexed_voxel_fraction(iter-1)>0 && abs(indexed_voxel_fraction(iter)-indexed_voxel_fraction(iter-1))<0.1 && iter>=9)
                [SpotsForIndex,~]=merge_regions_and_remove_spots(DS,proj_bin_bw,Spots,rot_start,rot_step,rot_angles,S,B,Ahkl,nrhkl,hklnumber, ...
                            hkl_square,RotDet,thetamax,lambda_min,lambda_max,Lsam2sou,Lsam2det,minEucDis,dety00,detz00,P0y,P0z,RotAxisOffset, ...
                            pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ,tomo_scale,VoxSize,RecVolumePixel,simap_data_flag);
+			   [proj,proj_bin,proj_bin_bw]=remove_spots_from_proj(proj,proj_bin,SpotsForIndex);
     %            GrainMapping_writer(DS_merge,tomo_scale.Center,[],[],atomparam.name, ...
     %               VoxSize,RecVolumePixel,tomo_scale.Dimension,OutputFolder,[SampleName '_temp'],[SampleName '_temp'],1);
          end

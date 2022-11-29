@@ -282,7 +282,7 @@ end
 check_fit_all=1;
 if check_fit_all==1
     sprintf("Grain mapping engine will check the need of fit_all mode for seeds.")
-    not_remove_spot=1;
+%    not_remove_spot=1;
 end
 fprintf('*********** Start grain reconstruction engine **************\n')
 while stop_grain_mapping~=1
@@ -294,11 +294,12 @@ while stop_grain_mapping~=1
            end
        end
        if iter>2 && not_remove_spot~=1
-           if (indexed_voxel_fraction(iter-1) == 0 && indexed_voxel_fraction(iter)>0.3) ...
-               || (indexed_voxel_fraction(iter-1)>0 && abs(indexed_voxel_fraction(iter)-indexed_voxel_fraction(iter-1))<0.05)
+           if (indexed_voxel_fraction(iter-1) == 0 && indexed_voxel_fraction(iter)>0.3 && iter>=9) ...
+               || (indexed_voxel_fraction(iter-1)>0 && abs(indexed_voxel_fraction(iter)-indexed_voxel_fraction(iter-1))<0.05 && iter>=9)
                [SpotsForIndex,~]=merge_regions_and_remove_spots(DS,proj_bin_bw,Spots,rot_start,rot_step,rot_angles,S,B,Ahkl,nrhkl,hklnumber, ...
                            hkl_square,RotDet,thetamax,lambda_min,lambda_max,Lsam2sou,Lsam2det,minEucDis,dety00,detz00,P0y,P0z,RotAxisOffset, ...
                            pixelysize,pixelzsize,dety0,detz0,detysize,detzsize,BeamStopY,BeamStopZ,tomo_scale,VoxSize,RecVolumePixel,simap_data_flag);
+			   [proj,proj_bin,proj_bin_bw]=remove_spots_from_proj(proj,proj_bin,SpotsForIndex);
 %                GrainMapping_writer(DS_merge,tomo_scale.Center,[],[],atomparam.name, ...
 %                    VoxSize,RecVolumePixel,tomo_scale.Dimension,OutputFolder,[SampleName '_temp'],[SampleName '_temp'],1);
            end
