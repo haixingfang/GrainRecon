@@ -10,7 +10,7 @@ switch(SampleName)
     simap_data_flag=1; % using simap data = 1; otherwise = 0
     sample_no=2; % sample number
     fitted_geo_already=1;  % fitted geometry already? 1-yes; 0-no
-    not_remove_spot=0; % flag for not to remove assigned spots from the spot list
+    not_remove_spot=1; % flag for not to remove assigned spots from the spot list
 
     % load experimental parameters: source, detector and distances
     setup_exp;
@@ -51,7 +51,7 @@ switch(SampleName)
         sample_no=2; % sample number
     end
     fitted_geo_already=1;  % fitted geometry already? 1-yes; 0-no
-    not_remove_spot=0; % flag for not to remove assigned spots from the spot list
+    not_remove_spot=1; % flag for not to remove assigned spots from the spot list
 
     % load experimental parameters: source, detector and distances
     setup_exp;
