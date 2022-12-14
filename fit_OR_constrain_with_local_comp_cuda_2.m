@@ -15,13 +15,16 @@ if nargin<31 || fit_all_flag~=1
     Nr_fit=1;
 elseif fit_all_flag==1
 %     Nr_fit=length(index_seeds(:,1));
-    Nr_fit=10;
+    Nr_fit=5;
 end
 
-q_all=[];
+% q_all=[];
 for j=1:length(index_seeds(:,1))
 %     OR_local=ori_local_sampling(index_seeds(j,5:8),10,0.001); % cover the whole range from -0.02 to 0.02, delta = nr * gridsize
     OR_local=ori_local_sampling(index_seeds(j,5:8),8,0.004);
+    if j==1
+        q_all=zeros(OR_local.len*length(index_seeds(:,1)),5);
+    end
     q_all((j-1)*length(OR_local.q(:,1))+1:j*length(OR_local.q(:,1)),1:4)=OR_local.q;
     q_all((j-1)*length(OR_local.q(:,1))+1:j*length(OR_local.q(:,1)),5)=j;
 end
@@ -46,7 +49,7 @@ if nr_rot * nr_hkl > 181*80
     error("error: the number of possible diffraction events exceeds the limit, \nplease increase the limit of the pre_allocated size for dis_simu_all in cuda_forward_comp.cu")
 end
 
-nr_ori_per_iter = 300000;
+nr_ori_per_iter = 1000000;
 total_iter = floor(length(q_all(:,1))/nr_ori_per_iter)+1;
 Output = zeros(size(q_all,1),9);
 for ii=1:total_iter
@@ -68,18 +71,21 @@ end
 
 % do this multiple times
 Output_max_temp=zeros(length(index_seeds(:,1)),9);
+nr_per_OR=OR_local.len;
 for j=1:length(index_seeds(:,1))
     if ~isempty(find(Output(:,9)==j))
-        ind0=find(Output(:,3)==max(Output(Output(:,9)==j,3)) & Output(:,9)==j);
+%        ind0=find(Output(:,3)==max(Output(Output(:,9)==j,3)) & Output(:,9)==j);
+        [~,ind0]=max(Output(1+nr_per_OR*(j-1):nr_per_OR*j,3));
+        ind0=ind0+nr_per_OR*(j-1);
         Output_max_temp(j,:)=Output(ind0(1),:);
 %         else
 %             sprintf('Warning: OR %d returns empty result',j)
     end
 end
 Output_max_temp = sortrows(Output_max_temp,3,'descend');
-calc_iter=3;
+calc_iter=2;
 for ii=1:calc_iter
-    [Output,Output_max_temp] = forward_calc_gridding_OR(Output_max_temp,5,0.001,pos_cuda,S_cuda, B_cuda, ...
+    [Output,Output_max_temp,nr_per_OR1] = forward_calc_gridding_OR(Output_max_temp,5,0.001,pos_cuda,S_cuda, B_cuda, ...
                         hkl_cuda, proj_bin_bw_cuda, ...
                         rot_angles_cuda, RotDet_cuda, param_cuda);
 end
@@ -127,9 +133,12 @@ if multi_fit==0
     spots_pair=[ones(size(SpotsPair,1),1)*i SpotsPair];
 else
     Output_max=zeros(length(index_seeds(:,1)),9);
+    Output=sortrows(Output,9,'ascend');
     for j=1:length(index_seeds(:,1))
         if ~isempty(find(Output(:,9)==j))
-            ind0=find(Output(:,3)==max(Output(Output(:,9)==j,3)) & Output(:,9)==j);
+%            ind0=find(Output(:,3)==max(Output(Output(:,9)==j,3)) & Output(:,9)==j);
+            [~,ind0]=max(Output(1+nr_per_OR1*(j-1):nr_per_OR1*j,3));
+            ind0=ind0+nr_per_OR1*(j-1);
             Output_max(j,:)=Output(ind0(1),:);
 %         else
 %             sprintf('Warning: OR %d returns empty result',j)
