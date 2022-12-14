@@ -240,7 +240,7 @@ while stop_grain_mapping~=1
     % generate seeding positions for indexing, April 14, 2022
 %     pos_seed = generate_uniform_seeding_pos(iter,RecVolumePixel,tomo_scale,VoxSize,simap_data_flag);
     if iter>=10
-        Nr_seed=1000;
+        Nr_seed=2500;
         fprintf("Nr_seed switches its value to %d.\n", Nr_seed);
     end
     tStart=tic;
