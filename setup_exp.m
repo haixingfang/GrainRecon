@@ -223,7 +223,7 @@ else
         det_center=[52.9931 -0.2163 -119.684]; % from get_geometry.m
 		det_normal=[0.999945 -0.004076 -0.009639];   % from get_geometry.m
 		detdiru = [-0.004077 -0.999992 -0.000041];
-		detdirv = [-0.009639 0.000079 -0.999954]
+		detdirv = [-0.009639 0.000079 -0.999954];
 		[RotDet,tilt_x,tilt_y,tilt_z]=get_det_tilt(det_normal,detdiru);
         dety00=det_center(2)-aquisition_center(2); % [mm]
         detz00=det_center(3)-aquisition_center(3); % [mm]
