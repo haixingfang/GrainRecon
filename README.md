@@ -28,6 +28,9 @@ LabDCT is a novel technique for 3D grain mapping using lab X-ray source, inspire
   - After geometry fitting, you may repeat steps of 2-3 to redo/refine grain mapping results.<br>
 ### All the codes have been tested executable with a Matlab version 2020a or later.
 
+# Want to generate forward simulated LabDCT spot images ?
+  - run [forward_simu_Fe_100um_6grains.m](https://github.com/haixingfang/GrainRecon/blob/main/forward_simu_Fe_100um_6grains.m) as an example with the option to use different geometry parameters
+
 ## Run on linux cluster
 Examples of bash file for submitting jobs to ESRF slurm cluster:
 1) [go_SLURM_job_fullvol.slurm](https://github.com/haixingfang/GrainRecon/blob/main/go_SLURM_job_fullvol.slurm) shows an example to submit a job to a cluster equipped with only CPU for reconstructing a full volume.<br>
@@ -52,10 +55,14 @@ This package is free to use, ditribute and adapt for non-commercial use only. Se
 A mirror site is accessible [here](https://github.com/haixingfang/GrainRecon) on Github.
 
 # Reference
-The reconstruction algorithms are presented in the following research article:<br>
-H. Fang, W. Ludwig, P. Lhuissier, Reconstruction algorithms for grain mapping by laboratory X-ray diffraction contrast tomography, Journal of Applied Crystallography, 2022, 55, 1652-1663.<br>
+The reconstruction algorithms and LabDCT implementation on conventional CT are presented in the following articles:<br>
+[1] H. Fang, W. Ludwig, P. Lhuissier, Reconstruction algorithms for grain mapping by laboratory X-ray diffraction contrast tomography, Journal of Applied Crystallography, 2022, 55, 1652-1663.<br>
 https://doi.org/10.1107/S1600576722010214. <br>
-Please cite this article if you use or get inspired by the code presented here. <br>
+[2] H. Fang, W. Ludwig, P. Lhuissier, Implementation of grain mapping by diffraction contrast tomography on a conventional laboratory tomography setup with various detectors, Journal of Applied Crystallography, 2023, 56, 810-824.<br>
+https://doi.org/10.1107/S1600576723003874. <br>
+[3] H. Fang, R. Granger, W. Ludwig, P. Lhuissier, 3D grain mapping by laboratory X-ray diffraction contrast tomography implemented on a conventional tomography setup, IOP Conference Series: Materials Science and Engineering, 2022, 1249.<br>
+https://iopscience.iop.org/article/10.1088/1757-899X/1249/1/012039/pdf. <br>
+Please cite the article if you use or get inspired by the code, algorithm or the implementation method presented here. <br>
 
 # Know more about LabDCT or synchrotron DCT?
 ## Read the following books and articles.
@@ -68,6 +75,6 @@ Please cite this article if you use or get inspired by the code presented here. 
 [7] [Fang, H., Juul Jensen, D. & Zhang, Y. (2020). Acta Cryst. A 76, 652-663.](https://journals.iucr.org/a/issues/2020/06/00/iv5008/iv5008.pdf)<br>
 [8] [Fang, H., Juul Jensen, D. & Zhang, Y. (2021). IUCrJ 8, 559-573.](https://journals.iucr.org/m/issues/2021/04/00/fc5052/index.html)<br>
 
-## Contact emails: haixing.fang@grenoble-inp.fr, haixing0a@esrf.fr or haixingfang868@gmail.com
-
+## Contact emails: haixing.fang@esrf.fr or haixingfang868@gmail.com
+## Haixing Fang currently is a beamline scientist at beamline ID11 of ESRF 
 
